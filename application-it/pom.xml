@@ -4,9 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>jp.gr.java_conf.dhun.starseeker</groupId>
+    <groupId>jp.gr.java_conf.dhun.starseeker-parent</groupId>
     <artifactId>starseeker-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-parent-SNAPSHOT</version>
   </parent>
 
   <groupId>jp.gr.java_conf.dhun.starseeker</groupId>
