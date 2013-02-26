@@ -1,0 +1,6 @@
+.project
+.settings
+application/.classpath
+application-it/.classpath
+application-it/target
+application/target
