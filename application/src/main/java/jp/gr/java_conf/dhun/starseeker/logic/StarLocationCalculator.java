@@ -6,7 +6,11 @@ package jp.gr.java_conf.dhun.starseeker.logic;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.annotation.SuppressLint;
+
 /**
+ * 星の座標計算機.<br/>
+ * 
  * @author jun
  * 
  */
@@ -79,7 +83,7 @@ public class StarLocationCalculator {
     /**
      * グリニッジ恒星時を算出します.<br/>
      * 
-     * @return グリニッジ恒星時
+     * @return グリニッジ恒星時(h). 経度０°において、南中している星の赤経
      */
     public double calculateGreenwichSiderealTime() {
         // MJD = 51544.50
@@ -91,6 +95,45 @@ public class StarLocationCalculator {
         double ofDecimal = tmpAnswer % 1;
         double ofHour = 24 * ofDecimal;
         return ofHour;
+    }
+
+    /**
+     * 地方恒星時を算出します.<br/>
+     * 
+     * @param greenwichSiderealTime グリニッジ恒星時
+     * @param longitude 経度. 経度、東経を - 西経を + とする. -180から+180
+     * @return 地方恒星時(h). 経度λにおいて南中している星の赤経
+     */
+    public double calculateLocalSiderealTime(double greenwichSiderealTime, double longitude) {
+        assert (Math.signum(longitude) != +0 && longitude == 0);
+        assert (Math.signum(longitude) != +1 && longitude < +180);
+        assert (Math.signum(longitude) != -1 && longitude > -180);
+
+        // θ = θG-λ = 18h 41.8m -(-(135+44/60)/15 ) = 18h 41.8m -(-9h 2.9m ) = 27h 44.7m
+        // 27h 44.7m - 24h = 3h 44.7m
+        double degree = Math.floor(longitude);
+        double minute = Math.round((longitude - degree) * 100);
+
+        final double DAYS_OF_HOUR = 24;
+        double result = greenwichSiderealTime - (-(degree + minute / 60) / 15);
+        result -= DAYS_OF_HOUR;
+        return result;
+    }
+
+    /**
+     * 時間を示すdoubleを「3h 41.3m」形式の文字列に変換します.<br/>
+     * デバッグ用途で利用するつもり.
+     * 
+     * @param hour 時間
+     * @return 時間の文字列表現
+     */
+    @SuppressLint("DefaultLocale")
+    public static String convertHourToHourString(double hour) {
+        int h = (int) Math.floor(hour);
+        double ms = (hour - h) * 60;
+        int m = (int) Math.floor(ms);
+        int s = (int) Math.round((ms - m) * 10); // 小数第一位までの概数
+        return String.format("%dh %d.%dm", h, m, s);
     }
 
     // ************************************************************************************************************************
