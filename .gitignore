@@ -6,3 +6,4 @@ application-it/target
 application/target
 bin
 gen
+starseeker-test/.classpath
