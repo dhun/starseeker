@@ -4,6 +4,8 @@
 package jp.gr.java_conf.dhun.starseeker.util;
 
 /**
+ * {@link java.lang.Math}の拡張ユーティリティ
+ * 
  * @author jun
  * 
  */

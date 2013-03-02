@@ -1,4 +1,4 @@
-package jp.gr.java_conf.dhun.starseeker;
+package jp.gr.java_conf.dhun.starseeker.util;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;

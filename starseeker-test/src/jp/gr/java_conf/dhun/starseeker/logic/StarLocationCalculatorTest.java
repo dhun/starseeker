@@ -8,6 +8,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -94,7 +96,7 @@ public class StarLocationCalculatorTest {
         double delta = 1d / 24 / 60 / 60 / 1000 * 1000; // 1ミリ秒以内の誤差が許容範囲
         assertTrue(Math.abs(actual - expect) < (delta));
 
-        assertThat(StarLocationCalculator.convertHourDoubleToHourString(actual), is("18h 41.8m"));
+        assertThat(StarLocationUtil.convertHourDoubleToHourString(actual), is("18h 41.8m"));
     }
 
     @Test
@@ -109,64 +111,18 @@ public class StarLocationCalculatorTest {
         double diff = Math.abs(actual - expect);
         assertTrue("must be " + diff + " < " + delta, diff < delta);
 
-        assertThat(StarLocationCalculator.convertHourDoubleToHourString(actual), is("3h 44.7m"));
+        assertThat(StarLocationUtil.convertHourDoubleToHourString(actual), is("3h 44.7m"));
     }
 
     @Test
     public void test_calculateHourAngle() {
         StarLocationCalculator target = new StarLocationCalculator();
-        double localSiderealTime = StarLocationCalculator.convertHourStringToHourDouble("3h 44.7m");
-        double rightAscension = StarLocationCalculator.convertHourStringToHourDouble("6h 45.1m");
+        double localSiderealTime = StarLocationUtil.convertHourStringToHourDouble("3h 44.7m");
+        double rightAscension = StarLocationUtil.convertHourStringToHourDouble("6h 45.1m");
         double actual = target.calculateHourAngle(localSiderealTime, rightAscension);
 
-        double expect = StarLocationCalculator.convertHourStringToHourDouble("-3h 0.4m");
+        double expect = StarLocationUtil.convertHourStringToHourDouble("-3h 0.4m");
         assertThat(actual, is(expect));
     }
 
-    @Test
-    public void test_convertHourDoubleToHourString_18dot69690() {
-        double hour = 18.69690;
-        String actual = StarLocationCalculator.convertHourDoubleToHourString(hour);
-        String expect = "18h 41.8m";
-        assertThat(actual, is(expect));
-    }
-
-    @Test
-    public void test_convertHourStringToHourDouble_18dot69690() {
-        String hour = "18h 41.8m";
-        double actual = StarLocationCalculator.convertHourStringToHourDouble(hour);
-        double expect = 18.69690;
-
-        double delta = 0.0003; // 誤差の許容範囲は適当
-        double diff = Math.abs(actual - expect);
-        assertTrue("must be " + diff + " < " + delta, diff < delta);
-
-        assertThat(StarLocationCalculator.convertHourDoubleToHourString(actual), is(hour));
-    }
-
-    // @Test
-    // public void test_convertHourStringToHourDouble_18dot69690_plus() {
-    // String hour = "+18h 41.8m";
-    // double actual = StarLocationCalculator.convertHourStringToHourDouble(hour);
-    // double expect = +18.69690;
-    //
-    // double delta = 0.0003; // 誤差の許容範囲は適当
-    // double diff = Math.abs(actual - expect);
-    // assertTrue("must be " + diff + " < " + delta, diff < delta);
-    //
-    // assertThat(StarLocationCalculator.convertHourDoubleToHourString(actual), is(hour));
-    // }
-
-    @Test
-    public void test_convertHourStringToHourDouble_18dot69690_minus() {
-        String hour = "-18h 41.8m";
-        double actual = StarLocationCalculator.convertHourStringToHourDouble(hour);
-        double expect = -18.69690;
-
-        double delta = 0.0003; // 誤差の許容範囲は適当
-        double diff = Math.abs(actual - expect);
-        assertTrue("must be " + diff + " < " + delta, diff < delta);
-
-        assertThat(StarLocationCalculator.convertHourDoubleToHourString(actual), is(hour));
-    }
 }
