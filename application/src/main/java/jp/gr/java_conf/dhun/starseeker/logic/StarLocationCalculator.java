@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jp.gr.java_conf.dhun.starseeker.util.MathUtils;
 import android.annotation.SuppressLint;
 
 /**
@@ -75,19 +76,7 @@ public class StarLocationCalculator {
         d += cal.get(Calendar.SECOND) / 24d / 60 / 60;
         // d += cal.get(Calendar.MILLISECOND) / 24d / 60 / 60 / 1000;
 
-        return extractInteger(365.25 * y) + extractInteger(y / 400) - extractInteger(y / 100) + extractInteger(30.59 * (m - 2)) + d + 1721088.5 - 2400000.5;
-    }
-
-    private double extractInteger(double value) {
-        return Math.floor(value);
-    }
-
-    private static/* TODO to util */double floor(double value) {
-        return (value >= 0) ? Math.floor(value) : Math.ceil(value);
-    }
-
-    private static/* TODO to util */double round(double value) {
-        return (value >= 0) ? Math.round(value) : Math.round(value); // -0.5の場合のroundがまずい
+        return MathUtils.floor(365.25 * y) + MathUtils.floor(y / 400) - MathUtils.floor(y / 100) + MathUtils.floor(30.59 * (m - 2)) + d + 1721088.5 - 2400000.5;
     }
 
     /**
@@ -119,8 +108,8 @@ public class StarLocationCalculator {
 
         // θ = θG-λ = 18h 41.8m -(-(135+44/60)/15 ) = 18h 41.8m -(-9h 2.9m ) = 27h 44.7m
         // 27h 44.7m - 24h = 3h 44.7m
-        double degree = floor(longitude);
-        double minute = round((longitude - degree) * 100);
+        double degree = MathUtils.floor(longitude);
+        double minute = MathUtils.round((longitude - degree) * 100);
 
         final double DAYS_OF_HOUR = 24;
         double result = greenwichSiderealTime - (-(degree + minute / 60) / 15);
@@ -150,10 +139,10 @@ public class StarLocationCalculator {
      */
     @SuppressLint("DefaultLocale")
     public static String convertHourDoubleToHourString(double hour) {
-        int h = (int) floor(hour);
+        int h = (int) MathUtils.floor(hour);
         double ms = Math.abs(hour - h) * 60;
-        int m = (int) floor(ms);
-        int s = (int) round((ms - m) * 10); // 小数第一位までの概数
+        int m = (int) MathUtils.floor(ms);
+        int s = (int) MathUtils.round((ms - m) * 10); // 小数第一位までの概数
         return String.format("%dh %d.%dm", h, m, s);
     }
 

@@ -7,3 +7,4 @@ application/target
 bin
 gen
 starseeker-test/.classpath
+starseeker-test/hs_err_*.log
