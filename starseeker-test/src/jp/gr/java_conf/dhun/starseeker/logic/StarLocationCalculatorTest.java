@@ -20,6 +20,10 @@ import org.junit.Test;
  */
 public class StarLocationCalculatorTest {
 
+    // 誤差の許容値
+    private static final double DELTA_HOUR = 1.0 / 24 / 60 / 60 / 1000 * 1000; // 時間. 1ミリ秒未満
+    private static final double DELTA_ANGLE = 0.000001; // 角度
+
     /**
      * @throws java.lang.Exception
      */
@@ -78,9 +82,8 @@ public class StarLocationCalculatorTest {
     public void runCalculateMJD(Date baseDate, double expect) throws ParseException {
         StarLocationCalculator target = new StarLocationCalculator(baseDate);
         double actual = target.calculateMJD(baseDate);
-        double delta = 1d / 24 / 60 / 60 / 1000 * 1000; // 1ミリ秒以内の誤差が許容範囲
         double diff = Math.abs(actual - expect);
-        assertTrue("must be " + diff + " < " + delta, diff < delta);
+        assertTrue(String.format("誤差が許容値より大きい, 誤差=[%f], 許容値=[%f]", diff, DELTA_HOUR), diff < DELTA_HOUR);
     }
 
     @Test
@@ -93,8 +96,8 @@ public class StarLocationCalculatorTest {
 
         double actual = target.calculateGreenwichSiderealTime();
         double expect = 18.69690;
-        double delta = 1d / 24 / 60 / 60 / 1000 * 1000; // 1ミリ秒以内の誤差が許容範囲
-        assertTrue(Math.abs(actual - expect) < (delta));
+        double diff = Math.abs(actual - expect);
+        assertTrue(String.format("誤差が許容値より大きい, 誤差=[%f], 許容値=[%f]", diff, DELTA_HOUR), diff < DELTA_HOUR);
 
         assertThat(StarLocationUtil.convertHourDoubleToHourString(actual), is("18h 41.8m"));
     }
@@ -107,9 +110,8 @@ public class StarLocationCalculatorTest {
         double actual = target.calculateLocalSiderealTime(greenwichSiderealTime, longitude);
 
         double expect = 3.745788888888889;
-        double delta = 1d / 24 / 60 / 60 / 1000 * 1000; // 1ミリ秒以内の誤差が許容範囲
         double diff = Math.abs(actual - expect);
-        assertTrue("must be " + diff + " < " + delta, diff < delta);
+        assertTrue(String.format("誤差が許容値より大きい, 誤差=[%f], 許容値=[%f]", diff, DELTA_HOUR), diff < DELTA_HOUR);
 
         assertThat(StarLocationUtil.convertHourDoubleToHourString(actual), is("3h 44.7m"));
     }
@@ -121,8 +123,9 @@ public class StarLocationCalculatorTest {
         double rightAscension = StarLocationUtil.convertHourStringToHourDouble("6h 45.1m");
         double actual = target.calculateHourAngle(localSiderealTime, rightAscension);
 
-        double expect = StarLocationUtil.convertHourStringToHourDouble("-3h 0.4m");
-        assertThat(actual, is(expect));
+        double expect = -45.1;
+        double diff = Math.abs(actual - expect);
+        assertTrue(String.format("誤差が許容値より大きい, 誤差=[%f], 許容値=[%f]", diff, DELTA_ANGLE), diff < DELTA_ANGLE);
     }
 
 }

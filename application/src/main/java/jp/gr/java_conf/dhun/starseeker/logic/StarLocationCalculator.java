@@ -124,7 +124,8 @@ public class StarLocationCalculator {
     public double calculateHourAngle(double localSiderealTime, double rightAscension) {
         // H = θ-α = 3h 44.7m-6h45.1m = -3h 0.4m = -45.1°
 
-        return localSiderealTime - rightAscension;
+        double diff = localSiderealTime - rightAscension;
+        return 360 * (diff / 24);
     }
 
     // ************************************************************************************************************************
