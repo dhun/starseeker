@@ -5,6 +5,8 @@ package jp.gr.java_conf.dhun.starseeker.logic;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.annotation.SuppressLint;
 
@@ -80,6 +82,14 @@ public class StarLocationCalculator {
         return Math.floor(value);
     }
 
+    private static/* TODO to util */double floor(double value) {
+        return (value >= 0) ? Math.floor(value) : Math.ceil(value);
+    }
+
+    private static/* TODO to util */double round(double value) {
+        return (value >= 0) ? Math.round(value) : Math.round(value); // -0.5の場合のroundがまずい
+    }
+
     /**
      * グリニッジ恒星時を算出します.<br/>
      * 
@@ -105,14 +115,12 @@ public class StarLocationCalculator {
      * @return 地方恒星時(h). 経度λにおいて南中している星の赤経
      */
     public double calculateLocalSiderealTime(double greenwichSiderealTime, double longitude) {
-        assert (Math.signum(longitude) != +0 && longitude == 0);
-        assert (Math.signum(longitude) != +1 && longitude < +180);
-        assert (Math.signum(longitude) != -1 && longitude > -180);
+        assert (-180 <= longitude && longitude <= +180);
 
         // θ = θG-λ = 18h 41.8m -(-(135+44/60)/15 ) = 18h 41.8m -(-9h 2.9m ) = 27h 44.7m
         // 27h 44.7m - 24h = 3h 44.7m
-        double degree = Math.floor(longitude);
-        double minute = Math.round((longitude - degree) * 100);
+        double degree = floor(longitude);
+        double minute = round((longitude - degree) * 100);
 
         final double DAYS_OF_HOUR = 24;
         double result = greenwichSiderealTime - (-(degree + minute / 60) / 15);
@@ -121,19 +129,60 @@ public class StarLocationCalculator {
     }
 
     /**
-     * 時間を示すdoubleを「3h 41.3m」形式の文字列に変換します.<br/>
+     * 時角を算出します.<br/>
+     * 
+     * @param localSiderealTime 地方恒星時(θ). 単位は(h)
+     * @param rightAscension 赤経
+     * @return 時角(H)
+     */
+    public double calculateHourAngle(double localSiderealTime, double rightAscension) {
+        // H = θ-α = 3h 44.7m-6h45.1m = -3h 0.4m = -45.1°
+
+        return localSiderealTime - rightAscension;
+    }
+
+    /**
+     * 時間を示すdouble「18.69690」を時間の文字列表現「18h 41.8m」に変換します.<br/>
      * デバッグ用途で利用するつもり.
      * 
      * @param hour 時間
      * @return 時間の文字列表現
      */
     @SuppressLint("DefaultLocale")
-    public static String convertHourToHourString(double hour) {
-        int h = (int) Math.floor(hour);
-        double ms = (hour - h) * 60;
-        int m = (int) Math.floor(ms);
-        int s = (int) Math.round((ms - m) * 10); // 小数第一位までの概数
+    public static String convertHourDoubleToHourString(double hour) {
+        int h = (int) floor(hour);
+        double ms = Math.abs(hour - h) * 60;
+        int m = (int) floor(ms);
+        int s = (int) round((ms - m) * 10); // 小数第一位までの概数
         return String.format("%dh %d.%dm", h, m, s);
+    }
+
+    /**
+     * 時間の文字列表現「18h 41.8m」を時間を示すdouble「18.69690」に変換します.<br/>
+     * デバッグ用途で利用するつもり. 恐らく超遅い
+     * 
+     * @param hour 時間の文字列表現
+     * @return 時間
+     */
+    @SuppressLint("DefaultLocale")
+    public static double convertHourStringToHourDouble(String hour) {
+        Pattern pattern = Pattern.compile("^([+-])?(\\d+)h (\\d+)\\.(\\d)m$");
+        Matcher matcher = pattern.matcher(hour);
+        if (!matcher.find() || matcher.groupCount() != 4) {
+            throw new IllegalArgumentException(String.format("時間の文字列表現が不正. value=[%s]", hour));
+        }
+
+        String sign = matcher.group(1);
+        String h = matcher.group(2);
+        String m = matcher.group(3);
+        String s = matcher.group(4);
+
+        double result = 0;
+        result += Double.valueOf(h);
+        result += Double.valueOf(m) / 60;
+        result += Double.valueOf(s) / 60 / 10;
+        result *= (null != sign && sign.equals("-")) ? -1 : +1;
+        return result;
     }
 
     // ************************************************************************************************************************
