@@ -128,6 +128,74 @@ public class StarLocationCalculator {
         return 360 * (diff / 24);
     }
 
+    /**
+     * 赤道座標→地平座標の変換式(1).<br/>
+     * = -cosδsinH
+     * 
+     * @param declination 赤緯(δ)
+     * @param hourAngle 時角(H)
+     * @return cosh sinA
+     */
+    public double convertEquatorialCoordinateToHorizontalCoordinate1(double declination, double hourAngle) {
+        return -cos(declination) * sin(hourAngle);
+    }
+
+    /**
+     * 赤道座標→地平座標の変換式(2).<br/>
+     * = cosψsinδ-sinψcosδcosH
+     * 
+     * @param latitude 緯度(ψ)
+     * @param declination 赤緯(δ)
+     * @param hourAngle 時角(H)
+     * @return cosh cosA
+     */
+    public double convertEquatorialCoordinateToHorizontalCoordinate2(double latitude, double declination, double hourAngle) {
+        return cos(latitude) * sin(declination) - sin(latitude) * cos(declination) * cos(hourAngle);
+    }
+
+    /**
+     * 赤道座標→地平座標の変換式(3).<br/>
+     * = sinψsinδ+cosψcosδcosH
+     * 
+     * @param latitude 緯度(ψ)
+     * @param declination 赤緯(δ)
+     * @param hourAngle 時角(H)
+     * @return sinh
+     */
+    public double convertEquatorialCoordinateToHorizontalCoordinate3(double latitude, double declination, double hourAngle) {
+        return sin(latitude) * sin(declination) + cos(latitude) * cos(declination) * cos(hourAngle);
+    }
+
+    /**
+     * 角度に対してsinを実行します.<br/>
+     * 
+     * @param angle 角度
+     * @return sin
+     */
+    protected final double sin(double angle) {
+        return Math.sin(angle * Math.PI / 180);
+    }
+
+    /**
+     * 角度に対してcosを実行します.<br/>
+     * 
+     * @param angle 角度
+     * @return cos
+     */
+    protected final double cos(double angle) {
+        return Math.cos(angle * Math.PI / 180);
+    }
+
+    /**
+     * 角度に対してtanを実行します.<br/>
+     * 
+     * @param angle 角度
+     * @return tan
+     */
+    protected final double tan(double angle) {
+        return Math.tan(angle * Math.PI / 180);
+    }
+
     // ************************************************************************************************************************
     // setter, getter
     // ************************************************************************************************************************
