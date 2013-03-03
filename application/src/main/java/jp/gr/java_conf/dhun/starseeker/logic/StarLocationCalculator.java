@@ -47,6 +47,10 @@ public class StarLocationCalculator {
      * @param baseDateTime 座標算出の基準日時
      */
     public StarLocationCalculator(double longitude, double latitude, Date baseDateTime) {
+        assert (-180 <= longitude && longitude <= +180);
+        assert (-90 <= latitude && latitude <= +90);
+        assert (null != baseDateTime);
+
         this.longitude = longitude;
         this.latitude = latitude;
         this.baseDateTime = baseDateTime;
@@ -63,15 +67,15 @@ public class StarLocationCalculator {
         double greenwichSiderealTime = calculateGreenwichSiderealTime();
 
         // 地方恒星時
-        double localSiderealTime = calculateLocalSiderealTime(greenwichSiderealTime, longitude);
+        double localSiderealTime = calculateLocalSiderealTime(greenwichSiderealTime);
 
         // 時角
         double hourAngle = calculateHourAngle(localSiderealTime, star.getRightAscension());
 
         // 赤道座標→地平座標の変換式３兄弟
         double convertValue1 = convertEquatorialCoordinateToHorizontalCoordinate1(star.getDeclination(), hourAngle);
-        double convertValue2 = convertEquatorialCoordinateToHorizontalCoordinate2(latitude, star.getDeclination(), hourAngle);
-        double convertValue3 = convertEquatorialCoordinateToHorizontalCoordinate3(latitude, star.getDeclination(), hourAngle);
+        double convertValue2 = convertEquatorialCoordinateToHorizontalCoordinate2(star.getDeclination(), hourAngle);
+        double convertValue3 = convertEquatorialCoordinateToHorizontalCoordinate3(star.getDeclination(), hourAngle);
 
         // 方位(A)：北から東回り
         double azimuth = calculateAzimuth(convertValue1, convertValue2);
@@ -139,20 +143,21 @@ public class StarLocationCalculator {
      * 地方恒星時を算出します.<br/>
      * 
      * @param greenwichSiderealTime グリニッジ恒星時
-     * @param longitude 経度. 経度、東経を - 西経を + とする. -180から+180
      * @return 地方恒星時(h). 経度λにおいて南中している星の赤経(α)
      */
-    protected double calculateLocalSiderealTime(double greenwichSiderealTime, double longitude) {
-        assert (-180 <= longitude && longitude <= +180);
-
+    protected double calculateLocalSiderealTime(double greenwichSiderealTime) {
         // θ = θG-λ = 18h 41.8m -(-(135+44/60)/15 ) = 18h 41.8m -(-9h 2.9m ) = 27h 44.7m
         // 27h 44.7m - 24h = 3h 44.7m
-        double degree = MathUtils.floor(longitude);
-        double minute = MathUtils.round((longitude - degree) * 100);
-
         final double DAYS_OF_HOUR = 24;
-        double result = greenwichSiderealTime - (-(degree + minute / 60) / 15);
-        result -= DAYS_OF_HOUR;
+        double result = greenwichSiderealTime - (-longitude / 15);
+
+        // return result - DAYS_OF_HOUR; // TODO サイトの例題では常に24を引いてるけど、違う気がしたので訂正
+        if (result > +DAYS_OF_HOUR) {
+            return result - DAYS_OF_HOUR;
+        }
+        if (result < -DAYS_OF_HOUR) {
+            return result + DAYS_OF_HOUR;
+        }
         return result;
     }
 
@@ -186,12 +191,11 @@ public class StarLocationCalculator {
      * 赤道座標→地平座標の変換式(2).<br/>
      * = cosψsinδ-sinψcosδcosH
      * 
-     * @param latitude 緯度(ψ)
      * @param declination 赤緯(δ)
      * @param hourAngle 時角(H)
      * @return cosh cosA
      */
-    protected double convertEquatorialCoordinateToHorizontalCoordinate2(double latitude, double declination, double hourAngle) {
+    protected double convertEquatorialCoordinateToHorizontalCoordinate2(double declination, double hourAngle) {
         return cos(latitude) * sin(declination) - sin(latitude) * cos(declination) * cos(hourAngle);
     }
 
@@ -199,12 +203,11 @@ public class StarLocationCalculator {
      * 赤道座標→地平座標の変換式(3).<br/>
      * = sinψsinδ+cosψcosδcosH
      * 
-     * @param latitude 緯度(ψ)
      * @param declination 赤緯(δ)
      * @param hourAngle 時角(H)
      * @return sinh
      */
-    protected double convertEquatorialCoordinateToHorizontalCoordinate3(double latitude, double declination, double hourAngle) {
+    protected double convertEquatorialCoordinateToHorizontalCoordinate3(double declination, double hourAngle) {
         return sin(latitude) * sin(declination) + cos(latitude) * cos(declination) * cos(hourAngle);
     }
 
