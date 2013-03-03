@@ -21,11 +21,11 @@ public class StarLocationCalculator {
     private final double longitude; // 経度(λ). 東経を - 西経を + とする. -180から+180
     private final double latitude;  // 緯度(ψ). 北緯を + 南緯を - とする.. +90から -90
 
-    // 座標計算の基準日時
+    // 座標計算基準日時
     private final Date baseDateTime;
 
-    // 座標計算基準日時に対するＭＪＤ
-    private final double mjd;
+    // 座標計算基準日時における観測地点の地方恒星時(θ)
+    private final double localSiderealTime;
 
     /**
      * コンストラクタ.<br/>
@@ -54,7 +54,15 @@ public class StarLocationCalculator {
         this.longitude = longitude;
         this.latitude = latitude;
         this.baseDateTime = baseDateTime;
-        this.mjd = calculateMJD(baseDateTime);
+
+        // MJD
+        double mjd = calculateMJD(baseDateTime);
+
+        // グリニッジ恒星時(θG)
+        double greenwichSiderealTime = calculateGreenwichSiderealTime(mjd);
+
+        // 地方恒星時(θ)
+        localSiderealTime = calculateLocalSiderealTime(greenwichSiderealTime);
     }
 
     /**
@@ -63,12 +71,6 @@ public class StarLocationCalculator {
      * @param star 星
      */
     public void locate(Star star) {
-        // グリニッジ恒星時
-        double greenwichSiderealTime = calculateGreenwichSiderealTime();
-
-        // 地方恒星時
-        double localSiderealTime = calculateLocalSiderealTime(greenwichSiderealTime);
-
         // 時角
         double hourAngle = calculateHourAngle(localSiderealTime, star.getRightAscension());
 
@@ -125,9 +127,10 @@ public class StarLocationCalculator {
     /**
      * グリニッジ恒星時を算出します.<br/>
      * 
-     * @return グリニッジ恒星時(h). 経度０°において、南中している星の赤経
+     * @param mjd MJD
+     * @return グリニッジ恒星時(θG). 経度０°において、南中している星の赤経
      */
-    protected double calculateGreenwichSiderealTime() {
+    protected double calculateGreenwichSiderealTime(double mjd) {
         // MJD = 51544.50
         // θG = 24hx(0.67239＋1.00273781x(MJD-40000.0))　2000.0分点に準拠
         // θG : グリニッジ恒星時。(0.67239＋1.00273781x(MJD-40000.0))の値から小数点以下のみ
@@ -142,8 +145,8 @@ public class StarLocationCalculator {
     /**
      * 地方恒星時を算出します.<br/>
      * 
-     * @param greenwichSiderealTime グリニッジ恒星時
-     * @return 地方恒星時(h). 経度λにおいて南中している星の赤経(α)
+     * @param greenwichSiderealTime グリニッジ恒星時(θG)
+     * @return 地方恒星時(θ). 経度λにおいて南中している星の赤経(α)
      */
     protected double calculateLocalSiderealTime(double greenwichSiderealTime) {
         // θ = θG-λ = 18h 41.8m -(-(135+44/60)/15 ) = 18h 41.8m -(-9h 2.9m ) = 27h 44.7m
@@ -164,7 +167,7 @@ public class StarLocationCalculator {
     /**
      * 時角を算出します.<br/>
      * 
-     * @param localSiderealTime 地方恒星時(θ). 単位は(h)
+     * @param localSiderealTime 地方恒星時(θ)
      * @param rightAscension 赤経(α)
      * @return 時角(H)
      */
@@ -286,11 +289,39 @@ public class StarLocationCalculator {
     // ************************************************************************************************************************
     // setter, getter
     // ************************************************************************************************************************
-    public Date getBaseDate() {
+    /**
+     * 観測地点の経度を取得します.<br/>
+     * 
+     * @return 経度(λ). 東経を - 西経を + とする. -180から+180
+     */
+    public double getLongitude() {
+        return longitude;
+    }
+
+    /**
+     * 観測地点の緯度を取得します.<br/>
+     * 
+     * @return 緯度(ψ). 北緯を + 南緯を - とする.. +90から -90
+     */
+    public double getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * 座標計算基準日時を取得します.<br/>
+     * 
+     * @return 日時
+     */
+    public Date getBaseDateTime() {
         return baseDateTime;
     }
 
-    public double getMjd() {
-        return mjd;
+    /**
+     * 座標計算基準日時における観測地点の地方恒星時を取得します.<br/>
+     * 
+     * @return 地方恒星時(θ)
+     */
+    public double getLocalSiderealTime() {
+        return localSiderealTime;
     }
 }

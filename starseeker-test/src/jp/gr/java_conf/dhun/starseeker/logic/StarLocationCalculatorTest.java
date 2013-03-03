@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import jp.gr.java_conf.dhun.starseeker.TestUtils;
+import jp.gr.java_conf.dhun.starseeker.model.Star;
 import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
 
 import org.junit.After;
@@ -50,14 +51,25 @@ public class StarLocationCalculatorTest {
 
     @Test
     public void test_starLocationCalculator() {
-        TestUtils.asserAllowingError(target.getBaseDate().getTime(), System.currentTimeMillis(), 1000); // 誤差は１秒未満
+        TestUtils.asserAllowingError(target.getBaseDateTime().getTime(), System.currentTimeMillis(), 1000); // 誤差は１秒未満
     }
 
     @Test
     public void test_starLocationCalculatorDate() throws ParseException {
         Date baseDate = new SimpleDateFormat("yyyy/MM/dd").parse("1977/08/05");
         StarLocationCalculator target = new StarLocationCalculator(longitude, latitude, baseDate);
-        assertTrue(baseDate.getTime() - target.getBaseDate().getTime() == 0);
+        assertTrue(baseDate.getTime() - target.getBaseDateTime().getTime() == 0);
+    }
+
+    @Test
+    public void test_locate() {
+        String rightAscension = "";
+        String declination = "";
+        Star star = new Star(rightAscension, declination);
+
+        target.locate(star);
+        assertThat(star.getAzimuth(), is(0.0));
+        assertThat(star.getAltitude(), is(0.0));
     }
 
     @Test
@@ -94,13 +106,9 @@ public class StarLocationCalculatorTest {
     }
 
     @Test
-    public void test_calculateGreenwichSiderealTime() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public void test_calculateGreenwichSiderealTime() {
         double mjd = 51544.50;
-        Field field = StarLocationCalculator.class.getDeclaredField("mjd");
-        field.setAccessible(true);
-        field.set(target, mjd);
-
-        double actual = target.calculateGreenwichSiderealTime();
+        double actual = target.calculateGreenwichSiderealTime(mjd);
         double expect = 18.69690;
         TestUtils.asserAllowingError(actual, expect, TestUtils.DELTA_HOUR);
 
