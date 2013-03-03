@@ -203,4 +203,14 @@ public class StarLocationCalculatorTest {
         TestUtils.asserAllowingError(target.tan(60), 1.73210, TestUtils.DELTA_TRIG_FUNC);
         TestUtils.asserAllowingError(target.tan(89), 57.2900, TestUtils.DELTA_TRIG_FUNC);
     }
+
+    @Test
+    public void test_atan() {
+        StarLocationCalculator target = new StarLocationCalculator();
+
+        TestUtils.asserAllowingError(target.atan(0.0), 0.0, TestUtils.DELTA_ANGLE);
+        TestUtils.asserAllowingError(target.atan(0.57740), 30, TestUtils.DELTA_ANGLE);
+        TestUtils.asserAllowingError(target.atan(1.73210), 60, TestUtils.DELTA_ANGLE);
+        TestUtils.asserAllowingError(target.atan(57.2900), 89, TestUtils.DELTA_ANGLE);
+    }
 }
