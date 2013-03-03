@@ -98,7 +98,7 @@ public class StarLocationCalculator {
      * 
      * @param greenwichSiderealTime グリニッジ恒星時
      * @param longitude 経度. 経度、東経を - 西経を + とする. -180から+180
-     * @return 地方恒星時(h). 経度λにおいて南中している星の赤経
+     * @return 地方恒星時(h). 経度λにおいて南中している星の赤経(α)
      */
     public double calculateLocalSiderealTime(double greenwichSiderealTime, double longitude) {
         assert (-180 <= longitude && longitude <= +180);
@@ -118,7 +118,7 @@ public class StarLocationCalculator {
      * 時角を算出します.<br/>
      * 
      * @param localSiderealTime 地方恒星時(θ). 単位は(h)
-     * @param rightAscension 赤経
+     * @param rightAscension 赤経(α)
      * @return 時角(H)
      */
     public double calculateHourAngle(double localSiderealTime, double rightAscension) {
