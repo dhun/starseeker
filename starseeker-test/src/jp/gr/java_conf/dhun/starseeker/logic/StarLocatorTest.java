@@ -17,18 +17,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * {@link StarLocationCalculator}のテスト
+ * {@link StarLocator}のテスト
  * 
  * @author jun
  * 
  */
-public class StarLocationCalculatorTest {
+public class StarLocatorTest {
 
     // 観測地点の座標
     private double longitude; // 経度(λ). 東経を - 西経を + とする. -180から+180
     private double latitude;  // 緯度(ψ). 北緯を + 南緯を - とする.. +90から -90
 
-    private StarLocationCalculator target;
+    private StarLocator target;
 
     /**
      * @throws java.lang.Exception
@@ -39,7 +39,7 @@ public class StarLocationCalculatorTest {
         longitude = StarLocationUtil.convertAngleStringToDouble("135°44'"); // 東経135°44'
         latitude = StarLocationUtil.convertAngleStringToDouble("35°01'");   // 北緯 35°01'
 
-        target = new StarLocationCalculator(longitude, latitude);
+        target = new StarLocator(longitude, latitude);
     }
 
     /**
@@ -50,14 +50,14 @@ public class StarLocationCalculatorTest {
     }
 
     @Test
-    public void test_starLocationCalculator() {
+    public void test_StarLocatorDoubleDouble() {
         TestUtils.asserAllowingError(target.getBaseDateTime().getTime(), System.currentTimeMillis(), 1000); // 誤差は１秒未満
     }
 
     @Test
-    public void test_starLocationCalculatorDate() throws ParseException {
+    public void test_StarLocatorDoubleDoubleDate() throws ParseException {
         Date baseDate = new SimpleDateFormat("yyyy/MM/dd").parse("1977/08/05");
-        StarLocationCalculator target = new StarLocationCalculator(longitude, latitude, baseDate);
+        StarLocator target = new StarLocator(longitude, latitude, baseDate);
         assertTrue(baseDate.getTime() - target.getBaseDateTime().getTime() == 0);
     }
 
@@ -76,7 +76,7 @@ public class StarLocationCalculatorTest {
         double longitude = StarLocationUtil.convertAngleStringToDouble("135°44'");
         double latitude = StarLocationUtil.convertAngleStringToDouble("35°01'");
         Date baseDateTime = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2000/01/01 21:00");
-        target = new StarLocationCalculator(longitude, latitude, baseDateTime);
+        target = new StarLocator(longitude, latitude, baseDateTime);
         target.locate(star);
         TestUtils.asserAllowingError(star.getAltitude(), 22.87, TestUtils.DELTA_ANGLE);
         TestUtils.asserAllowingError(star.getAzimuth(), 132.58, 0.02); // XXX 誤差が大きすぎ？ TestUtils.DELTA_ANGLE);
@@ -130,7 +130,7 @@ public class StarLocationCalculatorTest {
         double greenwichSiderealTime = 18.69690;
         double longitude = StarLocationUtil.convertAngleStringToDouble("135°44'");
         try {
-            Field field = StarLocationCalculator.class.getDeclaredField("longitude");
+            Field field = StarLocator.class.getDeclaredField("longitude");
             field.setAccessible(true);
             field.set(target, longitude);
         } catch (Exception e) {
@@ -165,7 +165,7 @@ public class StarLocationCalculatorTest {
     public void test_convertEquatorialCoordinateToHorizontalCoordinate2() {
         double latitude = StarLocationUtil.convertAngleStringToDouble("35°01'");
         try {
-            Field field = StarLocationCalculator.class.getDeclaredField("latitude");
+            Field field = StarLocator.class.getDeclaredField("latitude");
             field.setAccessible(true);
             field.set(target, latitude);
         } catch (Exception e) {
@@ -182,7 +182,7 @@ public class StarLocationCalculatorTest {
     public void test_convertEquatorialCoordinateToHorizontalCoordinate3() {
         double latitude = StarLocationUtil.convertAngleStringToDouble("35°01'");
         try {
-            Field field = StarLocationCalculator.class.getDeclaredField("latitude");
+            Field field = StarLocator.class.getDeclaredField("latitude");
             field.setAccessible(true);
             field.set(target, latitude);
         } catch (Exception e) {

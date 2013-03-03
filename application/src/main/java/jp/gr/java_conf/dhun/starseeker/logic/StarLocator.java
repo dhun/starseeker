@@ -11,12 +11,12 @@ import jp.gr.java_conf.dhun.starseeker.model.Star;
 import jp.gr.java_conf.dhun.starseeker.util.MathUtils;
 
 /**
- * 星座標の計算機.<br/>
+ * 星の座標配置クラス.<br/>
  * 
  * @author jun
  * 
  */
-public class StarLocationCalculator {
+public class StarLocator {
 
     // 観測地点の座標
     private final double longitude; // 経度(λ). 東経を - 西経を + とする. -180から+180
@@ -35,7 +35,7 @@ public class StarLocationCalculator {
      * @param longitude 観測地点の経度(λ)
      * @param latitude 観測地点の緯度(ψ)
      */
-    public StarLocationCalculator(double longitude, double latitude) {
+    public StarLocator(double longitude, double latitude) {
         this(longitude, latitude, new Date(System.currentTimeMillis()));
     }
 
@@ -47,7 +47,7 @@ public class StarLocationCalculator {
      * @param latitude 観測地点の緯度(ψ)
      * @param baseDateTime 座標算出の基準日時
      */
-    public StarLocationCalculator(double longitude, double latitude, Date baseDateTime) {
+    public StarLocator(double longitude, double latitude, Date baseDateTime) {
         assert (-180 <= longitude && longitude <= +180);
         assert (-90 <= latitude && latitude <= +90);
         assert (null != baseDateTime);
