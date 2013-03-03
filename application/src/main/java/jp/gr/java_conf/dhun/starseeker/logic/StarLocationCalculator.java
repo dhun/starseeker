@@ -6,6 +6,7 @@ package jp.gr.java_conf.dhun.starseeker.logic;
 import java.util.Calendar;
 import java.util.Date;
 
+import jp.gr.java_conf.dhun.starseeker.model.Star;
 import jp.gr.java_conf.dhun.starseeker.util.MathUtils;
 
 /**
@@ -16,29 +17,70 @@ import jp.gr.java_conf.dhun.starseeker.util.MathUtils;
  */
 public class StarLocationCalculator {
 
-    /** 座標計算の基準日時 */
+    // 観測地点の座標
+    private final double longitude; // 経度(λ). 東経を - 西経を + とする. -180から+180
+    private final double latitude;  // 緯度(ψ). 北緯を + 南緯を - とする.. +90から -90
+
+    // 座標計算の基準日時
     private final Date baseDateTime;
 
-    /** 座標計算基準日時に対するＭＪＤ */
+    // 座標計算基準日時に対するＭＪＤ
     private final double mjd;
 
     /**
      * コンストラクタ.<br/>
-     * システム日時が座標算出の基準日時になります.<br/>
+     * 座標算出の基準日時はシステム日時になります.<br/>
+     * 
+     * @param longitude 観測地点の経度(λ)
+     * @param latitude 観測地点の緯度(ψ)
      */
-    public StarLocationCalculator() {
-        this(new Date(System.currentTimeMillis()));
+    public StarLocationCalculator(double longitude, double latitude) {
+        this(longitude, latitude, new Date(System.currentTimeMillis()));
     }
 
     /**
      * コンストラクタ.<br/>
-     * 指定された日時が座標算出の基準日時になります.<br/>
+     * 座標算出の基準日時は指定された日時になります.<br/>
      * 
+     * @param longitude 観測地点の経度(λ)
+     * @param latitude 観測地点の緯度(ψ)
      * @param baseDateTime 座標算出の基準日時
      */
-    public StarLocationCalculator(Date baseDateTime) {
+    public StarLocationCalculator(double longitude, double latitude, Date baseDateTime) {
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.baseDateTime = baseDateTime;
         this.mjd = calculateMJD(baseDateTime);
+    }
+
+    /**
+     * 星を配置します.<br/>
+     * 
+     * @param star 星
+     */
+    public void locate(Star star) {
+        // グリニッジ恒星時
+        double greenwichSiderealTime = calculateGreenwichSiderealTime();
+
+        // 地方恒星時
+        double localSiderealTime = calculateLocalSiderealTime(greenwichSiderealTime, longitude);
+
+        // 時角
+        double hourAngle = calculateHourAngle(localSiderealTime, star.getRightAscension());
+
+        // 赤道座標→地平座標の変換式３兄弟
+        double convertValue1 = convertEquatorialCoordinateToHorizontalCoordinate1(star.getDeclination(), hourAngle);
+        double convertValue2 = convertEquatorialCoordinateToHorizontalCoordinate2(latitude, star.getDeclination(), hourAngle);
+        double convertValue3 = convertEquatorialCoordinateToHorizontalCoordinate3(latitude, star.getDeclination(), hourAngle);
+
+        // 方位(A)：北から東回り
+        double azimuth = calculateAzimuth(convertValue1, convertValue2);
+
+        // 高度(h)
+        double altitude = calculateAltitude(convertValue2, convertValue3, azimuth);
+
+        // 星を再配置
+        star.relocate(azimuth, altitude);
     }
 
     /**
@@ -50,7 +92,7 @@ public class StarLocationCalculator {
      * 
      * @see http://star.gs/nyumon/koseiji.htm
      */
-    public double calculateMJD(Date baseDateTime) {
+    protected double calculateMJD(Date baseDateTime) {
         // グレゴリオ暦（1582年10月15日以降）の西暦年をY、月をM、日をDとする。
         // ただし1月のはM=13、2月はM=14、YはY=Y-1とする。
         // MJD=365.25Y+Y/400-Y/100+30.59(M-2)+D+1721088.5-2400000.5
@@ -81,7 +123,7 @@ public class StarLocationCalculator {
      * 
      * @return グリニッジ恒星時(h). 経度０°において、南中している星の赤経
      */
-    public double calculateGreenwichSiderealTime() {
+    protected double calculateGreenwichSiderealTime() {
         // MJD = 51544.50
         // θG = 24hx(0.67239＋1.00273781x(MJD-40000.0))　2000.0分点に準拠
         // θG : グリニッジ恒星時。(0.67239＋1.00273781x(MJD-40000.0))の値から小数点以下のみ
@@ -100,7 +142,7 @@ public class StarLocationCalculator {
      * @param longitude 経度. 経度、東経を - 西経を + とする. -180から+180
      * @return 地方恒星時(h). 経度λにおいて南中している星の赤経(α)
      */
-    public double calculateLocalSiderealTime(double greenwichSiderealTime, double longitude) {
+    protected double calculateLocalSiderealTime(double greenwichSiderealTime, double longitude) {
         assert (-180 <= longitude && longitude <= +180);
 
         // θ = θG-λ = 18h 41.8m -(-(135+44/60)/15 ) = 18h 41.8m -(-9h 2.9m ) = 27h 44.7m
@@ -121,7 +163,7 @@ public class StarLocationCalculator {
      * @param rightAscension 赤経(α)
      * @return 時角(H)
      */
-    public double calculateHourAngle(double localSiderealTime, double rightAscension) {
+    protected double calculateHourAngle(double localSiderealTime, double rightAscension) {
         // H = θ-α = 3h 44.7m-6h45.1m = -3h 0.4m = -45.1°
 
         double diff = localSiderealTime - rightAscension;
@@ -136,7 +178,7 @@ public class StarLocationCalculator {
      * @param hourAngle 時角(H)
      * @return cosh sinA
      */
-    public double convertEquatorialCoordinateToHorizontalCoordinate1(double declination, double hourAngle) {
+    protected double convertEquatorialCoordinateToHorizontalCoordinate1(double declination, double hourAngle) {
         return -cos(declination) * sin(hourAngle);
     }
 
@@ -149,7 +191,7 @@ public class StarLocationCalculator {
      * @param hourAngle 時角(H)
      * @return cosh cosA
      */
-    public double convertEquatorialCoordinateToHorizontalCoordinate2(double latitude, double declination, double hourAngle) {
+    protected double convertEquatorialCoordinateToHorizontalCoordinate2(double latitude, double declination, double hourAngle) {
         return cos(latitude) * sin(declination) - sin(latitude) * cos(declination) * cos(hourAngle);
     }
 
@@ -162,7 +204,7 @@ public class StarLocationCalculator {
      * @param hourAngle 時角(H)
      * @return sinh
      */
-    public double convertEquatorialCoordinateToHorizontalCoordinate3(double latitude, double declination, double hourAngle) {
+    protected double convertEquatorialCoordinateToHorizontalCoordinate3(double latitude, double declination, double hourAngle) {
         return sin(latitude) * sin(declination) + cos(latitude) * cos(declination) * cos(hourAngle);
     }
 
@@ -173,7 +215,7 @@ public class StarLocationCalculator {
      * @param convertValue2 変換式(2)の値
      * @return 方位(A)
      */
-    public double calculateAzimuth(double convertValue1, double convertValue2) {
+    protected double calculateAzimuth(double convertValue1, double convertValue2) {
         double angle = atan(convertValue1 / convertValue2);
         double quadrant;
         if (convertValue1 >= 0) {
@@ -193,7 +235,7 @@ public class StarLocationCalculator {
      * @param azimuth 方位(A)
      * @return 高度(h)
      */
-    public double calculateAltitude(double convertValue2, double convertValue3, double azimuth) {
+    protected double calculateAltitude(double convertValue2, double convertValue3, double azimuth) {
         double angle = atan(convertValue3 / (convertValue2 / cos(azimuth)));
         return angle;
     }
