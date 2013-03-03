@@ -5,6 +5,7 @@ package jp.gr.java_conf.dhun.starseeker.util;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import jp.gr.java_conf.dhun.starseeker.TestUtils;
 
 import org.junit.After;
 import org.junit.Before;
@@ -31,50 +32,59 @@ public class StarLocationUtilTest {
     }
 
     @Test
-    public void test_convertHourDoubleToHourString_18dot69690() {
+    public void test_convertAngleStringToDouble_16dot43() {
+        String angle = "-16°43'";
+        double actual = StarLocationUtil.convertAngleStringToDouble(angle);
+        double expect = -16.717;
+        TestUtils.asserAllowingError(actual, expect, TestUtils.DELTA_ANGLE);
+
+        assertThat(StarLocationUtil.convertAngleDoubleToString(actual), is(angle));
+    }
+
+    @Test
+    public void test_convertAngleDoubleToString_16dot43() {
+        double angle = -16.717;
+        String actual = StarLocationUtil.convertAngleDoubleToString(angle);
+        String expect = "-16°43'";
+        assertThat(actual, is(expect));
+    }
+
+    @Test
+    public void test_convertHourDoubleToString_18dot69690() {
         double hour = 18.69690;
-        String actual = StarLocationUtil.convertHourDoubleToHourString(hour);
+        String actual = StarLocationUtil.convertHourDoubleToString(hour);
         String expect = "18h 41.8m";
         assertThat(actual, is(expect));
     }
 
     @Test
-    public void test_convertHourStringToHourDouble_18dot69690() {
+    public void test_convertHourStringToDouble_18dot69690() {
         String hour = "18h 41.8m";
-        double actual = StarLocationUtil.convertHourStringToHourDouble(hour);
+        double actual = StarLocationUtil.convertHourStringToDouble(hour);
         double expect = 18.69690;
+        TestUtils.asserAllowingError(actual, expect, 0.0003); // 誤差の許容範囲は適当
 
-        double delta = 0.0003; // 誤差の許容範囲は適当
-        double diff = Math.abs(actual - expect);
-        assertTrue("must be " + diff + " < " + delta, diff < delta);
-
-        assertThat(StarLocationUtil.convertHourDoubleToHourString(actual), is(hour));
+        assertThat(StarLocationUtil.convertHourDoubleToString(actual), is(hour));
     }
 
     @Test
-    public void test_convertHourStringToHourDouble_18dot69690_plus() {
+    public void test_convertHourStringToDouble_18dot69690_plus() {
         String hour = "+18h 41.8m";
-        double actual = StarLocationUtil.convertHourStringToHourDouble(hour);
+        double actual = StarLocationUtil.convertHourStringToDouble(hour);
         double expect = +18.69690;
+        TestUtils.asserAllowingError(actual, expect, 0.0003); // 誤差の許容範囲は適当
 
-        double delta = 0.0003; // 誤差の許容範囲は適当
-        double diff = Math.abs(actual - expect);
-        assertTrue("must be " + diff + " < " + delta, diff < delta);
-
-        assertThat(StarLocationUtil.convertHourDoubleToHourString(actual), is("18h 41.8m"));
+        assertThat(StarLocationUtil.convertHourDoubleToString(actual), is("18h 41.8m"));
     }
 
     @Test
-    public void test_convertHourStringToHourDouble_18dot69690_minus() {
+    public void test_convertHourStringToDouble_18dot69690_minus() {
         String hour = "-18h 41.8m";
-        double actual = StarLocationUtil.convertHourStringToHourDouble(hour);
+        double actual = StarLocationUtil.convertHourStringToDouble(hour);
         double expect = -18.69690;
+        TestUtils.asserAllowingError(actual, expect, 0.0003); // 誤差の許容範囲は適当
 
-        double delta = 0.0003; // 誤差の許容範囲は適当
-        double diff = Math.abs(actual - expect);
-        assertTrue("must be " + diff + " < " + delta, diff < delta);
-
-        assertThat(StarLocationUtil.convertHourDoubleToHourString(actual), is(hour));
+        assertThat(StarLocationUtil.convertHourDoubleToString(actual), is(hour));
     }
 
 }
