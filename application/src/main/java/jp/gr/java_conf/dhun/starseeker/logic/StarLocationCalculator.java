@@ -167,6 +167,38 @@ public class StarLocationCalculator {
     }
 
     /**
+     * 方位を算出します.<br/>
+     * 
+     * @param convertValue1 変換式(1)の値
+     * @param convertValue2 変換式(2)の値
+     * @return 方位(A)
+     */
+    public double calculateAzimuth(double convertValue1, double convertValue2) {
+        double angle = atan(convertValue1 / convertValue2);
+        double quadrant;
+        if (convertValue1 >= 0) {
+            quadrant = 2;
+        } else {
+            quadrant = 3; // TODO サイトに解説がなかったので正しいか分からない
+        }
+        double result = 180 + (angle * (quadrant == 2 ? +1 : -1)); // TODO サイトに解説がなかったので正しいか分からない
+        return result;
+    }
+
+    /**
+     * 高度を算出します.<br/>
+     * 
+     * @param convertValue2 変換式(2)の値
+     * @param convertValue3 変換式(3)の値
+     * @param azimuth 方位(A)
+     * @return 高度(h)
+     */
+    public double calculateAltitude(double convertValue2, double convertValue3, double azimuth) {
+        double angle = atan(convertValue3 / (convertValue2 / cos(azimuth)));
+        return angle;
+    }
+
+    /**
      * 角度に対してsinを実行します.<br/>
      * 
      * @param angle 角度
@@ -194,6 +226,16 @@ public class StarLocationCalculator {
      */
     protected final double tan(double angle) {
         return Math.tan(angle * Math.PI / 180);
+    }
+
+    /**
+     * ラジアンに対してatanを実行して、その角度を返却します.<br/>
+     * 
+     * @param radian ラジアン
+     * @return 角度
+     */
+    protected final double atan(double radian) {
+        return Math.atan(radian) * 180 / Math.PI;
     }
 
     // ************************************************************************************************************************

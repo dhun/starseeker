@@ -154,6 +154,27 @@ public class StarLocationCalculatorTest {
     }
 
     @Test
+    public void test_calculateAzimuth() {
+        StarLocationCalculator target = new StarLocationCalculator();
+        double convertValue1 = 0.67841;
+        double convertValue2 = -0.62350;
+        double actual = target.calculateAzimuth(convertValue1, convertValue2);
+        double expect = 132.58;
+        TestUtils.asserAllowingError(actual, expect, TestUtils.DELTA_ANGLE);
+    }
+
+    @Test
+    public void test_calculateAltitude() {
+        StarLocationCalculator target = new StarLocationCalculator();
+        double convertValue2 = -0.62350;
+        double convertValue3 = +0.38860;
+        double azimuth = 132.58;
+        double actual = target.calculateAltitude(convertValue2, convertValue3, azimuth);
+        double expect = 22.87;
+        TestUtils.asserAllowingError(actual, expect, TestUtils.DELTA_ANGLE);
+    }
+
+    @Test
     public void test_sin() {
         StarLocationCalculator target = new StarLocationCalculator();
 
