@@ -16,8 +16,9 @@ public class Star {
     private final double rightAscension; // 赤経(α)の数値表現
     private final double declination;    // 赤緯(δ)の数値表現
 
-    private double azimuth;  // 方位(A)の数値表現
-    private double altitude; // 高度(h)の数値表現
+    private boolean locaated;   // 配置済であるかどうか
+    private double azimuth;     // 方位(A)の数値表現
+    private double altitude;    // 高度(h)の数値表現
 
     private String name; // 名前
 
@@ -42,6 +43,7 @@ public class Star {
     public Star(double rightAscension, double declination) {
         this.rightAscension = rightAscension;
         this.declination = declination;
+        this.locaated = false;
     }
 
     /**
@@ -51,23 +53,13 @@ public class Star {
      * @param altitude 高度(h)の数値表現
      */
     public void relocate(double azimuth, double altitude) {
+        this.locaated = true;
         this.azimuth = azimuth;
         this.altitude = altitude;
     }
 
     /**
-     * 名前を取得します.<br/>
-     * 
-     * @return 名前.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
      * 赤経(α)の数値表現を取得します.<br/>
-     * 
-     * @return 赤経.
      */
     public double getRightAscension() {
         return rightAscension;
@@ -75,38 +67,55 @@ public class Star {
 
     /**
      * 赤緯(δ)の数値表現を取得します.<br/>
-     * 
-     * @return 赤緯.
      */
     public double getDeclination() {
         return declination;
     }
 
     /**
+     * 星が配置済であるかどうかを取得します.<br/>
+     */
+    public boolean isLocated() {
+        return locaated;
+    }
+
+    /**
      * 方位(A)の数値表現を取得します.<br/>
-     * 
-     * @return 方位.
      */
     public double getAzimuth() {
+        assert (isLocated());
         return azimuth;
     }
 
     /**
      * 高度(h)の数値表現を取得します.<br/>
-     * 
-     * @return 高度.
      */
     public double getAltitude() {
+        assert (isLocated());
         return altitude;
+    }
+
+    /**
+     * 名前を取得します.<br/>
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 名前を設定します.<br/>
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public String toString() {
         return String.format("赤経(α)=[%s], 赤緯(δ)=[%s], 方位(A)=[%s], 高度(h)=[%s], 名前=[%s]" //
-                , getRightAscension() //
-                , getDeclination()    //
-                , getAzimuth()        //
-                , getAltitude()       //
+                , StarLocationUtil.convertAngleDoubleToString(getRightAscension())  //
+                , StarLocationUtil.convertAngleDoubleToString(getDeclination())     //
+                , StarLocationUtil.convertAngleDoubleToString(getAzimuth())         //
+                , StarLocationUtil.convertAngleDoubleToString(getAltitude())        //
                 , getName());
     }
 

@@ -12,16 +12,10 @@ import java.util.Set;
  */
 public class EquatorialCoordinateSystem {
 
-    public String starName;
-    public String starSignName;
-    public String rightAscension; // 赤経(h m)
-    public String declination; // 赤緯(° ')
-    public String memo;
-
-    public static final Set<EquatorialCoordinateSystem> STARS;
+    public static final Set<Star> STARS;
 
     static {
-        STARS = new HashSet<EquatorialCoordinateSystem>();
+        STARS = new HashSet<Star>();
         STARS.add(newStar("ポラリス", "こぐま", "02 31.8", "+89 16", "ご存知北極星。赤緯９０°ではありません。"));
         STARS.add(newStar("アルデバラン", "おうし", "04 35", "9 +16 31"));
         STARS.add(newStar("リゲル", "オリオン", "05 14.5", "-08 12"));
@@ -37,17 +31,14 @@ public class EquatorialCoordinateSystem {
         STARS.add(newStar("デネブ", "はくちょう", "20 41.4", "+45 17"));
     }
 
-    private static EquatorialCoordinateSystem newStar(String name, String starSignName, String rightAscension, String declination) {
-        return newStar(name, starSignName, rightAscension, declination, null);
+    private static Star newStar(String name, String starSignName, String rightAscension, String declination, String memo) {
+        return newStar(name, starSignName, rightAscension, declination);
+
     }
 
-    private static EquatorialCoordinateSystem newStar(String name, String starSignName, String rightAscension, String declination, String memo) {
-        EquatorialCoordinateSystem result = new EquatorialCoordinateSystem();
-        result.starName = name;
-        result.starSignName = starSignName;
-        result.rightAscension = rightAscension;
-        result.declination = declination;
-        result.memo = memo;
-        return result;
+    private static Star newStar(String name, String starSignName, String rightAscension, String declination) {
+        Star star = new Star(rightAscension, declination);
+        star.setName(name);
+        return star;
     }
 }
