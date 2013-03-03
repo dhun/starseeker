@@ -122,6 +122,38 @@ public class StarLocationCalculatorTest {
     }
 
     @Test
+    public void test_convertEquatorialCoordinateToHorizontalCoordinate1() {
+        StarLocationCalculator target = new StarLocationCalculator();
+        double declination = StarLocationUtil.convertAngleStringToDouble("-16°43'");
+        double hourAngle = -45.1;
+        double actual = target.convertEquatorialCoordinateToHorizontalCoordinate1(declination, hourAngle);
+        double expect = 0.67841;
+        TestUtils.asserAllowingError(actual, expect, TestUtils.DELTA_CONVERT_EQUATORIAL_COORDINATE_TO_HORIZONTAL_COORDINATE);
+    }
+
+    @Test
+    public void test_convertEquatorialCoordinateToHorizontalCoordinate2() {
+        StarLocationCalculator target = new StarLocationCalculator();
+        double latitude = StarLocationUtil.convertAngleStringToDouble("35°01'");
+        double declination = StarLocationUtil.convertAngleStringToDouble("-16°43'");
+        double hourAngle = -45.1;
+        double actual = target.convertEquatorialCoordinateToHorizontalCoordinate2(latitude, declination, hourAngle);
+        double expect = -0.62350;
+        TestUtils.asserAllowingError(actual, expect, TestUtils.DELTA_CONVERT_EQUATORIAL_COORDINATE_TO_HORIZONTAL_COORDINATE);
+    }
+
+    @Test
+    public void test_convertEquatorialCoordinateToHorizontalCoordinate3() {
+        StarLocationCalculator target = new StarLocationCalculator();
+        double latitude = StarLocationUtil.convertAngleStringToDouble("35°01'");
+        double declination = StarLocationUtil.convertAngleStringToDouble("-16°43'");
+        double hourAngle = -45.1;
+        double actual = target.convertEquatorialCoordinateToHorizontalCoordinate3(latitude, declination, hourAngle);
+        double expect = 0.38860;
+        TestUtils.asserAllowingError(actual, expect, TestUtils.DELTA_CONVERT_EQUATORIAL_COORDINATE_TO_HORIZONTAL_COORDINATE);
+    }
+
+    @Test
     public void test_sin() {
         StarLocationCalculator target = new StarLocationCalculator();
 

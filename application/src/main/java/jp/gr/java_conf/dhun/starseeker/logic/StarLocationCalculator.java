@@ -9,17 +9,17 @@ import java.util.Date;
 import jp.gr.java_conf.dhun.starseeker.util.MathUtils;
 
 /**
- * 星の座標計算機.<br/>
+ * 星座標の計算機.<br/>
  * 
  * @author jun
  * 
  */
 public class StarLocationCalculator {
 
-    /** 座標算出の基準日時 */
+    /** 座標計算の基準日時 */
     private final Date baseDateTime;
 
-    /** 座標算出基準日時に対するＭＪＤ */
+    /** 座標計算基準日時に対するＭＪＤ */
     private final double mjd;
 
     /**
