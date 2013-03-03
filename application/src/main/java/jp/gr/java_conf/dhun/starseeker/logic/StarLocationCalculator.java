@@ -5,6 +5,7 @@ package jp.gr.java_conf.dhun.starseeker.logic;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import jp.gr.java_conf.dhun.starseeker.model.Star;
 import jp.gr.java_conf.dhun.starseeker.util.MathUtils;
@@ -110,6 +111,7 @@ public class StarLocationCalculator {
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(baseDateTime);
+        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
         double y = cal.get(Calendar.YEAR);
         double m = cal.get(Calendar.MONTH);
         double d = cal.get(Calendar.DAY_OF_MONTH);

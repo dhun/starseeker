@@ -85,7 +85,7 @@ public final class StarLocationUtil {
      */
     @SuppressLint("DefaultLocale")
     public static final double convertHourStringToDouble(String hour) {
-        Pattern pattern = Pattern.compile("^([+-])?(\\d+)h (\\d+)\\.(\\d)m$");
+        Pattern pattern = Pattern.compile("^([+-])?(\\d+)h *(\\d+)\\.(\\d)m$");
         Matcher matcher = pattern.matcher(hour);
         if (!matcher.find() || matcher.groupCount() != 4) {
             throw new IllegalArgumentException(String.format("時間の文字列表現が不正. value=[%s]", hour));

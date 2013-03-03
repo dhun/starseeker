@@ -61,42 +61,52 @@ public class StarLocationCalculatorTest {
         assertTrue(baseDate.getTime() - target.getBaseDateTime().getTime() == 0);
     }
 
+    /**
+     * ２０００年１月１日２１時の京都（経度：東経135°44'、緯度：北緯35°01'）における<br/>
+     * シリウス（赤経：06h45.1m、赤緯：-16°43'）の位置。
+     * 
+     * @throws ParseException
+     */
     @Test
-    public void test_locate() {
-        String rightAscension = "";
-        String declination = "";
+    public void test_locate() throws ParseException {
+        String rightAscension = "06h45.1m";
+        String declination = "-16°43'";
         Star star = new Star(rightAscension, declination);
 
+        double longitude = StarLocationUtil.convertAngleStringToDouble("135°44'");
+        double latitude = StarLocationUtil.convertAngleStringToDouble("35°01'");
+        Date baseDateTime = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2000/01/01 21:00");
+        target = new StarLocationCalculator(longitude, latitude, baseDateTime);
         target.locate(star);
-        assertThat(star.getAzimuth(), is(0.0));
-        assertThat(star.getAltitude(), is(0.0));
+        TestUtils.asserAllowingError(star.getAltitude(), 22.87, TestUtils.DELTA_ANGLE);
+        TestUtils.asserAllowingError(star.getAzimuth(), 132.58, 0.02); // XXX 誤差が大きすぎ？ TestUtils.DELTA_ANGLE);
     }
 
     @Test
     public void test_calculateMJD_１月() throws ParseException {
         Date baseDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2000/01/01 21:00");
-        double expect = 51544.875;
+        double expect = 51544.5;
         runCalculateMJD(baseDate, expect);
     }
 
     @Test
     public void test_calculateMJD_２月() throws ParseException {
         Date baseDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2000/02/01 21:00");
-        double expect = 51575.875;
+        double expect = 51575.5;
         runCalculateMJD(baseDate, expect);
     }
 
     @Test
     public void test_calculateMJD_３月() throws ParseException {
         Date baseDate = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse("2000/03/01 21:00");
-        double expect = 51604.875;
+        double expect = 51604.5;
         runCalculateMJD(baseDate, expect);
     }
 
     @Test
     public void test_calculateMJD_Ｎ月() throws ParseException {
         Date baseDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse("2013/04/05 06:07:08");
-        double expect = 56387.254953703705;
+        double expect = 56386.87995370384;
         runCalculateMJD(baseDate, expect);
     }
 
