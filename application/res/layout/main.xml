@@ -4,9 +4,34 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
+<TextView
+    android:id="@+id/textView1"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
     android:text="@string/hello"
     />
+<TextView
+    android:id="@+id/textView2"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="20dp"
+    android:text="@string/hello"
+    />
+
+<TextView
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:text="orientationValues[1]：軸（方位）, azimuth; ケータイを水平に持った場合スクリーンに垂直線を立てた軸を中心に回る角"/>
+<TextView
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:text="orientationValues[1]：X軸（仰角）, pitch; ケータイに横に線を引いた軸を中心に前後に傾けた場合の角"/>
+<TextView
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:text="orientationValues[2]：Y軸（ロール角）, roll; ケータイに縦に線を引いた軸を中心に左右に傾けた場合の角。"/>
 </LinearLayout>
