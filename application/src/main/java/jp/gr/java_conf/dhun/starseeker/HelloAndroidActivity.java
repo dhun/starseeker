@@ -4,18 +4,20 @@ import java.text.DecimalFormat;
 
 import jp.gr.java_conf.dhun.starseeker.logic.IObservationSiteLocator;
 import jp.gr.java_conf.dhun.starseeker.logic.ObservationSiteLocator1;
-import jp.gr.java_conf.dhun.starseeker.logic.ObservationSiteLocator2;
+import jp.gr.java_conf.dhun.starseeker.logic.ObservationSiteLocator3;
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.widget.TextView;
 
 public class HelloAndroidActivity extends Activity {
 
     private static String TAG = "starseeker";
 
-    private ObservationSiteLocator1 observationSiteLocator1;
-    private ObservationSiteLocator2 observationSiteLocator2;
+    private IObservationSiteLocator observationSiteLocator1;
+    private IObservationSiteLocator observationSiteLocator2;
 
     private TextView tv1, tv2;
 
@@ -41,7 +43,7 @@ public class HelloAndroidActivity extends Activity {
         nf.setNegativePrefix("-");
 
         observationSiteLocator1 = new ObservationSiteLocator1(this);
-        observationSiteLocator2 = new ObservationSiteLocator2(this);
+        observationSiteLocator2 = new ObservationSiteLocator3(this);
     }
 
     @Override
@@ -86,4 +88,13 @@ public class HelloAndroidActivity extends Activity {
         observationSiteLocator1.unregisterSensorListeners();
         observationSiteLocator2.unregisterSensorListeners();
     }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Log.d("onConfigurationChanged", "rotation=" + display.getRotation());
+    }
+
 }
