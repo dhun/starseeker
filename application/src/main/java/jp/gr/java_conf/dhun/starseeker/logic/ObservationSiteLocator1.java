@@ -103,23 +103,16 @@ public class ObservationSiteLocator1 implements SensorEventListener, IObservatio
             SensorManager.getOrientation(outR, orientationValues);
 
             // ラジアンから度への変換 及び方位の範囲を-180～180度から0～359度に変換
-            float angle = radianToDegree(orientationValues[0]);
-            if (angle >= 0) {
-                orientationValues[0] = angle;
-            } else if (angle < 0) {
-                orientationValues[0] = 360 + angle;
-            }
+            orientationValues[0] = radianToDegree(orientationValues[0]);
             orientationValues[1] = radianToDegree(orientationValues[1]);
             orientationValues[2] = radianToDegree(orientationValues[2]);
         }
 
         // 出力するための配列に格納
-        siteLocation.accelX = accelerometerValues[0];
-        siteLocation.accelY = accelerometerValues[1];
-        siteLocation.accelZ = accelerometerValues[2];
         siteLocation.azimuth = orientationValues[0];
         siteLocation.pitch = orientationValues[1];
         siteLocation.roll = orientationValues[2];
+
         if (null != onChangeSiteLocationListener) {
             onChangeSiteLocationListener.onChangeSiteLocation(siteLocation);
         }

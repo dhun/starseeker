@@ -42,8 +42,9 @@ public class HelloAndroidActivity extends Activity {
         nf.setPositivePrefix("+");
         nf.setNegativePrefix("-");
 
+        int displayRotation = getDisplayRotation();
         observationSiteLocator1 = new ObservationSiteLocator1(this);
-        observationSiteLocator2 = new ObservationSiteLocator3(this);
+        observationSiteLocator2 = new ObservationSiteLocator3(this, displayRotation);
     }
 
     @Override
@@ -63,9 +64,8 @@ public class HelloAndroidActivity extends Activity {
         observationSiteLocator1.setOnChangeSiteLocationListener(new IObservationSiteLocator.OnChangeSiteLocationListener() {
             @Override
             public void onChangeSiteLocation(IObservationSiteLocator.SiteLocation siteLocation) {
-                String text = "Xaccel：" + siteLocation.accelX + "\nYaccel：" + siteLocation.accelY + "\nZaccel：" + siteLocation.accelZ +
-                        "\n方位：" + nf.format(siteLocation.azimuth) + "\nピッチ：" + nf.format(siteLocation.pitch) + "\nロール：" + nf.format(siteLocation.roll);
-                tv1.setText(text);        // 描画
+                String text = "方位：" + nf.format(to360Degrees(siteLocation.azimuth)) + "\nピッチ：" + nf.format(siteLocation.pitch) + "\nロール：" + nf.format(siteLocation.roll);
+                tv1.setText(text); // 描画
             }
         });
 
@@ -73,9 +73,8 @@ public class HelloAndroidActivity extends Activity {
         observationSiteLocator2.setOnChangeSiteLocationListener(new IObservationSiteLocator.OnChangeSiteLocationListener() {
             @Override
             public void onChangeSiteLocation(IObservationSiteLocator.SiteLocation siteLocation) {
-                String text = "Xaccel：" + siteLocation.accelX + "\nYaccel：" + siteLocation.accelY + "\nZaccel：" + siteLocation.accelZ +
-                        "\n方位：" + nf.format(siteLocation.azimuth) + "\nピッチ：" + nf.format(siteLocation.pitch) + "\nロール：" + nf.format(siteLocation.roll);
-                tv2.setText(text);        // 描画
+                String text = "方位：" + nf.format(to360Degrees(siteLocation.azimuth)) + "\nピッチ：" + nf.format(siteLocation.pitch) + "\nロール：" + nf.format(siteLocation.roll);
+                tv2.setText(text); // 描画
             }
         });
     }
@@ -93,8 +92,20 @@ public class HelloAndroidActivity extends Activity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Log.d("onConfigurationChanged", "rotation=" + display.getRotation());
+        Log.d("onConfigurationChanged", "rotation=" + getDisplayRotation());
     }
 
+    private int getDisplayRotation() {
+        Display display = getWindowManager().getDefaultDisplay();
+        return display.getRotation();
+    }
+
+    // 方位の範囲を-180～180度から0～359度に変換
+    private double to360Degrees(double degrees) {
+        if (degrees >= 0) {
+            return degrees;
+        } else {
+            return 360 + degrees;
+        }
+    }
 }

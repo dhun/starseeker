@@ -142,12 +142,10 @@ public class ObservationSiteLocator2 implements SensorEventListener, IObservatio
         }
 
         // 出力するための配列に格納
-        siteLocation.accelX = accelerometerValues[0];
-        siteLocation.accelX = accelerometerValues[1];
-        siteLocation.accelX = accelerometerValues[2];
         siteLocation.azimuth = orientationValues[0];
         siteLocation.pitch = orientationValues[1];
         siteLocation.roll = orientationValues[2];
+
         if (null != onChangeSiteLocationListener) {
             onChangeSiteLocationListener.onChangeSiteLocation(siteLocation);
         }

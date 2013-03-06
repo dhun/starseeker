@@ -5,7 +5,6 @@ package jp.gr.java_conf.dhun.starseeker.logic;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -23,37 +22,77 @@ import android.view.Surface;
  */
 public class ObservationSiteLocator3 implements SensorEventListener, IObservationSiteLocator {
 
+    private static final int MATRIX_SIZE = 9; // 16だと正しい値が取得できなかった
+
     private final SensorManager sensorManager;
-    private final Sensor accelerometerSensor;
-    private final Sensor magneticFieldSensor;
+    private final Sensor accelerometerSensor; // 加速度センサー
+    private final Sensor magneticFieldSensor; // 地磁気センサー
 
-    private final Activity context;
+    private final int axisX; // 端末の回転状態に応じたX軸
+    private final int axisY; // 端末の回転状態に応じたY軸
 
-    public ObservationSiteLocator3(Activity context) {
+    private final float[] accelerometerValues = new float[3]; // 加速度センサーの値. x, y, z
+    private final float[] magneticFieldValues = new float[3]; // 地磁気センサーの値. x, y, z
+    private final float[] orientationValues = new float[3];   // ２つのセンサーから算出した方位. x, y, z
+
+    private boolean readyAccelerometerValues = false; // accelerometerValuesに値が格納されたかどうか
+    private boolean readyMagneticFieldValues = false; // magneticFieldValuesに値が格納されたかどうか
+
+    private OnChangeSiteLocationListener onChangeSiteLocationListener;
+    private final SiteLocation siteLocation = new SiteLocation(); // リスナが通知する変数をキャッシュ
+
+    // 以下はonSensorChangedでのみ利用するローカル変数. キャッシュ
+    private final float[] R = new float[MATRIX_SIZE];
+    private final float[] I = new float[MATRIX_SIZE];
+    private final float[] outR = new float[MATRIX_SIZE];
+
+    /**
+     * コンストラクタ.<br/>
+     * 
+     * @param context コンテキスト
+     * @param displayRotation 端末の回転状態. {@link Display#getRotation()}の値
+     */
+    public ObservationSiteLocator3(Context context, int displayRotation) {
+        // センサーマネージャからセンサーを取得
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 
         List<Sensor> list;
         list = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             accelerometerSensor = list.get(0);
         } else {
             accelerometerSensor = null;
         }
         list = sensorManager.getSensorList(Sensor.TYPE_MAGNETIC_FIELD);
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             magneticFieldSensor = list.get(0);
         } else {
             magneticFieldSensor = null;
         }
 
-        this.context = context;
+        // 端末の回転状態に応じたX軸とY軸を算出
+        switch (displayRotation) {
+        case Surface.ROTATION_0:
+            axisX = SensorManager.AXIS_X;
+            axisY = SensorManager.AXIS_Z;
+            break;
+        case Surface.ROTATION_180:
+            axisX = SensorManager.AXIS_MINUS_X;
+            axisY = SensorManager.AXIS_Z;
+            break;
+        case Surface.ROTATION_90:
+            axisX = SensorManager.AXIS_MINUS_Y;
+            axisY = SensorManager.AXIS_Z;
+            break;
+        case Surface.ROTATION_270:
+            axisX = SensorManager.AXIS_Y;
+            axisY = SensorManager.AXIS_Z;
+            break;
+        default:
+            throw new IllegalStateException("displayRotationの値が不正です. value=" + displayRotation);
+        }
     }
 
-    /*
-     * (非 Javadoc)
-     * 
-     * @see jp.gr.java_conf.dhun.starseeker.logic.IObservationSiteLocator#registerSensorListeners()
-     */
     @Override
     public void registerSensorListeners() {
         if (null != accelerometerSensor) {
@@ -64,25 +103,24 @@ public class ObservationSiteLocator3 implements SensorEventListener, IObservatio
         }
     }
 
-    /*
-     * (非 Javadoc)
-     * 
-     * @see jp.gr.java_conf.dhun.starseeker.logic.IObservationSiteLocator#unregisterSensorListeners()
-     */
     @Override
     public void unregisterSensorListeners() {
         sensorManager.unregisterListener(this);
     }
 
-    /** SensorEventListener */
+    @Override
+    public void setOnChangeSiteLocationListener(OnChangeSiteLocationListener listener) {
+        this.onChangeSiteLocationListener = listener;
+    }
+
+    // SensorEventListener
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
-    private final float[] magneticValues = new float[3];
-    private final float[] accelerometerValues = new float[3];
-    private final float[] orientationValues = new float[3];
-
+    /**
+     * 加速度センサーと地磁気センサーから方位を算出して、リスナに通知します.<br/>
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
         // 加速度の取得
@@ -90,94 +128,37 @@ public class ObservationSiteLocator3 implements SensorEventListener, IObservatio
             accelerometerValues[0] = event.values[0];
             accelerometerValues[1] = event.values[1];
             accelerometerValues[2] = event.values[2];
+            readyAccelerometerValues = true;
         }
         // 地磁気の取得
         if (event.sensor == magneticFieldSensor) {
-            magneticValues[0] = event.values[0];
-            magneticValues[1] = event.values[1];
-            magneticValues[2] = event.values[2];
+            magneticFieldValues[0] = event.values[0];
+            magneticFieldValues[1] = event.values[1];
+            magneticFieldValues[2] = event.values[2];
+            readyMagneticFieldValues = true;
         }
 
-        // 傾きの算出
-        if (magneticValues != null && accelerometerValues != null) {
-
-            // 端末の回転状態からX軸とY軸の要素を算出
-            int axisX;
-            int axisY;
-
-            switch (getDispRotation(context)) {
-            case Surface.ROTATION_0:
-                axisX = SensorManager.AXIS_X;
-                axisY = SensorManager.AXIS_Z;
-                break;
-            case Surface.ROTATION_180:
-                axisX = SensorManager.AXIS_MINUS_X;
-                axisY = SensorManager.AXIS_Z;
-                break;
-            case Surface.ROTATION_90:
-                axisX = SensorManager.AXIS_MINUS_Y;
-                axisY = SensorManager.AXIS_Z;
-                break;
-            case Surface.ROTATION_270:
-                axisX = SensorManager.AXIS_Y;
-                axisY = SensorManager.AXIS_Z;
-                break;
-            default:
-                throw new IllegalStateException("");
-            }
-
-            // 回転状態に応じた方位角を算出
-            final int MATRIX_SIZE = 9; // 16
-            float[] R = new float[MATRIX_SIZE];
-            float[] I = new float[MATRIX_SIZE];
-            float[] outR = new float[MATRIX_SIZE];
-
-            SensorManager.getRotationMatrix(R, I, accelerometerValues, magneticValues);
-            SensorManager.remapCoordinateSystem(R, axisX, axisY, outR);
-            SensorManager.getOrientation(outR, orientationValues);
-
-            // ラジアンを度に変換
-            // orientationValues[0] = (float) Math.toDegrees(orientationValues[0]);
-            // orientationValues[1] = (float) Math.toDegrees(orientationValues[1]);
-            // orientationValues[2] = (float) Math.toDegrees(orientationValues[2]);
-            float angle = radianToDegree(orientationValues[0]);
-            if (angle >= 0) {
-                orientationValues[0] = angle;
-            } else if (angle < 0) {
-                orientationValues[0] = 360 + angle;
-            }
-            orientationValues[1] = radianToDegree(orientationValues[1]);
-            orientationValues[2] = radianToDegree(orientationValues[2]);
+        if (!readyAccelerometerValues || !readyMagneticFieldValues) {
+            return;
         }
 
-        // 出力するための配列に格納
-        siteLocation.accelX = accelerometerValues[0];
-        siteLocation.accelY = accelerometerValues[1];
-        siteLocation.accelZ = accelerometerValues[2];
-        siteLocation.azimuth = orientationValues[0];
-        siteLocation.pitch = orientationValues[1];
-        siteLocation.roll = orientationValues[2];
+        // 回転状態に応じた方位角を算出
+        SensorManager.getRotationMatrix(R, I, accelerometerValues, magneticFieldValues);
+        SensorManager.remapCoordinateSystem(R, axisX, axisY, outR);
+        SensorManager.getOrientation(outR, orientationValues);
+
+        // ラジアンを度に変換
+        orientationValues[0] = (float) Math.toDegrees(orientationValues[0]);
+        orientationValues[1] = (float) Math.toDegrees(orientationValues[1]);
+        orientationValues[2] = (float) Math.toDegrees(orientationValues[2]);
+
+        // 算出した値を通知
         if (null != onChangeSiteLocationListener) {
+            siteLocation.azimuth = orientationValues[0];
+            siteLocation.pitch = orientationValues[1];
+            siteLocation.roll = orientationValues[2];
+
             onChangeSiteLocationListener.onChangeSiteLocation(siteLocation);
         }
-    }
-
-    private final SiteLocation siteLocation = new SiteLocation();
-    private OnChangeSiteLocationListener onChangeSiteLocationListener;
-
-    /* ***** ラジアンから度への変換 ***** */
-    int radianToDegree(float rad) {
-        return (int) Math.floor(Math.toDegrees(rad));
-        // return (int) Math.floor(Math.toDegrees(rad) / 10) * 10;
-    }
-
-    private static int getDispRotation(Activity act) {
-        Display d = act.getWindowManager().getDefaultDisplay();
-        return d.getRotation();
-    }
-
-    @Override
-    public void setOnChangeSiteLocationListener(OnChangeSiteLocationListener listener) {
-        this.onChangeSiteLocationListener = listener;
     }
 }
