@@ -1,5 +1,7 @@
 package jp.gr.java_conf.dhun.starseeker;
 
+import java.text.DecimalFormat;
+
 import jp.gr.java_conf.dhun.starseeker.logic.IObservationSiteLocator;
 import jp.gr.java_conf.dhun.starseeker.logic.ObservationSiteLocator1;
 import jp.gr.java_conf.dhun.starseeker.logic.ObservationSiteLocator2;
@@ -17,6 +19,8 @@ public class HelloAndroidActivity extends Activity {
 
     private TextView tv1, tv2;
 
+    private DecimalFormat nf;
+
     /**
      * Called when the activity is first created.
      * 
@@ -32,6 +36,9 @@ public class HelloAndroidActivity extends Activity {
         setContentView(R.layout.main);
         tv1 = (TextView) findViewById(R.id.textView1);
         tv2 = (TextView) findViewById(R.id.textView2);
+        nf = new DecimalFormat("000.0");
+        nf.setPositivePrefix("+");
+        nf.setNegativePrefix("-");
 
         observationSiteLocator1 = new ObservationSiteLocator1(this);
         observationSiteLocator2 = new ObservationSiteLocator2(this);
@@ -55,7 +62,7 @@ public class HelloAndroidActivity extends Activity {
             @Override
             public void onChangeSiteLocation(IObservationSiteLocator.SiteLocation siteLocation) {
                 String text = "Xaccel：" + siteLocation.accelX + "\nYaccel：" + siteLocation.accelY + "\nZaccel：" + siteLocation.accelZ +
-                        "\n方位：" + siteLocation.azimuth + "\nピッチ：" + siteLocation.pitch + "\nロール：" + siteLocation.roll;
+                        "\n方位：" + nf.format(siteLocation.azimuth) + "\nピッチ：" + nf.format(siteLocation.pitch) + "\nロール：" + nf.format(siteLocation.roll);
                 tv1.setText(text);        // 描画
             }
         });
@@ -65,7 +72,7 @@ public class HelloAndroidActivity extends Activity {
             @Override
             public void onChangeSiteLocation(IObservationSiteLocator.SiteLocation siteLocation) {
                 String text = "Xaccel：" + siteLocation.accelX + "\nYaccel：" + siteLocation.accelY + "\nZaccel：" + siteLocation.accelZ +
-                        "\n方位：" + siteLocation.azimuth + "\nピッチ：" + siteLocation.pitch + "\nロール：" + siteLocation.roll;
+                        "\n方位：" + nf.format(siteLocation.azimuth) + "\nピッチ：" + nf.format(siteLocation.pitch) + "\nロール：" + nf.format(siteLocation.roll);
                 tv2.setText(text);        // 描画
             }
         });

@@ -23,15 +23,15 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:text="orientationValues[1]：軸（方位）, azimuth; ケータイを水平に持った場合スクリーンに垂直線を立てた軸を中心に回る角"/>
+    android:text="orientation[0]：軸（方位）, 北向きが0, azimuth; ケータイを水平に持った場合スクリーンに垂直線を立てた軸を中心に回る角"/>
 <TextView
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:text="orientationValues[1]：X軸（仰角）, pitch; ケータイに横に線を引いた軸を中心に前後に傾けた場合の角"/>
+    android:text="orientation[1]：X軸（仰角）, 水平方向が0 , pitch; ケータイに横に線を引いた軸を中心に前後に傾けた場合の角"/>
 <TextView
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:text="orientationValues[2]：Y軸（ロール角）, roll; ケータイに縦に線を引いた軸を中心に左右に傾けた場合の角。"/>
+    android:text="orientation[2]：Y軸（ロール角）, 普通の状態が0 , roll; ケータイに縦に線を引いた軸を中心に左右に傾けた場合の角。"/>
 </LinearLayout>
