@@ -47,9 +47,6 @@ public class ObservationSiteLocator3 implements SensorEventListener, IObservatio
         }
 
         this.context = context;
-
-        x = SensorManager.AXIS_MINUS_Z;
-        y = SensorManager.AXIS_Y;
     }
 
     /*
@@ -108,54 +105,32 @@ public class ObservationSiteLocator3 implements SensorEventListener, IObservatio
             int axisX;
             int axisY;
 
-            // switch (getDispRotation(context)) {
-            // case Surface.ROTATION_0:
-            // axisX = SensorManager.AXIS_X;
-            // axisY = SensorManager.AXIS_MINUS_Z;
-            // break;
-            // case Surface.ROTATION_90:
-            // axisX = SensorManager.AXIS_MINUS_Y;
-            // axisY = SensorManager.AXIS_MINUS_Z;
-            // break;
-            // case Surface.ROTATION_180:
-            // axisX = SensorManager.AXIS_MINUS_X;
-            // axisY = SensorManager.AXIS_MINUS_Z;
-            // break;
-            // case Surface.ROTATION_270:
-            // axisX = SensorManager.AXIS_Y;
-            // axisY = SensorManager.AXIS_MINUS_Z;
-            // break;
-            // default:
-            // throw new IllegalStateException("");
-            // }
             switch (getDispRotation(context)) {
             case Surface.ROTATION_0:
-                axisX = SensorManager.AXIS_MINUS_Z;
-                axisY = SensorManager.AXIS_Y;
-                break;
-            case Surface.ROTATION_90:
-                axisX = SensorManager.AXIS_MINUS_Z;
-                axisY = SensorManager.AXIS_MINUS_X;
+                axisX = SensorManager.AXIS_X;
+                axisY = SensorManager.AXIS_Z;
                 break;
             case Surface.ROTATION_180:
-                axisX = SensorManager.AXIS_MINUS_Z;
-                axisY = SensorManager.AXIS_MINUS_Y;
+                axisX = SensorManager.AXIS_MINUS_X;
+                axisY = SensorManager.AXIS_Z;
+                break;
+            case Surface.ROTATION_90:
+                axisX = SensorManager.AXIS_MINUS_Y;
+                axisY = SensorManager.AXIS_Z;
                 break;
             case Surface.ROTATION_270:
-                axisX = SensorManager.AXIS_MINUS_Z;
-                axisY = SensorManager.AXIS_X;
+                axisX = SensorManager.AXIS_Y;
+                axisY = SensorManager.AXIS_Z;
                 break;
             default:
                 throw new IllegalStateException("");
             }
 
-            axisX = x;
-            axisY = y;
-
             // 回転状態に応じた方位角を算出
-            float[] R = new float[16];
-            float[] I = new float[16];
-            float[] outR = new float[16];
+            final int MATRIX_SIZE = 9; // 16
+            float[] R = new float[MATRIX_SIZE];
+            float[] I = new float[MATRIX_SIZE];
+            float[] outR = new float[MATRIX_SIZE];
 
             SensorManager.getRotationMatrix(R, I, accelerometerValues, magneticValues);
             SensorManager.remapCoordinateSystem(R, axisX, axisY, outR);
@@ -177,8 +152,8 @@ public class ObservationSiteLocator3 implements SensorEventListener, IObservatio
 
         // 出力するための配列に格納
         siteLocation.accelX = accelerometerValues[0];
-        siteLocation.accelX = accelerometerValues[1];
-        siteLocation.accelX = accelerometerValues[2];
+        siteLocation.accelY = accelerometerValues[1];
+        siteLocation.accelZ = accelerometerValues[2];
         siteLocation.azimuth = orientationValues[0];
         siteLocation.pitch = orientationValues[1];
         siteLocation.roll = orientationValues[2];
@@ -187,15 +162,13 @@ public class ObservationSiteLocator3 implements SensorEventListener, IObservatio
         }
     }
 
-    private int x = SensorManager.AXIS_Y;
-    private int y = SensorManager.AXIS_Z;
-
     private final SiteLocation siteLocation = new SiteLocation();
     private OnChangeSiteLocationListener onChangeSiteLocationListener;
 
     /* ***** ラジアンから度への変換 ***** */
     int radianToDegree(float rad) {
-        return (int) Math.floor(Math.toDegrees(rad) / 10) * 10;
+        return (int) Math.floor(Math.toDegrees(rad));
+        // return (int) Math.floor(Math.toDegrees(rad) / 10) * 10;
     }
 
     private static int getDispRotation(Activity act) {
