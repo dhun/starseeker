@@ -2,9 +2,10 @@ package jp.gr.java_conf.dhun.starseeker;
 
 import java.text.DecimalFormat;
 
-import jp.gr.java_conf.dhun.starseeker.logic.IObservationSiteLocator;
-import jp.gr.java_conf.dhun.starseeker.logic.ObservationSiteLocator1;
-import jp.gr.java_conf.dhun.starseeker.logic.ObservationSiteLocator3;
+import jp.gr.java_conf.dhun.starseeker.logic.ITerminalOrientationsCalculator;
+import jp.gr.java_conf.dhun.starseeker.logic.TerminalOrientationsCalculator;
+import jp.gr.java_conf.dhun.starseeker.logic.TerminalOrientationsCalculator2;
+import jp.gr.java_conf.dhun.starseeker.model.Orientations;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -16,8 +17,8 @@ public class HelloAndroidActivity extends Activity {
 
     private static String TAG = "starseeker";
 
-    private IObservationSiteLocator observationSiteLocator1;
-    private IObservationSiteLocator observationSiteLocator2;
+    private ITerminalOrientationsCalculator terminalOrientationsCalculator1;
+    private ITerminalOrientationsCalculator terminalOrientationsCalculator2;
 
     private TextView tv1, tv2;
 
@@ -43,16 +44,16 @@ public class HelloAndroidActivity extends Activity {
         nf.setNegativePrefix("-");
 
         int displayRotation = getDisplayRotation();
-        observationSiteLocator1 = new ObservationSiteLocator1(this);
-        observationSiteLocator2 = new ObservationSiteLocator3(this, displayRotation);
+        terminalOrientationsCalculator1 = new TerminalOrientationsCalculator2(this);
+        terminalOrientationsCalculator2 = new TerminalOrientationsCalculator(this, displayRotation);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        observationSiteLocator1 = null;
-        observationSiteLocator2 = null;
+        terminalOrientationsCalculator1 = null;
+        terminalOrientationsCalculator2 = null;
     }
 
     @Override
@@ -60,19 +61,19 @@ public class HelloAndroidActivity extends Activity {
         super.onResume();
 
         // センサーイベントの登録
-        observationSiteLocator1.registerSensorListeners();
-        observationSiteLocator1.setOnChangeSiteLocationListener(new IObservationSiteLocator.OnChangeSiteLocationListener() {
+        terminalOrientationsCalculator1.registerSensorListeners();
+        terminalOrientationsCalculator1.setOnChangeTerminalOrientationsListener(new ITerminalOrientationsCalculator.OnChangeTerminalOrientationsListener() {
             @Override
-            public void onChangeSiteLocation(IObservationSiteLocator.SiteLocation siteLocation) {
+            public void onChangeTerminalOrientations(Orientations siteLocation) {
                 String text = "方位：" + nf.format(to360Degrees(siteLocation.azimuth)) + "\nピッチ：" + nf.format(siteLocation.pitch) + "\nロール：" + nf.format(siteLocation.roll);
                 tv1.setText(text); // 描画
             }
         });
 
-        observationSiteLocator2.registerSensorListeners();
-        observationSiteLocator2.setOnChangeSiteLocationListener(new IObservationSiteLocator.OnChangeSiteLocationListener() {
+        terminalOrientationsCalculator2.registerSensorListeners();
+        terminalOrientationsCalculator2.setOnChangeTerminalOrientationsListener(new ITerminalOrientationsCalculator.OnChangeTerminalOrientationsListener() {
             @Override
-            public void onChangeSiteLocation(IObservationSiteLocator.SiteLocation siteLocation) {
+            public void onChangeTerminalOrientations(Orientations siteLocation) {
                 String text = "方位：" + nf.format(to360Degrees(siteLocation.azimuth)) + "\nピッチ：" + nf.format(siteLocation.pitch) + "\nロール：" + nf.format(siteLocation.roll);
                 tv2.setText(text); // 描画
             }
@@ -84,8 +85,8 @@ public class HelloAndroidActivity extends Activity {
         super.onPause();
 
         // センサーイベントの削除
-        observationSiteLocator1.unregisterSensorListeners();
-        observationSiteLocator2.unregisterSensorListeners();
+        terminalOrientationsCalculator1.unregisterSensorListeners();
+        terminalOrientationsCalculator2.unregisterSensorListeners();
     }
 
     @Override

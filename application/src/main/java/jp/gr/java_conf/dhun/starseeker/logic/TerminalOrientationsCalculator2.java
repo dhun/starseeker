@@ -5,6 +5,7 @@ package jp.gr.java_conf.dhun.starseeker.logic;
 
 import java.util.List;
 
+import jp.gr.java_conf.dhun.starseeker.model.Orientations;
 import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -21,7 +22,7 @@ import android.view.Surface;
  * @author jun
  * 
  */
-public class ObservationSiteLocator2 implements SensorEventListener, IObservationSiteLocator {
+public class TerminalOrientationsCalculator2 implements SensorEventListener, ITerminalOrientationsCalculator {
 
     private final SensorManager sensorManager;
     private final Sensor accelerometerSensor;
@@ -29,7 +30,7 @@ public class ObservationSiteLocator2 implements SensorEventListener, IObservatio
 
     private final Activity context;
 
-    public ObservationSiteLocator2(Activity context) {
+    public TerminalOrientationsCalculator2(Activity context) {
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 
         List<Sensor> list;
@@ -47,6 +48,10 @@ public class ObservationSiteLocator2 implements SensorEventListener, IObservatio
         }
 
         this.context = context;
+    }
+
+    @Override
+    public void setTerminalRotation(int displayRotation) {
     }
 
     /*
@@ -147,12 +152,12 @@ public class ObservationSiteLocator2 implements SensorEventListener, IObservatio
         siteLocation.roll = orientationValues[2];
 
         if (null != onChangeSiteLocationListener) {
-            onChangeSiteLocationListener.onChangeSiteLocation(siteLocation);
+            onChangeSiteLocationListener.onChangeTerminalOrientations(siteLocation);
         }
     }
 
-    private final SiteLocation siteLocation = new SiteLocation();
-    private OnChangeSiteLocationListener onChangeSiteLocationListener;
+    private final Orientations siteLocation = new Orientations();
+    private OnChangeTerminalOrientationsListener onChangeSiteLocationListener;
 
     /* ***** ラジアンから度への変換 ***** */
     int radianToDegree(float rad) {
@@ -165,7 +170,7 @@ public class ObservationSiteLocator2 implements SensorEventListener, IObservatio
     }
 
     @Override
-    public void setOnChangeSiteLocationListener(OnChangeSiteLocationListener listener) {
+    public void setOnChangeTerminalOrientationsListener(OnChangeTerminalOrientationsListener listener) {
         this.onChangeSiteLocationListener = listener;
     }
 }

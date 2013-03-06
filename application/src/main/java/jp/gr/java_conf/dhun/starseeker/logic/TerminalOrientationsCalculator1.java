@@ -5,6 +5,7 @@ package jp.gr.java_conf.dhun.starseeker.logic;
 
 import java.util.List;
 
+import jp.gr.java_conf.dhun.starseeker.model.Orientations;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -17,13 +18,13 @@ import android.hardware.SensorManager;
  * @author jun
  * 
  */
-public class ObservationSiteLocator1 implements SensorEventListener, IObservationSiteLocator {
+public class TerminalOrientationsCalculator1 implements SensorEventListener, ITerminalOrientationsCalculator {
 
     private final SensorManager sensorManager;
     private final Sensor accelerometerSensor;
     private final Sensor magneticFieldSensor;
 
-    public ObservationSiteLocator1(Context context) {
+    public TerminalOrientationsCalculator1(Context context) {
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 
         List<Sensor> list;
@@ -39,6 +40,10 @@ public class ObservationSiteLocator1 implements SensorEventListener, IObservatio
         } else {
             magneticFieldSensor = null;
         }
+    }
+
+    @Override
+    public void setTerminalRotation(int displayRotation) {
     }
 
     /*
@@ -114,12 +119,12 @@ public class ObservationSiteLocator1 implements SensorEventListener, IObservatio
         siteLocation.roll = orientationValues[2];
 
         if (null != onChangeSiteLocationListener) {
-            onChangeSiteLocationListener.onChangeSiteLocation(siteLocation);
+            onChangeSiteLocationListener.onChangeTerminalOrientations(siteLocation);
         }
     }
 
-    private final SiteLocation siteLocation = new SiteLocation();
-    private OnChangeSiteLocationListener onChangeSiteLocationListener;
+    private final Orientations siteLocation = new Orientations();
+    private OnChangeTerminalOrientationsListener onChangeSiteLocationListener;
 
     /* ***** ラジアンから度への変換 ***** */
     int radianToDegree(float rad) {
@@ -127,7 +132,7 @@ public class ObservationSiteLocator1 implements SensorEventListener, IObservatio
     }
 
     @Override
-    public void setOnChangeSiteLocationListener(OnChangeSiteLocationListener listener) {
+    public void setOnChangeTerminalOrientationsListener(OnChangeTerminalOrientationsListener listener) {
         this.onChangeSiteLocationListener = listener;
     }
 }
