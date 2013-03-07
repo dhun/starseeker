@@ -259,9 +259,9 @@ public class TerminalOrientationsCalculator implements SensorEventListener, ITer
         }
 
         // 回転状態に応じた方位角を算出
-        SensorManager.getRotationMatrix(R, I, accelerometerValues, magneticFieldValues);
-        SensorManager.remapCoordinateSystem(R, axisX, axisY, outR);
-        SensorManager.getOrientation(outR, orientationValues);
+        // SensorManager.getRotationMatrix(R, I, accelerometerValues, magneticFieldValues);
+        // SensorManager.remapCoordinateSystem(R, axisX, axisY, outR);
+        // SensorManager.getOrientation(outR, orientationValues);
 
         // // rotation 90
         // final int SIZE = 16;
@@ -290,6 +290,28 @@ public class TerminalOrientationsCalculator implements SensorEventListener, ITer
         // SensorManager.getRotationMatrix(R, I, accelerometerValues, magneticFieldValues);
         // SensorManager.remapCoordinateSystem(R, axisX, axisY, outR1);
         // SensorManager.getOrientation(outR1, orientationValues);
+
+        // // rotation 270
+        // final int SIZE = 9;
+        // float[] R = new float[SIZE];
+        // float[] I = new float[SIZE];
+        // float[] outR1 = new float[SIZE];
+        // float[] outR2 = new float[SIZE];
+        // SensorManager.getRotationMatrix(R, I, accelerometerValues, magneticFieldValues);
+        // SensorManager.remapCoordinateSystem(R, SensorManager.AXIS_MINUS_Y, SensorManager.AXIS_MINUS_X, outR1);
+        // SensorManager.remapCoordinateSystem(outR1, SensorManager.AXIS_MINUS_X, SensorManager.AXIS_Z, outR2);
+        // SensorManager.getOrientation(outR2, orientationValues);
+
+        // rotation 90
+        final int SIZE = 9;
+        float[] R = new float[SIZE];
+        float[] I = new float[SIZE];
+        float[] outR1 = new float[SIZE];
+        float[] outR2 = new float[SIZE];
+        SensorManager.getRotationMatrix(R, I, accelerometerValues, magneticFieldValues);
+        SensorManager.remapCoordinateSystem(R, SensorManager.AXIS_Y, SensorManager.AXIS_MINUS_X, outR1);
+        SensorManager.remapCoordinateSystem(outR1, SensorManager.AXIS_X, SensorManager.AXIS_Z, outR2);
+        SensorManager.getOrientation(outR2, orientationValues);
 
         // ラジアンを度に変換
         orientationValues[0] = (float) Math.toDegrees(orientationValues[0]);

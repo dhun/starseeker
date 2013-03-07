@@ -12,7 +12,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 
@@ -105,8 +104,8 @@ public class TerminalOrientationsCalculator2 implements SensorEventListener, ITe
 
         // 傾きの算出
         if (magneticValues != null && accelerometerValues != null) {
-            float[] R = new float[16];
-            float[] I = new float[16];
+            float[] R = new float[9];
+            float[] I = new float[9];
 
             SensorManager.getRotationMatrix(R, I,
                     accelerometerValues, magneticValues);
@@ -120,14 +119,14 @@ public class TerminalOrientationsCalculator2 implements SensorEventListener, ITe
 
             } else {
                 // 回転あり
-                float[] outR = new float[16];
+                float[] outR = new float[9];
 
                 if (dr == Surface.ROTATION_90) {
                     SensorManager.remapCoordinateSystem(R,
                             SensorManager.AXIS_Y, SensorManager.AXIS_MINUS_X, outR);
 
                 } else if (dr == Surface.ROTATION_180) {
-                    float[] outR2 = new float[16];
+                    float[] outR2 = new float[9];
                     SensorManager.remapCoordinateSystem(R,
                             SensorManager.AXIS_Y, SensorManager.AXIS_MINUS_X, outR2);
                     SensorManager.remapCoordinateSystem(outR2,
@@ -143,7 +142,8 @@ public class TerminalOrientationsCalculator2 implements SensorEventListener, ITe
 
             // 求まった方位角．ラジアンなので度に変換する
             orientationValues[0] = (float) Math.toDegrees(orientationValues[0]);
-            Log.d("**Test", "orientDegree=" + orientationValues[0]);
+            orientationValues[1] = (float) Math.toDegrees(orientationValues[1]);
+            orientationValues[2] = (float) Math.toDegrees(orientationValues[2]);
         }
 
         // 出力するための配列に格納
