@@ -1,18 +1,19 @@
-package jp.gr.java_conf.dhun.starseeker.logic;
+package jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations;
 
 import jp.gr.java_conf.dhun.starseeker.model.Orientations;
 import android.view.Display;
 
-// http://yoko-gb.blogspot.jp/2012/10/android.html
-// http://kamoland.com/wiki/wiki.cgi?TYPE_ORIENTATION%A4%F2%BB%C8%A4%EF%A4%BA%A4%CB%CA%FD%B0%CC%B3%D1%A4%F2%BC%E8%C6%C0
 //
 /**
  * 端末方位計算機のインターフェース.<br/>
  * 
+ * @see http://kamoland.com/wiki/wiki.cgi?TYPE_ORIENTATION%A4%F2%BB%C8%A4%EF%A4%BA%A4%CB%CA%FD%B0%CC%B3%D1%A4%F2%BC%E8%C6%C0
  * @author jun
  * 
  */
 public interface ITerminalOrientationsCalculator {
+
+    public static final int MATRIX_SIZE = 9; // 16だと正しい値が取得できなかった
 
     /**
      * センサーマネージャにリスナを登録します.<br/>

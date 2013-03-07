@@ -5,6 +5,7 @@ package jp.gr.java_conf.dhun.starseeker.logic;
 
 import java.util.List;
 
+import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.ITerminalOrientationsCalculator;
 import jp.gr.java_conf.dhun.starseeker.model.Orientations;
 import android.content.Context;
 import android.hardware.Sensor;

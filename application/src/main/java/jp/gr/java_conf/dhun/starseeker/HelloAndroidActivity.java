@@ -2,9 +2,9 @@ package jp.gr.java_conf.dhun.starseeker;
 
 import java.text.DecimalFormat;
 
-import jp.gr.java_conf.dhun.starseeker.logic.ITerminalOrientationsCalculator;
 import jp.gr.java_conf.dhun.starseeker.logic.TerminalOrientationsCalculator;
-import jp.gr.java_conf.dhun.starseeker.logic.TerminalOrientationsCalculator2;
+import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.ITerminalOrientationsCalculator;
+import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.TerminalOrientationsCalculatorFactory;
 import jp.gr.java_conf.dhun.starseeker.model.Orientations;
 import android.app.Activity;
 import android.content.res.Configuration;
@@ -44,8 +44,8 @@ public class HelloAndroidActivity extends Activity {
         nf.setNegativePrefix("-");
 
         int displayRotation = getDisplayRotation();
-        terminalOrientationsCalculator1 = new TerminalOrientationsCalculator2(this);
-        terminalOrientationsCalculator2 = new TerminalOrientationsCalculator(this, displayRotation);
+        terminalOrientationsCalculator1 = new TerminalOrientationsCalculator(this, displayRotation);
+        terminalOrientationsCalculator2 = TerminalOrientationsCalculatorFactory.create(this, displayRotation);
     }
 
     @Override
