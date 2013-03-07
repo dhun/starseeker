@@ -81,7 +81,8 @@ public abstract class AbstractTerminalOrientationsCalculator implements SensorEv
 
     @Override
     public void unregisterSensorListeners() {
-        sensorManager.unregisterListener(this);
+        sensorManager.unregisterListener(this, accelerometerSensor);
+        sensorManager.unregisterListener(this, magneticFieldSensor);
     }
 
     @Override

@@ -83,7 +83,8 @@ public class FlatTerminalOrientationsCalculator2 implements SensorEventListener,
 
     @Override
     public void unregisterSensorListeners() {
-        sensorManager.unregisterListener(this);
+        sensorManager.unregisterListener(this, accelerometerSensor);
+        sensorManager.unregisterListener(this, magneticFieldSensor);
     }
 
     @Override
