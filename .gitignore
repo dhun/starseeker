@@ -8,3 +8,5 @@ bin
 gen
 starseeker-test/.classpath
 starseeker-test/hs_err_*.log
+application-test/.classpath
+application-test/target/
