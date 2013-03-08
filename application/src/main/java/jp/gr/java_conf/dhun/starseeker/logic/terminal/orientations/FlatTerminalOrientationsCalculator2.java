@@ -16,6 +16,7 @@ import android.view.Surface;
 
 /**
  * 端末を水平に置いた場合の方位計算機.<br/>
+ * TODO サンプルなのでそのうち削除する
  * 
  * @author jun
  * 

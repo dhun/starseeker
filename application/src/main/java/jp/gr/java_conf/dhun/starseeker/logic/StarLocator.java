@@ -227,9 +227,9 @@ public class StarLocator {
         double angle = atan(convertValue1 / convertValue2);
         double quadrant;
         if (convertValue1 >= 0) {
-            quadrant = 2;
+            quadrant = 2; // 第２象限
         } else {
-            quadrant = 3; // TODO サイトに解説がなかったので正しいか分からない
+            quadrant = 3; // 第３象限 TODO サイトに解説がなかったので正しいか分からない
         }
         double result = 180 + (angle * (quadrant == 2 ? +1 : -1)); // TODO サイトに解説がなかったので正しいか分からない
         return result;
