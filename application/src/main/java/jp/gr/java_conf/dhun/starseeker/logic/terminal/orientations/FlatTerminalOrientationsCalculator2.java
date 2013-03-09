@@ -72,8 +72,12 @@ public class FlatTerminalOrientationsCalculator2 implements SensorEventListener,
         this.displayRotation = displayRotation;
     }
 
+    /**
+     * {@inheritDoc}<br/>
+     * センサーマネージャにリスナを登録します
+     */
     @Override
-    public void registerSensorListeners() {
+    public void prepare() {
         if (null != accelerometerSensor) {
             sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_UI);
         }
@@ -82,8 +86,12 @@ public class FlatTerminalOrientationsCalculator2 implements SensorEventListener,
         }
     }
 
+    /**
+     * {@inheritDoc}<br/>
+     * センサーマネージャをリスナから削除します.
+     */
     @Override
-    public void unregisterSensorListeners() {
+    public void pause() {
         sensorManager.unregisterListener(this, accelerometerSensor);
         sensorManager.unregisterListener(this, magneticFieldSensor);
     }

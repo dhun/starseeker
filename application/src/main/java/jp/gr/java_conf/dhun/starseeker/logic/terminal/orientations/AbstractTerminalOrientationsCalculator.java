@@ -44,7 +44,7 @@ public abstract class AbstractTerminalOrientationsCalculator implements SensorEv
     /**
      * コンストラクタ.<br/>
      * 
-     * @param context コンテキスト
+     * @param context Androidコンテキスト
      * @param displayRotation 端末の回転状態. {@link Display#getRotation()}の値
      */
     public AbstractTerminalOrientationsCalculator(Context context, int displayRotation) {
@@ -69,8 +69,24 @@ public abstract class AbstractTerminalOrientationsCalculator implements SensorEv
         setTerminalRotation(displayRotation);
     }
 
+    /**
+     * 端末の回転状況に応じてマトリクスを回転させます.<br/>
+     * 
+     * @param inR 入力マトリクス
+     * @param outR 出力マトリクス
+     * @return {@link SensorManager#remapCoordinateSystem(float[], int, int, float[])}の戻り値
+     */
+    protected abstract boolean remapCoordinateSystem(float[] inR, float[] outR);
+
+    // ********************************************************************************
+    // ITerminalOrientationsCalculator
+
+    /**
+     * {@inheritDoc}<br/>
+     * センサーマネージャにリスナを登録します.
+     */
     @Override
-    public void registerSensorListeners() {
+    public void prepare() {
         if (null != accelerometerSensor) {
             sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_UI);
         }
@@ -79,10 +95,18 @@ public abstract class AbstractTerminalOrientationsCalculator implements SensorEv
         }
     }
 
+    /**
+     * {@inheritDoc}<br/>
+     * センサーマネージャをリスナから削除します.
+     */
     @Override
-    public void unregisterSensorListeners() {
-        sensorManager.unregisterListener(this, accelerometerSensor);
-        sensorManager.unregisterListener(this, magneticFieldSensor);
+    public void pause() {
+        if (null != accelerometerSensor) {
+            sensorManager.unregisterListener(this, accelerometerSensor);
+        }
+        if (null != magneticFieldSensor) {
+            sensorManager.unregisterListener(this, magneticFieldSensor);
+        }
     }
 
     @Override
@@ -90,9 +114,9 @@ public abstract class AbstractTerminalOrientationsCalculator implements SensorEv
         this.onChangeSiteLocationListener = listener;
     }
 
-    protected abstract boolean remapCoordinateSystem(float[] inR, float[] outR);
-
+    // ********************************************************************************
     // SensorEventListener
+
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }

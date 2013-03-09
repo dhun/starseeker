@@ -16,16 +16,16 @@ public interface ITerminalOrientationsCalculator {
     public static final int MATRIX_SIZE = 9; // 16だと正しい値が取得できなかった
 
     /**
-     * センサーマネージャにリスナを登録します.<br/>
-     * Activity.onResumeなどで呼び出してください
+     * 計算機を利用できる状態にします.<br/>
+     * Activity.onResumeなどで呼び出してください.
      */
-    void registerSensorListeners();
+    void prepare();
 
     /**
-     * センサーマネージャからリスナを削除します.<br/>
-     * Activity.onPauseなどで呼び出してください
+     * 計算機を停止します.<br/>
+     * Activity.onPauseなどで呼び出してください.
      */
-    void unregisterSensorListeners();
+    void pause();
 
     /**
      * 端末の回転状況を設定します.<br/>

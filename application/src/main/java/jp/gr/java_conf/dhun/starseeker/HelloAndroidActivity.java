@@ -6,16 +6,14 @@ import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.FlatTerminalO
 import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.ITerminalOrientationsCalculator;
 import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.TerminalOrientationsCalculatorFactory;
 import jp.gr.java_conf.dhun.starseeker.model.Orientations;
+import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.widget.TextView;
 
 public class HelloAndroidActivity extends Activity {
-
-    private static String TAG = "starseeker";
 
     private ITerminalOrientationsCalculator terminalOrientationsCalculator1;
     private ITerminalOrientationsCalculator terminalOrientationsCalculator2;
@@ -34,7 +32,7 @@ public class HelloAndroidActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate");
+        LogUtils.i(getClass(), "onCreate:");
 
         setContentView(R.layout.main);
         tv1 = (TextView) findViewById(R.id.textView1);
@@ -61,7 +59,7 @@ public class HelloAndroidActivity extends Activity {
         super.onResume();
 
         // センサーイベントの登録
-        terminalOrientationsCalculator1.registerSensorListeners();
+        terminalOrientationsCalculator1.prepare();
         terminalOrientationsCalculator1.setOnChangeTerminalOrientationsListener(new ITerminalOrientationsCalculator.OnChangeTerminalOrientationsListener() {
             @Override
             public void onChangeTerminalOrientations(Orientations siteLocation) {
@@ -70,7 +68,7 @@ public class HelloAndroidActivity extends Activity {
             }
         });
 
-        terminalOrientationsCalculator2.registerSensorListeners();
+        terminalOrientationsCalculator2.prepare();
         terminalOrientationsCalculator2.setOnChangeTerminalOrientationsListener(new ITerminalOrientationsCalculator.OnChangeTerminalOrientationsListener() {
             @Override
             public void onChangeTerminalOrientations(Orientations siteLocation) {
@@ -85,15 +83,15 @@ public class HelloAndroidActivity extends Activity {
         super.onPause();
 
         // センサーイベントの削除
-        terminalOrientationsCalculator1.unregisterSensorListeners();
-        terminalOrientationsCalculator2.unregisterSensorListeners();
+        terminalOrientationsCalculator1.pause();
+        terminalOrientationsCalculator2.pause();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        Log.d("onConfigurationChanged", "rotation=" + getDisplayRotation());
+        LogUtils.d(getClass(), "onConfigurationChanged:rotation=" + getDisplayRotation());
     }
 
     private int getDisplayRotation() {

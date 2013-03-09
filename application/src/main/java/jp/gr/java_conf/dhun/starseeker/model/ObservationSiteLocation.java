@@ -3,8 +3,6 @@
  */
 package jp.gr.java_conf.dhun.starseeker.model;
 
-import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
-
 /**
  * 観測地点の位置.<br/>
  * 
@@ -13,19 +11,20 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
  */
 public class ObservationSiteLocation {
 
-    // 初期値は京都
-    private static final double DEFAULT_LATITUDE = StarLocationUtil.convertAngleStringToDouble("+35°01'");
-    private static final double DEFAULT_LONGITUDE = StarLocationUtil.convertAngleStringToDouble("+135°46'");
-
     private double latitude;  // 緯度
     private double longitude; // 経度
+    private double altitude;  // 高度
+    private String name;      // 観測地点の名前
 
     /**
      * コンストラクタ.<br/>
-     * 緯度と軽度は初期値となります.<br/>
+     * 
+     * @param latitude 緯度
+     * @param longitude 経度
+     * @param altitude 高度
      */
-    public ObservationSiteLocation() {
-        this(DEFAULT_LATITUDE, DEFAULT_LONGITUDE);
+    public ObservationSiteLocation(double latitude, double longitude) {
+        this(latitude, longitude, 0.0, "");
     }
 
     /**
@@ -33,13 +32,27 @@ public class ObservationSiteLocation {
      * 
      * @param latitude 緯度
      * @param longitude 経度
+     * @param altitude 高度
      */
-    public ObservationSiteLocation(double latitude, double longitude) {
-        setLocation(latitude, longitude);
+    public ObservationSiteLocation(double latitude, double longitude, String name) {
+        this(latitude, longitude, 0.0, "");
     }
 
     /**
-     * 位置を設定します..<br/>
+     * コンストラクタ.<br/>
+     * 
+     * @param latitude 緯度
+     * @param longitude 経度
+     * @param altitude 高度
+     */
+    public ObservationSiteLocation(double latitude, double longitude, double altitude, String name) {
+        setLocation(latitude, longitude, altitude);
+        setName(name);
+    }
+
+    /**
+     * 位置を設定します.<br/>
+     * 高度は変更しません.
      * 
      * @param latitude 緯度
      * @param longitude 経度
@@ -47,6 +60,19 @@ public class ObservationSiteLocation {
     public void setLocation(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    /**
+     * 位置を設定します.<br/>
+     * 
+     * @param latitude 緯度
+     * @param longitude 経度
+     * @param altitude 高度
+     */
+    public void setLocation(double latitude, double longitude, double altitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.altitude = altitude;
     }
 
     /**
@@ -63,4 +89,24 @@ public class ObservationSiteLocation {
         return longitude;
     }
 
+    /**
+     * 高度を取得します.<br>
+     */
+    public double getAltitude() {
+        return altitude;
+    }
+
+    /**
+     * 名前を取得します.<br>
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 名前を設定します.<br>
+     */
+    public void setName(String name) {
+        this.name = (null == name) ? "" : name;
+    }
 }
