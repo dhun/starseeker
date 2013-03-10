@@ -4,19 +4,30 @@
 package jp.gr.java_conf.dhun.starseeker.logic.observationsite.location;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import jp.gr.java_conf.dhun.starseeker.model.ObservationSiteLocation;
 import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.TextView;
 
 /**
- * 観測地点を手動で選択する観測地点の位置のリゾルバ.<br/>
+ * 観測地点をリスト選択で指定する観測地点の位置のリゾルバ.<br/>
  * 
  * @author jun
  * 
  */
-public class ManualObservationSiteLocationResolver implements IObservationSiteLocationResolver {
+public class ChooseObservationSiteLocationResolver implements IObservationSiteLocationResolver {
 
     // ********************************************************************************
     // == class
@@ -45,18 +56,11 @@ public class ManualObservationSiteLocationResolver implements IObservationSiteLo
 
     private static ObservationSiteLocation newObservationSiteLocation(String latitude, String longitude, String altitude, String name) {
         ObservationSiteLocation result = new ObservationSiteLocation(   //
-                StarLocationUtil.convertAngleStringToDouble(latitude),  //
-                StarLocationUtil.convertAngleStringToDouble(longitude), //
-                StarLocationUtil.convertAngleStringToDouble(altitude),  //
+                StarLocationUtil.convertAngleStringToDouble(latitude),  // 緯度
+                StarLocationUtil.convertAngleStringToDouble(longitude), // 経度
+                StarLocationUtil.convertAngleStringToDouble(altitude),  // 高度
                 name);
         return result;
-    }
-
-    /**
-     * 観測地点の選択肢を取得します.<br/>
-     */
-    public static List<ObservationSiteLocation> getLocations() {
-        return Collections.unmodifiableList(locations);
     }
 
     // ********************************************************************************
@@ -65,10 +69,16 @@ public class ManualObservationSiteLocationResolver implements IObservationSiteLo
     /** 観測地点の位置を解決できたことの通知を受け取るリスナ */
     private ObservationSiteLocationResolverListener onResolveObservationSiteLocationListener;
 
+    private final Context context;
+    private Dialog dialog;
+
     /**
      * コンストラクタ.<br/>
+     * 
+     * @param context Androidコンテキスト
      */
-    public ManualObservationSiteLocationResolver() {
+    public ChooseObservationSiteLocationResolver(Context context) {
+        this.context = context;
     }
 
     // ********************************************************************************
@@ -76,10 +86,55 @@ public class ManualObservationSiteLocationResolver implements IObservationSiteLo
 
     @Override
     public void resume() {
+        ListAdapter adapter = new ArrayAdapter<ObservationSiteLocation>(context, android.R.layout.simple_list_item_1, locations) {
+            private final LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if (convertView == null) {
+                    convertView = layoutInflater.inflate(android.R.layout.simple_list_item_1, null);
+                }
+
+                ObservationSiteLocation location = this.getItem(position);
+
+                TextView textView = ((TextView) convertView.findViewById(android.R.id.text1));
+                textView.setText(location.getName());
+                textView.setTextColor(Color.BLACK);
+
+                return convertView;
+            }
+
+        };
+
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                setObservationSiteLocation(locations.get(which));
+                dialog = null;
+            }
+        };
+
+        Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("観測地点の選択"); // XXX strings.xml
+        builder.setAdapter(adapter, listener);
+        builder.setCancelable(true);
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                dialog = null;
+            }
+        });
+
+        dialog = builder.create();
+        dialog.show();
     }
 
     @Override
     public void pause() {
+        if (null != dialog && dialog.isShowing()) {
+            dialog.dismiss();
+            dialog = null;
+        }
     }
 
     @Override

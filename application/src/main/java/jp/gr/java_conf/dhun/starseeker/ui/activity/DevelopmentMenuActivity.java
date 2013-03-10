@@ -32,7 +32,7 @@ public class DevelopmentMenuActivity extends Activity implements View.OnClickLis
             startActivity(intent);
             break;
         case R.id.resolveObservationSiteByManualActivity:
-            intent = new Intent(this, ResolveObservationSiteByManualActivity.class);
+            intent = new Intent(this, ResolveObservationSiteByChooseActivity.class);
             startActivity(intent);
             break;
         }
