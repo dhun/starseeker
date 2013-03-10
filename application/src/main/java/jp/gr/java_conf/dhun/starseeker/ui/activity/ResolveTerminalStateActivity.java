@@ -1,7 +1,8 @@
-package jp.gr.java_conf.dhun.starseeker;
+package jp.gr.java_conf.dhun.starseeker.ui.activity;
 
 import java.text.DecimalFormat;
 
+import jp.gr.java_conf.dhun.starseeker.R;
 import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.FlatTerminalOrientationsCalculator2;
 import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.ITerminalOrientationsCalculator;
 import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.TerminalOrientationsCalculatorFactory;
@@ -13,7 +14,7 @@ import android.os.Bundle;
 import android.view.Display;
 import android.widget.TextView;
 
-public class HelloAndroidActivity extends Activity {
+public class ResolveTerminalStateActivity extends Activity {
 
     private ITerminalOrientationsCalculator terminalOrientationsCalculator1;
     private ITerminalOrientationsCalculator terminalOrientationsCalculator2;
@@ -34,7 +35,7 @@ public class HelloAndroidActivity extends Activity {
         super.onCreate(savedInstanceState);
         LogUtils.i(getClass(), "onCreate:");
 
-        setContentView(R.layout.main);
+        setContentView(R.layout.activity_resolve_terminal_state);
         tv1 = (TextView) findViewById(R.id.textView1);
         tv2 = (TextView) findViewById(R.id.textView2);
         nf = new DecimalFormat("000.0");

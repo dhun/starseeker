@@ -2,20 +2,34 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="jp.gr.java_conf.dhun.starseeker"
     android:versionCode="1"
-    android:versionName="1.0-SNAPSHOT">
+    android:versionName="1.0-SNAPSHOT" >
 
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="9" />
 
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name=".HelloAndroidActivity">
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+
+    <application
+        android:icon="@drawable/icon"
+        android:label="@string/app_name" >
+        <activity
+            android:name="jp.gr.java_conf.dhun.starseeker.ui.activity.DevelopmentMenuActivity"
+            android:label="@string/title_activity_development_menu" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name="jp.gr.java_conf.dhun.starseeker.ui.activity.ResolveTerminalStateActivity" >
+        </activity>
+        <activity android:name="jp.gr.java_conf.dhun.starseeker.ui.activity.ResolveObservationSiteByGpsActivity" >
+        </activity>
+        <activity android:name="jp.gr.java_conf.dhun.starseeker.ui.activity.ResolveObservationSiteByManualActivity" >
         </activity>
     </application>
 
 </manifest>
-

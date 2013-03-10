@@ -21,7 +21,8 @@ import android.os.Bundle;
 public class GpsObservationSiteLocationResolver implements IObservationSiteLocationResolver, LocationListener {
 
     private final LocationManager locationManager;
-    private OnResolveObservationSiteLocationListener onResolveObservationSiteLocationListener;
+
+    private ObservationSiteLocationResolverListener onResolveObservationSiteLocationListener;
 
     /**
      * コンストラクタ.<br/>
@@ -36,21 +37,46 @@ public class GpsObservationSiteLocationResolver implements IObservationSiteLocat
     // IObservationSiteLocationResolver
 
     @Override
-    public void prepare() {
+    public void resume() {
         if (null != locationManager) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this); // TODO パラメータを確認する
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                LogUtils.i(GpsObservationSiteLocationResolver.class, "GPS_PROVIDERによる位置情報の取得を開始します.");
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+                if (null != onResolveObservationSiteLocationListener) {
+                    onResolveObservationSiteLocationListener.onStartResolveObservationSiteLocation();
+                }
+                return;
+            }
+            if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                LogUtils.i(GpsObservationSiteLocationResolver.class, "NETWORK_PROVIDERによる位置情報の取得を開始します.");
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+
+                if (null != onResolveObservationSiteLocationListener) {
+                    onResolveObservationSiteLocationListener.onStartResolveObservationSiteLocation();
+                }
+                return;
+            }
+
+            LogUtils.i(GpsObservationSiteLocationResolver.class, "位置情報プロバイダを利用できません..");
+            onResolveObservationSiteLocationListener.onNotAvailableLocationProvider();
         }
     }
 
     @Override
     public void pause() {
         if (null != locationManager) {
+            LogUtils.i(GpsObservationSiteLocationResolver.class, "位置情報プロバイダによる位置情報の取得を停止します.");
             locationManager.removeUpdates(this);
+
+            if (null != onResolveObservationSiteLocationListener) {
+                onResolveObservationSiteLocationListener.onStopResolveObservationSiteLocation();
+            }
         }
     }
 
     @Override
-    public void setOnResolveObservationSiteLocationListener(OnResolveObservationSiteLocationListener listener) {
+    public void setObservationSiteLocationResolverListener(ObservationSiteLocationResolverListener listener) {
         this.onResolveObservationSiteLocationListener = listener;
     }
 
@@ -64,11 +90,13 @@ public class GpsObservationSiteLocationResolver implements IObservationSiteLocat
 
     @Override
     public void onLocationChanged(Location location) {
+        LogUtils.i(getClass(), "位置情報プロバイダにより位置情報を取得しました.");
+
         if (null != onResolveObservationSiteLocationListener) {
             ObservationSiteLocation result = new ObservationSiteLocation( //
-                    location.getAltitude(),     //
-                    location.getLongitude(),    //
-                    location.getLatitude(),    //
+                    location.getLatitude(),     // 緯度
+                    location.getLongitude(),    // 経度
+                    location.getAltitude(),     // 高度
                     "現在地"); // XXX strings.xml
             onResolveObservationSiteLocationListener.onResolveObservationSiteLocation(result);
         }
@@ -86,16 +114,18 @@ public class GpsObservationSiteLocationResolver implements IObservationSiteLocat
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
+        String statusName = "unknown";
         switch (status) {
         case LocationProvider.AVAILABLE:
-            LogUtils.v(getClass(), "onStatusChanged;status=LocationProvider.AVAILABLE");
+            statusName = "LocationProvider.AVAILABLE";
             break;
         case LocationProvider.OUT_OF_SERVICE:
-            LogUtils.v(getClass(), "onStatusChanged;status=LocationProvider.OUT_OF_SERVICE");
+            statusName = "LocationProvider.OUT_OF_SERVICE";
             break;
         case LocationProvider.TEMPORARILY_UNAVAILABLE:
-            LogUtils.v(getClass(), "onStatusChanged;status=LocationProvider.TEMPORARILY_UNAVAILABLE");
+            statusName = "LocationProvider.TEMPORARILY_UNAVAILABLE";
             break;
         }
+        LogUtils.v(getClass(), "onStatusChanged:provider=" + provider + ", status=" + statusName);
     }
 }
