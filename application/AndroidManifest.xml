@@ -30,6 +30,8 @@
         </activity>
         <activity android:name="jp.gr.java_conf.dhun.starseeker.ui.activity.ResolveObservationSiteByChooseActivity" >
         </activity>
-    </application>
+        <activity android:name="jp.gr.java_conf.dhun.starseeker.ui.activity.SurfaceViewActivity" >
+        </activity>
+        </application>
 
 </manifest>

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 public class DevelopmentMenuActivity extends Activity implements View.OnClickListener {
 
@@ -16,6 +17,9 @@ public class DevelopmentMenuActivity extends Activity implements View.OnClickLis
         findViewById(R.id.resolveTerminalStateButton).setOnClickListener(this);
         findViewById(R.id.resolveObservationSiteByGpsActivity).setOnClickListener(this);
         findViewById(R.id.resolveObservationSiteByManualActivity).setOnClickListener(this);
+        findViewById(R.id.surfaceViewActivity).setOnClickListener(this);
+
+        ((Button) findViewById(R.id.surfaceViewActivity)).performClick();
     }
 
     @Override
@@ -33,6 +37,10 @@ public class DevelopmentMenuActivity extends Activity implements View.OnClickLis
             break;
         case R.id.resolveObservationSiteByManualActivity:
             intent = new Intent(this, ResolveObservationSiteByChooseActivity.class);
+            startActivity(intent);
+            break;
+        case R.id.surfaceViewActivity:
+            intent = new Intent(this, SurfaceViewActivity.class);
             startActivity(intent);
             break;
         }

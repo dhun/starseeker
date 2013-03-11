@@ -30,6 +30,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="手動で観測地点を選択するリゾルバ" />
+
+        <Button
+            android:id="@+id/surfaceViewActivity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="サーフェースビューのサンプル" />
     </LinearLayout>
 
 </ScrollView>
