@@ -19,19 +19,38 @@ import android.graphics.RectF;
  */
 public class AstronomicalTheaterCanvas {
 
-    private final int theaterWidth;
-    private final int theaterHeight;
+    private static final int PANE_COUNT = 4;
+    private static final int NORTH_EAST_PANE = 0;
+    private static final int NORTH_WEST_PANE = 1;
+    private static final int SOUTH_EAST_PANE = 2;
+    private static final int SOUTH_WEST_PANE = 3;
 
-    private Orientations orientations; // 端末の回転状況
+    private final int width;
+    private final int height;
 
+    private final AstronomicalTheaterPanel[] panes;
+
+    private final PointF pointCT = new PointF(); // キャンバスの中央の座標
     private final PointF pointLT = new PointF(); // キャンバスの左上の座標
     private final PointF pointLB = new PointF(); // キャンバスの左下の座標
     private final PointF pointRT = new PointF(); // キャンバスの右上の座標
     private final PointF pointRB = new PointF(); // キャンバスの右下の座標
 
-    public AstronomicalTheaterCanvas(int theaterWidth, int theaterHeight) {
-        this.theaterWidth = theaterWidth;
-        this.theaterHeight = theaterHeight;
+    private Orientations orientations; // 端末の回転状況
+
+    private float fullRangeX;
+    private float fullRangeY;
+    private float halfRangeX;
+    private float halfRangeY;
+
+    public AstronomicalTheaterCanvas(int width, int height) {
+        this.width = width;
+        this.height = height;
+
+        panes = new AstronomicalTheaterPanel[PANE_COUNT];
+        for (int i = 0; i < PANE_COUNT; i++) {
+            panes[i] = new AstronomicalTheaterPanel();
+        }
     }
 
     /**
@@ -43,28 +62,47 @@ public class AstronomicalTheaterCanvas {
         this.orientations = newOrientations;
 
         // 端末の回転状態から、キャンバスに描画する範囲を算出
-        final float rangeX;
-        final float rangeY;
         if (orientations.getDisplayRotation().isPortrait()) {
-            rangeX = 140;
-            rangeY = 30;
+            fullRangeX = 140;
+            fullRangeY = 30;
         } else {
-            rangeX = 90;
-            rangeY = 60;
+            fullRangeX = 90;
+            fullRangeY = 60;
         }
+        halfRangeX = fullRangeX / 2;
+        halfRangeY = fullRangeY / 2;
 
         // 端末の方位とピッチから、キャンバスの座標を算出
-        pointLT.x = (float) orientations.azimuth - (rangeX / 2);
-        pointLT.y = (float) orientations.pitch - (rangeY / 2);
+        pointCT.x = (float) orientations.azimuth;
+        pointCT.y = (float) orientations.pitch;
+
+        pointLT.x = pointCT.x - halfRangeX;
+        pointLT.y = pointCT.y - halfRangeY;
         pointLB.x = pointLT.x;
-        pointLB.y = pointLT.y - rangeY;
-        pointRT.x = pointLT.x + rangeX;
+        pointLB.y = pointLT.y - fullRangeX;
+        pointRT.x = pointLT.x + fullRangeY;
         pointRT.y = pointLB.y;
         pointRB.x = pointRT.x;
         pointRB.y = pointLB.y;
 
         // TODO スケールで座標を補正
         // TODO 端末の回転状況により座標を回転
+
+        //
+        assign();
+    }
+
+    private void assign() {
+        if (pointLT.x > 0) {
+            panes[NORTH_EAST_PANE].pointLT.x = (pointRT.x > 0) ? 0 : -180;
+        } else {
+            panes[NORTH_EAST_PANE].pointLT.x = Math.min(0, pointLT.x);
+        }
+        if (pointRT.x < 0) {
+            panes[NORTH_EAST_PANE].pointRT.x = (pointLT.x < 0) ? 0 : +180;
+        } else {
+            panes[NORTH_EAST_PANE].pointRT.x = Math.max(0, pointRT.x);
+        }
     }
 
     /**
