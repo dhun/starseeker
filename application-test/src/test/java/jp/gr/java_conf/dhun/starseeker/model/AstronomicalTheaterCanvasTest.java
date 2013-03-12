@@ -36,7 +36,7 @@ public class AstronomicalTheaterCanvasTest {
 
     @Test
     public void test_prepare() {
-        fail("まだ実装されていません");
+        Orientations orientations = new Orientations();
+        orientations.
     }
-
 }

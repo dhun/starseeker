@@ -31,10 +31,11 @@ public class AstronomicalTheaterCanvas {
     private final AstronomicalTheaterPanel[] panes;
 
     private final PointF pointCT = new PointF(); // キャンバスの中央の座標
-    private final PointF pointLT = new PointF(); // キャンバスの左上の座標
-    private final PointF pointLB = new PointF(); // キャンバスの左下の座標
-    private final PointF pointRT = new PointF(); // キャンバスの右上の座標
-    private final PointF pointRB = new PointF(); // キャンバスの右下の座標
+    private final Rect rect = new Rect();
+    // private final PointF pointLT = new PointF(); // キャンバスの左上の座標
+    // private final PointF pointLB = new PointF(); // キャンバスの左下の座標
+    // private final PointF pointRT = new PointF(); // キャンバスの右上の座標
+    // private final PointF pointRB = new PointF(); // キャンバスの右下の座標
 
     private Orientations orientations; // 端末の回転状況
 
@@ -76,32 +77,93 @@ public class AstronomicalTheaterCanvas {
         pointCT.x = (float) orientations.azimuth;
         pointCT.y = (float) orientations.pitch;
 
-        pointLT.x = pointCT.x - halfRangeX;
-        pointLT.y = pointCT.y - halfRangeY;
-        pointLB.x = pointLT.x;
-        pointLB.y = pointLT.y - fullRangeX;
-        pointRT.x = pointLT.x + fullRangeY;
-        pointRT.y = pointLB.y;
-        pointRB.x = pointRT.x;
-        pointRB.y = pointLB.y;
+        rect.xL = pointCT.x - halfRangeX;
+        rect.yT = pointCT.y - halfRangeY;
+        rect.xR = rect.xL + fullRangeY;
+        rect.yB = rect.yT - fullRangeX;
 
         // TODO スケールで座標を補正
         // TODO 端末の回転状況により座標を回転
 
         //
-        assign();
+        assignAstronomical();
     }
 
-    private void assign() {
-        if (pointLT.x > 0) {
-            panes[NORTH_EAST_PANE].pointLT.x = (pointRT.x > 0) ? 0 : -180;
+    private void assignAstronomical() {
+        if (rect.xL < rect.xR) {
+            // ±180°をまたいでいない場合
+            panes[NORTH_EAST_PANE].starRect.xL = Math.max(rect.xL, 0);
+            panes[NORTH_EAST_PANE].starRect.xR = Math.max(rect.xR, 0);
+
+            panes[NORTH_WEST_PANE].starRect.xL = Math.min(rect.xL, 0);
+            panes[NORTH_WEST_PANE].starRect.xR = Math.min(rect.xR, 0);
+
         } else {
-            panes[NORTH_EAST_PANE].pointLT.x = Math.min(0, pointLT.x);
+            // ±180°をまたいでいる場合
+            panes[NORTH_EAST_PANE].starRect.xL = rect.xL;
+            panes[NORTH_EAST_PANE].starRect.xR = +180;
+
+            panes[NORTH_WEST_PANE].starRect.xL = -180;
+            panes[NORTH_WEST_PANE].starRect.xR = rect.xR;
         }
-        if (pointRT.x < 0) {
-            panes[NORTH_EAST_PANE].pointRT.x = (pointLT.x < 0) ? 0 : +180;
+
+        if (rect.yT <= +90) {
+            // ＋90°をまたいでいない場合
+            panes[NORTH_EAST_PANE].starRect.yT = rect.yT;
+            panes[NORTH_EAST_PANE].starRect.yB = rect.yB;
+
+            panes[NORTH_WEST_PANE].starRect.yT = rect.yT;
+            panes[NORTH_WEST_PANE].starRect.yB = rect.yB;
+
+            panes[SOUTH_EAST_PANE].starRect.setupZero();
+            panes[SOUTH_WEST_PANE].starRect.setupZero();
+
         } else {
-            panes[NORTH_EAST_PANE].pointRT.x = Math.max(0, pointRT.x);
+            // ＋90°をまたいでいる場合
+            panes[NORTH_EAST_PANE].starRect.yT = +90;
+            panes[NORTH_EAST_PANE].starRect.yB = rect.yB;
+
+            panes[NORTH_WEST_PANE].starRect.yT = +90;
+            panes[NORTH_WEST_PANE].starRect.yB = rect.yB;
+
+            panes[SOUTH_EAST_PANE].starRect.yT = rect.yT;
+            panes[SOUTH_EAST_PANE].starRect.yB = +90;
+            panes[SOUTH_EAST_PANE].starRect.xL = panes[NORTH_EAST_PANE].starRect.xL;
+            panes[SOUTH_EAST_PANE].starRect.xR = panes[NORTH_EAST_PANE].starRect.xR;
+
+            panes[SOUTH_WEST_PANE].starRect.yT = rect.yT;
+            panes[SOUTH_WEST_PANE].starRect.yB = +90;
+            panes[SOUTH_WEST_PANE].starRect.xL = panes[NORTH_EAST_PANE].starRect.xL;
+            panes[SOUTH_WEST_PANE].starRect.xR = panes[NORTH_EAST_PANE].starRect.xR;
+        }
+    }
+
+    private void assignScreen() {
+        if (rect.xL < rect.xR) {
+            // ±180°をまたいでいない場合
+            float consumeW = 0;
+            if (panes[NORTH_WEST_PANE].starRect.hasRange()) {
+                consumeW = width * (panes[NORTH_WEST_PANE].starRect.width() / fullRangeX);
+                panes[NORTH_EAST_PANE].screenRect.xL = 0;
+                panes[NORTH_EAST_PANE].screenRect.xR = consumeW;
+            }
+            if (panes[NORTH_WEST_PANE].starRect.hasRange()) {
+                panes[NORTH_EAST_PANE].screenRect.xL = consumeW;
+                panes[NORTH_EAST_PANE].screenRect.xR = width - consumeW;
+            }
+
+        } else {
+            // ±180°をまたいでいない場合
+            float consumeW = 0;
+            if (panes[NORTH_WEST_PANE].starRect.hasRange()) {
+                consumeW = width * (panes[NORTH_WEST_PANE].starRect.width() / fullRangeX);
+                panes[NORTH_EAST_PANE].screenRect.xL = 0;
+                panes[NORTH_EAST_PANE].screenRect.xR = consumeW;
+            }
+            if (panes[NORTH_WEST_PANE].starRect.hasRange()) {
+                panes[NORTH_EAST_PANE].screenRect.xL = consumeW;
+                panes[NORTH_EAST_PANE].screenRect.xR = width - consumeW;
+            }
         }
     }
 
@@ -112,17 +174,12 @@ public class AstronomicalTheaterCanvas {
      * @return 描画領域に含まれる場合はtrue
      */
     public boolean contains(Star star) {
-        float minX = Math.min(pointLT.x, pointLB.x);
-        float maxX = Math.max(pointRT.x, pointRB.x);
-        float minY = Math.min(pointLT.y, pointRT.y);
-        float maxY = Math.max(pointLB.y, pointRB.y);
-
         float starAzimuth = (float) star.getAzimuth();
         float starAltitude = (float) star.getAltitude();
-        if (starAzimuth < minX || maxX < starAzimuth) {
+        if (starAzimuth < rect.xL || rect.xR < starAzimuth) {
             return false;
         }
-        if (starAltitude < minY || maxY < starAltitude) {
+        if (starAltitude < rect.yT || rect.yB < starAltitude) {
             return false;
         }
         return true;
@@ -138,14 +195,41 @@ public class AstronomicalTheaterCanvas {
         float starAzimuth = (float) star.getAzimuth();
         float starAltitude = (float) star.getAltitude();
 
-        RectF rect = new RectF();
-        rect.left = 50;
-        rect.top = 50;
-        rect.right = 100;
-        rect.bottom = 100;
+        RectF rectF = new RectF();
+        rectF.left = 50;
+        rectF.top = 50;
+        rectF.right = 100;
+        rectF.bottom = 100;
 
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        canvas.drawOval(rect, paint);
+        canvas.drawOval(rectF, paint);
     }
+
+    public static class Rect {
+        public float xL;
+        public float xR;
+        public float yT;
+        public float yB;
+
+        public void setupZero() {
+            xL = 0f;
+            xR = 0f;
+            yT = 0f;
+            yB = 0f;
+        }
+
+        public boolean hasRange() {
+            return xL != 0 || yT != 0 || xR != 0 || yB != 0;
+        }
+
+        public float width() {
+            return Math.abs((xL - xR));
+        }
+
+        public float height() {
+            return Math.abs((yT - yB));
+        }
+    }
+
 }
