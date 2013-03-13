@@ -86,84 +86,109 @@ public class AstronomicalTheaterCanvas {
         // TODO 端末の回転状況により座標を回転
 
         //
-        assignAstronomical();
+        assignTheaterRect();
+        assignDisplayRect();
     }
 
-    private void assignAstronomical() {
+    /* package */void assignTheaterRect() {
         if (rect.xL < rect.xR) {
-            // ±180°をまたいでいない場合
-            panes[NORTH_EAST_PANE].starRect.xL = Math.max(rect.xL, 0);
-            panes[NORTH_EAST_PANE].starRect.xR = Math.max(rect.xR, 0);
+            // X軸の ±180°をまたいでいない場合
+            panes[NORTH_EAST_PANE].theaterRect.xL = Math.max(rect.xL, 0);
+            panes[NORTH_EAST_PANE].theaterRect.xR = Math.max(rect.xR, 0);
 
-            panes[NORTH_WEST_PANE].starRect.xL = Math.min(rect.xL, 0);
-            panes[NORTH_WEST_PANE].starRect.xR = Math.min(rect.xR, 0);
+            panes[NORTH_WEST_PANE].theaterRect.xL = Math.min(rect.xL, 0);
+            panes[NORTH_WEST_PANE].theaterRect.xR = Math.min(rect.xR, 0);
 
         } else {
-            // ±180°をまたいでいる場合
-            panes[NORTH_EAST_PANE].starRect.xL = rect.xL;
-            panes[NORTH_EAST_PANE].starRect.xR = +180;
+            // X軸の ±180°をまたいでいる場合
+            panes[NORTH_EAST_PANE].theaterRect.xL = rect.xL;
+            panes[NORTH_EAST_PANE].theaterRect.xR = +180;
 
-            panes[NORTH_WEST_PANE].starRect.xL = -180;
-            panes[NORTH_WEST_PANE].starRect.xR = rect.xR;
+            panes[NORTH_WEST_PANE].theaterRect.xL = -180;
+            panes[NORTH_WEST_PANE].theaterRect.xR = rect.xR;
         }
 
         if (rect.yT <= +90) {
-            // ＋90°をまたいでいない場合
-            panes[NORTH_EAST_PANE].starRect.yT = rect.yT;
-            panes[NORTH_EAST_PANE].starRect.yB = rect.yB;
+            // Y軸の ＋90°をまたいでいない場合
+            panes[NORTH_EAST_PANE].theaterRect.yT = rect.yT;
+            panes[NORTH_EAST_PANE].theaterRect.yB = rect.yB;
 
-            panes[NORTH_WEST_PANE].starRect.yT = rect.yT;
-            panes[NORTH_WEST_PANE].starRect.yB = rect.yB;
+            panes[NORTH_WEST_PANE].theaterRect.yT = rect.yT;
+            panes[NORTH_WEST_PANE].theaterRect.yB = rect.yB;
 
-            panes[SOUTH_EAST_PANE].starRect.setupZero();
-            panes[SOUTH_WEST_PANE].starRect.setupZero();
+            panes[SOUTH_EAST_PANE].theaterRect.setupZero();
+            panes[SOUTH_WEST_PANE].theaterRect.setupZero();
 
         } else {
-            // ＋90°をまたいでいる場合
-            panes[NORTH_EAST_PANE].starRect.yT = +90;
-            panes[NORTH_EAST_PANE].starRect.yB = rect.yB;
+            // Y軸の ＋90°をまたいでいる場合
+            panes[NORTH_EAST_PANE].theaterRect.yT = +90;
+            panes[NORTH_EAST_PANE].theaterRect.yB = rect.yB;
 
-            panes[NORTH_WEST_PANE].starRect.yT = +90;
-            panes[NORTH_WEST_PANE].starRect.yB = rect.yB;
+            panes[NORTH_WEST_PANE].theaterRect.yT = +90;
+            panes[NORTH_WEST_PANE].theaterRect.yB = rect.yB;
 
-            panes[SOUTH_EAST_PANE].starRect.yT = rect.yT;
-            panes[SOUTH_EAST_PANE].starRect.yB = +90;
-            panes[SOUTH_EAST_PANE].starRect.xL = panes[NORTH_EAST_PANE].starRect.xL;
-            panes[SOUTH_EAST_PANE].starRect.xR = panes[NORTH_EAST_PANE].starRect.xR;
+            panes[SOUTH_EAST_PANE].theaterRect.yT = rect.yT;
+            panes[SOUTH_EAST_PANE].theaterRect.yB = +90;
+            panes[SOUTH_EAST_PANE].theaterRect.xL = panes[NORTH_EAST_PANE].theaterRect.xL;
+            panes[SOUTH_EAST_PANE].theaterRect.xR = panes[NORTH_EAST_PANE].theaterRect.xR;
 
-            panes[SOUTH_WEST_PANE].starRect.yT = rect.yT;
-            panes[SOUTH_WEST_PANE].starRect.yB = +90;
-            panes[SOUTH_WEST_PANE].starRect.xL = panes[NORTH_EAST_PANE].starRect.xL;
-            panes[SOUTH_WEST_PANE].starRect.xR = panes[NORTH_EAST_PANE].starRect.xR;
+            panes[SOUTH_WEST_PANE].theaterRect.yT = rect.yT;
+            panes[SOUTH_WEST_PANE].theaterRect.yB = +90;
+            panes[SOUTH_WEST_PANE].theaterRect.xL = panes[NORTH_EAST_PANE].theaterRect.xL;
+            panes[SOUTH_WEST_PANE].theaterRect.xR = panes[NORTH_EAST_PANE].theaterRect.xR;
         }
     }
 
-    private void assignScreen() {
+    /* package */void assignDisplayRect() {
+        final int indexFaceL, indexFaceR, indexBackL, indexBackR;
         if (rect.xL < rect.xR) {
-            // ±180°をまたいでいない場合
-            float consumeW = 0;
-            if (panes[NORTH_WEST_PANE].starRect.hasRange()) {
-                consumeW = width * (panes[NORTH_WEST_PANE].starRect.width() / fullRangeX);
-                panes[NORTH_EAST_PANE].screenRect.xL = 0;
-                panes[NORTH_EAST_PANE].screenRect.xR = consumeW;
-            }
-            if (panes[NORTH_WEST_PANE].starRect.hasRange()) {
-                panes[NORTH_EAST_PANE].screenRect.xL = consumeW;
-                panes[NORTH_EAST_PANE].screenRect.xR = width - consumeW;
-            }
-
+            // X軸の ±180°をまたいでいない場合
+            indexFaceL = NORTH_EAST_PANE;
+            indexFaceR = NORTH_WEST_PANE;
+            indexBackL = SOUTH_EAST_PANE;
+            indexBackR = SOUTH_WEST_PANE;
         } else {
-            // ±180°をまたいでいない場合
-            float consumeW = 0;
-            if (panes[NORTH_WEST_PANE].starRect.hasRange()) {
-                consumeW = width * (panes[NORTH_WEST_PANE].starRect.width() / fullRangeX);
-                panes[NORTH_EAST_PANE].screenRect.xL = 0;
-                panes[NORTH_EAST_PANE].screenRect.xR = consumeW;
-            }
-            if (panes[NORTH_WEST_PANE].starRect.hasRange()) {
-                panes[NORTH_EAST_PANE].screenRect.xL = consumeW;
-                panes[NORTH_EAST_PANE].screenRect.xR = width - consumeW;
-            }
+            // X軸の ±180°をまたいでいない場合
+            indexFaceL = NORTH_WEST_PANE;
+            indexFaceR = NORTH_EAST_PANE;
+            indexBackL = SOUTH_WEST_PANE;
+            indexBackR = SOUTH_EAST_PANE;
+        }
+
+        float consumeW = 0;
+        if (panes[indexFaceL].theaterRect.hasRange()) {
+            consumeW = width * (panes[indexFaceL].theaterRect.width() / fullRangeX);
+            panes[indexFaceL].displayRect.xL = 0;
+            panes[indexFaceL].displayRect.xR = consumeW;
+            panes[indexBackL].displayRect.xL = panes[indexFaceL].displayRect.xL;
+            panes[indexBackL].displayRect.xR = panes[indexFaceL].displayRect.xR;
+        }
+        if (panes[indexFaceR].theaterRect.hasRange()) {
+            panes[indexFaceR].displayRect.xL = consumeW;
+            panes[indexFaceR].displayRect.xR = width - consumeW;
+            panes[indexBackR].displayRect.xL = panes[indexFaceR].displayRect.xL;
+            panes[indexBackR].displayRect.xR = panes[indexFaceR].displayRect.xR;
+        }
+
+        float consumeH = 0;
+        if (panes[indexBackL].theaterRect.hasRange()) {
+            consumeH = height * (panes[indexBackL].theaterRect.height() / fullRangeY);
+            panes[indexBackL].displayRect.yT = 0;
+            panes[indexBackL].displayRect.yB = consumeH;
+            panes[indexBackR].displayRect.yT = panes[indexBackL].displayRect.yT;
+            panes[indexBackR].displayRect.yB = panes[indexBackL].displayRect.yB;
+        } else {
+            panes[indexBackL].displayRect.setupZero();
+            panes[indexBackR].displayRect.setupZero();
+        }
+        if (panes[indexFaceL].theaterRect.hasRange()) {
+            panes[indexFaceL].displayRect.yT = consumeH;
+            panes[indexFaceL].displayRect.yB = height - consumeH;
+            panes[indexFaceR].displayRect.yT = panes[indexBackL].displayRect.yT;
+            panes[indexFaceR].displayRect.yB = panes[indexBackL].displayRect.yB;
+        } else {
+            panes[indexFaceL].displayRect.setupZero();
+            panes[indexFaceR].displayRect.setupZero();
         }
     }
 

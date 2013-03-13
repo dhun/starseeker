@@ -3,8 +3,6 @@
  */
 package jp.gr.java_conf.dhun.starseeker.model;
 
-import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,8 +33,10 @@ public class AstronomicalTheaterCanvasTest {
     }
 
     @Test
-    public void test_prepare() {
+    public void test_assignTheaterRect() {
         Orientations orientations = new Orientations();
-        orientations.
+        orientations.x;
+
+        target.assignTheaterRect();
     }
 }

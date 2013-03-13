@@ -7,9 +7,6 @@ import jp.gr.java_conf.dhun.starseeker.model.AstronomicalTheaterCanvas.Rect;
 
 public class AstronomicalTheaterPanel {
 
-    private int width;
-    private int height;
-
-    public final Rect starRect = new Rect();
-    public final Rect screenRect = new Rect();
+    public final Rect theaterRect = new Rect(); // 天体シアターの座標
+    public final Rect displayRect = new Rect(); // ディスプレイの座標
 }
