@@ -133,12 +133,14 @@ public class AstronomicalTheater {
 
         if (theaterRect.yT <= +90) {
             // Y軸の ＋90°をまたいでいない場合
-            panels[FACE_EAST_PANEL].theaterRect.yT = theaterRect.yT;
-            panels[FACE_EAST_PANEL].theaterRect.yB = theaterRect.yB;
-
-            panels[FACE_WEST_PANEL].theaterRect.yT = theaterRect.yT;
-            panels[FACE_WEST_PANEL].theaterRect.yB = theaterRect.yB;
-
+            if (panels[FACE_EAST_PANEL].theaterRect.hasWidth()) {
+                panels[FACE_EAST_PANEL].theaterRect.yT = theaterRect.yT;
+                panels[FACE_EAST_PANEL].theaterRect.yB = theaterRect.yB;
+            }
+            if (panels[FACE_WEST_PANEL].theaterRect.hasWidth()) {
+                panels[FACE_WEST_PANEL].theaterRect.yT = theaterRect.yT;
+                panels[FACE_WEST_PANEL].theaterRect.yB = theaterRect.yB;
+            }
             panels[BACK_EAST_PANEL].theaterRect.setupZero();
             panels[BACK_WEST_PANEL].theaterRect.setupZero();
 
@@ -169,16 +171,16 @@ public class AstronomicalTheater {
         final int indexFaceL, indexFaceR, indexBackL, indexBackR;
         if (theaterRect.xL < theaterRect.xR) {
             // X軸の ±180°をまたいでいない場合
-            indexFaceL = FACE_EAST_PANEL;
-            indexFaceR = FACE_WEST_PANEL;
-            indexBackL = BACK_EAST_PANEL;
-            indexBackR = BACK_WEST_PANEL;
-        } else {
-            // X軸の ±180°をまたいでいない場合
             indexFaceL = FACE_WEST_PANEL;
             indexFaceR = FACE_EAST_PANEL;
             indexBackL = BACK_WEST_PANEL;
             indexBackR = BACK_EAST_PANEL;
+        } else {
+            // X軸の ±180°をまたいでいる場合
+            indexFaceL = FACE_EAST_PANEL;
+            indexFaceR = FACE_WEST_PANEL;
+            indexBackL = BACK_EAST_PANEL;
+            indexBackR = BACK_WEST_PANEL;
         }
 
         float consumeW = 0;
@@ -186,32 +188,53 @@ public class AstronomicalTheater {
             consumeW = displayWidth * (panels[indexFaceL].theaterRect.width() / theaterWidth);
             panels[indexFaceL].displayRect.xL = 0;
             panels[indexFaceL].displayRect.xR = consumeW;
-            panels[indexBackL].displayRect.xL = panels[indexFaceL].displayRect.xL;
-            panels[indexBackL].displayRect.xR = panels[indexFaceL].displayRect.xR;
+            panels[indexBackL].displayRect.xL = 0;
+            panels[indexBackL].displayRect.xR = consumeW;
         }
         if (panels[indexFaceR].theaterRect.hasRange()) {
             panels[indexFaceR].displayRect.xL = consumeW;
-            panels[indexFaceR].displayRect.xR = displayWidth - consumeW;
-            panels[indexBackR].displayRect.xL = panels[indexFaceR].displayRect.xL;
-            panels[indexBackR].displayRect.xR = panels[indexFaceR].displayRect.xR;
+            panels[indexFaceR].displayRect.xR = displayWidth;
+            panels[indexBackR].displayRect.xL = consumeW;
+            panels[indexBackR].displayRect.xR = displayWidth;
         }
 
         float consumeH = 0;
-        if (panels[indexBackL].theaterRect.hasRange()) {
+        boolean hasRangeL = panels[indexBackL].theaterRect.hasRange();
+        boolean hasRangeR = panels[indexBackR].theaterRect.hasRange();
+        if (hasRangeL || hasRangeR) {
             consumeH = displayHeight * (panels[indexBackL].theaterRect.height() / theaterHeight);
-            panels[indexBackL].displayRect.yT = 0;
-            panels[indexBackL].displayRect.yB = consumeH;
-            panels[indexBackR].displayRect.yT = panels[indexBackL].displayRect.yT;
-            panels[indexBackR].displayRect.yB = panels[indexBackL].displayRect.yB;
+            if (hasRangeL) {
+                panels[indexBackL].displayRect.yT = 0;
+                panels[indexBackL].displayRect.yB = consumeH;
+            } else {
+                panels[indexBackL].displayRect.setupZero();
+            }
+            if (hasRangeR) {
+                panels[indexBackR].displayRect.yT = 0;
+                panels[indexBackR].displayRect.yB = consumeH;
+            } else {
+                panels[indexBackR].displayRect.setupZero();
+            }
         } else {
             panels[indexBackL].displayRect.setupZero();
             panels[indexBackR].displayRect.setupZero();
         }
-        if (panels[indexFaceL].theaterRect.hasRange()) {
+
+        hasRangeL = panels[indexFaceL].theaterRect.hasRange();
+        hasRangeR = panels[indexFaceR].theaterRect.hasRange();
+        if (hasRangeL && hasRangeR) {
             panels[indexFaceL].displayRect.yT = consumeH;
-            panels[indexFaceL].displayRect.yB = displayHeight - consumeH;
-            panels[indexFaceR].displayRect.yT = panels[indexBackL].displayRect.yT;
-            panels[indexFaceR].displayRect.yB = panels[indexBackL].displayRect.yB;
+            panels[indexFaceL].displayRect.yB = displayHeight;
+            panels[indexFaceR].displayRect.yT = consumeH;
+            panels[indexFaceR].displayRect.yB = displayHeight;
+        } else if (hasRangeL) {
+            panels[indexFaceL].displayRect.yT = consumeH;
+            panels[indexFaceL].displayRect.yB = displayHeight;
+            panels[indexFaceR].displayRect.setupZero();
+        } else if (hasRangeR) {
+            panels[indexFaceL].displayRect.setupZero();
+            panels[indexFaceR].displayRect.yT = consumeH;
+            panels[indexFaceR].displayRect.yB = displayHeight;
         } else {
             panels[indexFaceL].displayRect.setupZero();
             panels[indexFaceR].displayRect.setupZero();
@@ -272,6 +295,14 @@ public class AstronomicalTheater {
 
         public boolean hasRange() {
             return xL != 0 || yT != 0 || xR != 0 || yB != 0;
+        }
+
+        public boolean hasWidth() {
+            return xL != 0 || xR != 0;
+        }
+
+        public boolean hasHeight() {
+            return xL != 0 || xR != 0;
         }
 
         public float width() {

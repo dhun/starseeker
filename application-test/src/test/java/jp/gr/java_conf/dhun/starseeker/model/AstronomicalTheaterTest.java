@@ -47,13 +47,65 @@ public class AstronomicalTheaterTest {
         float terminalAzimuth = +80;
         float terminalPitch = -50;
         target.calculateTheaterRect(terminalAzimuth, terminalPitch);
-        Rect actual = extractTheaterRect(target);
 
-        assertThat(actual, notNullValue());
-        assertThat(actual.xL, is(+45f));
-        assertThat(actual.xR, is(+115f));
-        assertThat(actual.yT, is(-65f));
-        assertThat(actual.yB, is(-35f));
+        Rect actualTheaterRect = extractTheaterRect(target);
+        assertThat(actualTheaterRect, notNullValue());
+        assertThat(actualTheaterRect.xL, is(+45f));
+        assertThat(actualTheaterRect.xR, is(+115f));
+        assertThat(actualTheaterRect.yT, is(-65f));
+        assertThat(actualTheaterRect.yB, is(-35f));
+
+        AstronomicalTheaterPanel actualPanel;
+
+        // 天体シアターの座標
+        actualPanel = extractTheaterPanel_FACE_EAST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(+45f));
+        assertThat(actualPanel.theaterRect.xR, is(+115f));
+        assertThat(actualPanel.theaterRect.yT, is(-65f));
+        assertThat(actualPanel.theaterRect.yB, is(-35f));
+
+        actualPanel = extractTheaterPanel_FACE_WEST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(0f));
+        assertThat(actualPanel.theaterRect.xR, is(0f));
+        assertThat(actualPanel.theaterRect.yT, is(0f));
+        assertThat(actualPanel.theaterRect.yB, is(0f));
+
+        actualPanel = extractTheaterPanel_BACK_EAST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(0f));
+        assertThat(actualPanel.theaterRect.xR, is(0f));
+        assertThat(actualPanel.theaterRect.yT, is(0f));
+        assertThat(actualPanel.theaterRect.yB, is(0f));
+
+        actualPanel = extractTheaterPanel_BACK_WEST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(0f));
+        assertThat(actualPanel.theaterRect.xR, is(0f));
+        assertThat(actualPanel.theaterRect.yT, is(0f));
+        assertThat(actualPanel.theaterRect.yB, is(0f));
+
+        // ディスプレイの座標
+        actualPanel = extractTheaterPanel_FACE_EAST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(600f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(1024f));
+
+        actualPanel = extractTheaterPanel_FACE_WEST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(0f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(0f));
+
+        actualPanel = extractTheaterPanel_BACK_EAST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(0f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(0f));
+
+        actualPanel = extractTheaterPanel_BACK_WEST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(0f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(0f));
     }
 
     @Test
@@ -61,13 +113,65 @@ public class AstronomicalTheaterTest {
         float terminalAzimuth = -80;
         float terminalPitch = -50;
         target.calculateTheaterRect(terminalAzimuth, terminalPitch);
-        Rect actual = extractTheaterRect(target);
 
-        assertThat(actual, notNullValue());
-        assertThat(actual.xL, is(-115f));
-        assertThat(actual.xR, is(-45f));
-        assertThat(actual.yT, is(-65f));
-        assertThat(actual.yB, is(-35f));
+        Rect actualTheaterRect = extractTheaterRect(target);
+        assertThat(actualTheaterRect, notNullValue());
+        assertThat(actualTheaterRect.xL, is(-115f));
+        assertThat(actualTheaterRect.xR, is(-45f));
+        assertThat(actualTheaterRect.yT, is(-65f));
+        assertThat(actualTheaterRect.yB, is(-35f));
+
+        AstronomicalTheaterPanel actualPanel;
+
+        // 天体シアターの座標
+        actualPanel = extractTheaterPanel_FACE_EAST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(0f));
+        assertThat(actualPanel.theaterRect.xR, is(0f));
+        assertThat(actualPanel.theaterRect.yT, is(0f));
+        assertThat(actualPanel.theaterRect.yB, is(0f));
+
+        actualPanel = extractTheaterPanel_FACE_WEST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(-115f));
+        assertThat(actualPanel.theaterRect.xR, is(-45f));
+        assertThat(actualPanel.theaterRect.yT, is(-65f));
+        assertThat(actualPanel.theaterRect.yB, is(-35f));
+
+        actualPanel = extractTheaterPanel_BACK_EAST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(0f));
+        assertThat(actualPanel.theaterRect.xR, is(0f));
+        assertThat(actualPanel.theaterRect.yT, is(0f));
+        assertThat(actualPanel.theaterRect.yB, is(0f));
+
+        actualPanel = extractTheaterPanel_BACK_WEST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(0f));
+        assertThat(actualPanel.theaterRect.xR, is(0f));
+        assertThat(actualPanel.theaterRect.yT, is(0f));
+        assertThat(actualPanel.theaterRect.yB, is(0f));
+
+        // ディスプレイの座標
+        actualPanel = extractTheaterPanel_FACE_EAST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(0f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(0f));
+
+        actualPanel = extractTheaterPanel_FACE_WEST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(600f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(1024f));
+
+        actualPanel = extractTheaterPanel_BACK_EAST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(0f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(0f));
+
+        actualPanel = extractTheaterPanel_BACK_WEST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(0f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(0f));
     }
 
     @Test
@@ -75,13 +179,65 @@ public class AstronomicalTheaterTest {
         float terminalAzimuth = +170;
         float terminalPitch = -50;
         target.calculateTheaterRect(terminalAzimuth, terminalPitch);
-        Rect actual = extractTheaterRect(target);
 
-        assertThat(actual, notNullValue());
-        assertThat(actual.xL, is(+135f));
-        assertThat(actual.xR, is(-155f));
-        assertThat(actual.yT, is(-65f));
-        assertThat(actual.yB, is(-35f));
+        Rect actualTheaterRect = extractTheaterRect(target);
+        assertThat(actualTheaterRect, notNullValue());
+        assertThat(actualTheaterRect.xL, is(+135f));
+        assertThat(actualTheaterRect.xR, is(-155f));
+        assertThat(actualTheaterRect.yT, is(-65f));
+        assertThat(actualTheaterRect.yB, is(-35f));
+
+        AstronomicalTheaterPanel actualPanel;
+
+        // 天体シアターの座標
+        actualPanel = extractTheaterPanel_FACE_EAST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(+135f));
+        assertThat(actualPanel.theaterRect.xR, is(+180f));
+        assertThat(actualPanel.theaterRect.yT, is(-65f));
+        assertThat(actualPanel.theaterRect.yB, is(-35f));
+
+        actualPanel = extractTheaterPanel_FACE_WEST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(-180f));
+        assertThat(actualPanel.theaterRect.xR, is(-155f));
+        assertThat(actualPanel.theaterRect.yT, is(-65f));
+        assertThat(actualPanel.theaterRect.yB, is(-35f));
+
+        actualPanel = extractTheaterPanel_BACK_EAST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(0f));
+        assertThat(actualPanel.theaterRect.xR, is(0f));
+        assertThat(actualPanel.theaterRect.yT, is(0f));
+        assertThat(actualPanel.theaterRect.yB, is(0f));
+
+        actualPanel = extractTheaterPanel_BACK_WEST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(0f));
+        assertThat(actualPanel.theaterRect.xR, is(0f));
+        assertThat(actualPanel.theaterRect.yT, is(0f));
+        assertThat(actualPanel.theaterRect.yB, is(0f));
+
+        // ディスプレイの座標
+        actualPanel = extractTheaterPanel_FACE_EAST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(385.7142857f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(1024f));
+
+        actualPanel = extractTheaterPanel_FACE_WEST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(385.7142857f));
+        assertThat(actualPanel.displayRect.xR, is(600f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(1024f));
+
+        actualPanel = extractTheaterPanel_BACK_EAST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(0f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(0f));
+
+        actualPanel = extractTheaterPanel_BACK_WEST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(0f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(0f));
     }
 
     @Test
@@ -89,13 +245,65 @@ public class AstronomicalTheaterTest {
         float terminalAzimuth = -170;
         float terminalPitch = -50;
         target.calculateTheaterRect(terminalAzimuth, terminalPitch);
-        Rect actual = extractTheaterRect(target);
 
-        assertThat(actual, notNullValue());
-        assertThat(actual.xL, is(+155f));
-        assertThat(actual.xR, is(-135f));
-        assertThat(actual.yT, is(-65f));
-        assertThat(actual.yB, is(-35f));
+        Rect actualTheaterRect = extractTheaterRect(target);
+        assertThat(actualTheaterRect, notNullValue());
+        assertThat(actualTheaterRect.xL, is(+155f));
+        assertThat(actualTheaterRect.xR, is(-135f));
+        assertThat(actualTheaterRect.yT, is(-65f));
+        assertThat(actualTheaterRect.yB, is(-35f));
+
+        AstronomicalTheaterPanel actualPanel;
+
+        // 天体シアターの座標
+        actualPanel = extractTheaterPanel_FACE_EAST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(+155f));
+        assertThat(actualPanel.theaterRect.xR, is(+180f));
+        assertThat(actualPanel.theaterRect.yT, is(-65f));
+        assertThat(actualPanel.theaterRect.yB, is(-35f));
+
+        actualPanel = extractTheaterPanel_FACE_WEST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(-180f));
+        assertThat(actualPanel.theaterRect.xR, is(-135f));
+        assertThat(actualPanel.theaterRect.yT, is(-65f));
+        assertThat(actualPanel.theaterRect.yB, is(-35f));
+
+        actualPanel = extractTheaterPanel_BACK_EAST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(0f));
+        assertThat(actualPanel.theaterRect.xR, is(0f));
+        assertThat(actualPanel.theaterRect.yT, is(0f));
+        assertThat(actualPanel.theaterRect.yB, is(0f));
+
+        actualPanel = extractTheaterPanel_BACK_WEST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(0f));
+        assertThat(actualPanel.theaterRect.xR, is(0f));
+        assertThat(actualPanel.theaterRect.yT, is(0f));
+        assertThat(actualPanel.theaterRect.yB, is(0f));
+
+        // ディスプレイの座標
+        actualPanel = extractTheaterPanel_FACE_EAST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(214.28572f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(1024f));
+
+        actualPanel = extractTheaterPanel_FACE_WEST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(214.28572f));
+        assertThat(actualPanel.displayRect.xR, is(600f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(1024f));
+
+        actualPanel = extractTheaterPanel_BACK_EAST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(0f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(0f));
+
+        actualPanel = extractTheaterPanel_BACK_WEST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(0f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(0f));
     }
 
     @Test
@@ -103,13 +311,65 @@ public class AstronomicalTheaterTest {
         float terminalAzimuth = +10;
         float terminalPitch = -50;
         target.calculateTheaterRect(terminalAzimuth, terminalPitch);
-        Rect actual = extractTheaterRect(target);
 
-        assertThat(actual, notNullValue());
-        assertThat(actual.xL, is(-25f));
-        assertThat(actual.xR, is(+45f));
-        assertThat(actual.yT, is(-65f));
-        assertThat(actual.yB, is(-35f));
+        Rect actualTheaterRect = extractTheaterRect(target);
+        assertThat(actualTheaterRect, notNullValue());
+        assertThat(actualTheaterRect.xL, is(-25f));
+        assertThat(actualTheaterRect.xR, is(+45f));
+        assertThat(actualTheaterRect.yT, is(-65f));
+        assertThat(actualTheaterRect.yB, is(-35f));
+
+        AstronomicalTheaterPanel actualPanel;
+
+        // 天体シアターの座標
+        actualPanel = extractTheaterPanel_FACE_EAST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(0f));
+        assertThat(actualPanel.theaterRect.xR, is(+45f));
+        assertThat(actualPanel.theaterRect.yT, is(-65f));
+        assertThat(actualPanel.theaterRect.yB, is(-35f));
+
+        actualPanel = extractTheaterPanel_FACE_WEST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(-25f));
+        assertThat(actualPanel.theaterRect.xR, is(0f));
+        assertThat(actualPanel.theaterRect.yT, is(-65f));
+        assertThat(actualPanel.theaterRect.yB, is(-35f));
+
+        actualPanel = extractTheaterPanel_BACK_EAST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(0f));
+        assertThat(actualPanel.theaterRect.xR, is(0f));
+        assertThat(actualPanel.theaterRect.yT, is(0f));
+        assertThat(actualPanel.theaterRect.yB, is(0f));
+
+        actualPanel = extractTheaterPanel_BACK_WEST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(0f));
+        assertThat(actualPanel.theaterRect.xR, is(0f));
+        assertThat(actualPanel.theaterRect.yT, is(0f));
+        assertThat(actualPanel.theaterRect.yB, is(0f));
+
+        // ディスプレイの座標
+        actualPanel = extractTheaterPanel_FACE_EAST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(214.2857143f));
+        assertThat(actualPanel.displayRect.xR, is(600f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(1024f));
+
+        actualPanel = extractTheaterPanel_FACE_WEST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(214.2857143f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(1024f));
+
+        actualPanel = extractTheaterPanel_BACK_EAST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(0f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(0f));
+
+        actualPanel = extractTheaterPanel_BACK_WEST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(0f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(0f));
     }
 
     @Test
@@ -117,13 +377,65 @@ public class AstronomicalTheaterTest {
         float terminalAzimuth = -10;
         float terminalPitch = -50;
         target.calculateTheaterRect(terminalAzimuth, terminalPitch);
-        Rect actual = extractTheaterRect(target);
 
-        assertThat(actual, notNullValue());
-        assertThat(actual.xL, is(-45f));
-        assertThat(actual.xR, is(+25f));
-        assertThat(actual.yT, is(-65f));
-        assertThat(actual.yB, is(-35f));
+        Rect actualTheaterRect = extractTheaterRect(target);
+        assertThat(actualTheaterRect, notNullValue());
+        assertThat(actualTheaterRect.xL, is(-45f));
+        assertThat(actualTheaterRect.xR, is(+25f));
+        assertThat(actualTheaterRect.yT, is(-65f));
+        assertThat(actualTheaterRect.yB, is(-35f));
+
+        AstronomicalTheaterPanel actualPanel;
+
+        // 天体シアターの座標
+        actualPanel = extractTheaterPanel_FACE_EAST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(0f));
+        assertThat(actualPanel.theaterRect.xR, is(+25f));
+        assertThat(actualPanel.theaterRect.yT, is(-65f));
+        assertThat(actualPanel.theaterRect.yB, is(-35f));
+
+        actualPanel = extractTheaterPanel_FACE_WEST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(-45f));
+        assertThat(actualPanel.theaterRect.xR, is(0f));
+        assertThat(actualPanel.theaterRect.yT, is(-65f));
+        assertThat(actualPanel.theaterRect.yB, is(-35f));
+
+        actualPanel = extractTheaterPanel_BACK_EAST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(0f));
+        assertThat(actualPanel.theaterRect.xR, is(0f));
+        assertThat(actualPanel.theaterRect.yT, is(0f));
+        assertThat(actualPanel.theaterRect.yB, is(0f));
+
+        actualPanel = extractTheaterPanel_BACK_WEST_PANEL(target);
+        assertThat(actualPanel.theaterRect.xL, is(0f));
+        assertThat(actualPanel.theaterRect.xR, is(0f));
+        assertThat(actualPanel.theaterRect.yT, is(0f));
+        assertThat(actualPanel.theaterRect.yB, is(0f));
+
+        // ディスプレイの座標
+        actualPanel = extractTheaterPanel_FACE_EAST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(385.7142857f));
+        assertThat(actualPanel.displayRect.xR, is(600f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(1024f));
+
+        actualPanel = extractTheaterPanel_FACE_WEST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(385.7142857f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(1024f));
+
+        actualPanel = extractTheaterPanel_BACK_EAST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(0f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(0f));
+
+        actualPanel = extractTheaterPanel_BACK_WEST_PANEL(target);
+        assertThat(actualPanel.displayRect.xL, is(0f));
+        assertThat(actualPanel.displayRect.xR, is(0f));
+        assertThat(actualPanel.displayRect.yT, is(0f));
+        assertThat(actualPanel.displayRect.yB, is(0f));
     }
 
     private Rect extractTheaterRect(AstronomicalTheater theater) {
@@ -131,6 +443,36 @@ public class AstronomicalTheaterTest {
             Field field = AstronomicalTheater.class.getDeclaredField("theaterRect");
             field.setAccessible(true);
             return (Rect) field.get(theater);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private AstronomicalTheaterPanel extractTheaterPanel_FACE_EAST_PANEL(AstronomicalTheater theater) {
+        return extractTheaterPanel(theater, "FACE_EAST_PANEL");
+    }
+
+    private AstronomicalTheaterPanel extractTheaterPanel_FACE_WEST_PANEL(AstronomicalTheater theater) {
+        return extractTheaterPanel(theater, "FACE_WEST_PANEL");
+    }
+
+    private AstronomicalTheaterPanel extractTheaterPanel_BACK_EAST_PANEL(AstronomicalTheater theater) {
+        return extractTheaterPanel(theater, "BACK_EAST_PANEL");
+    }
+
+    private AstronomicalTheaterPanel extractTheaterPanel_BACK_WEST_PANEL(AstronomicalTheater theater) {
+        return extractTheaterPanel(theater, "BACK_WEST_PANEL");
+    }
+
+    private AstronomicalTheaterPanel extractTheaterPanel(AstronomicalTheater theater, String indexName) {
+        try {
+            Field indexField = AstronomicalTheater.class.getDeclaredField(indexName);
+            indexField.setAccessible(true);
+            int index = (Integer) indexField.get(theater);
+
+            Field field = AstronomicalTheater.class.getDeclaredField("panels");
+            field.setAccessible(true);
+            return ((AstronomicalTheaterPanel[]) field.get(theater))[index];
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
