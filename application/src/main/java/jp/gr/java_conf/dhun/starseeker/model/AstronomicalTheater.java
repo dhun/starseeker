@@ -131,8 +131,8 @@ public class AstronomicalTheater {
             panels[FACE_WEST_PANEL].theaterRect.xR = theaterRect.xR;
         }
 
-        if (theaterRect.yT <= +90) {
-            // Y軸の ＋90°をまたいでいない場合
+        if (theaterRect.yT >= -90) {
+            // Y軸の －90°をまたいでいない場合
             if (panels[FACE_EAST_PANEL].theaterRect.hasWidth()) {
                 panels[FACE_EAST_PANEL].theaterRect.yT = theaterRect.yT;
                 panels[FACE_EAST_PANEL].theaterRect.yB = theaterRect.yB;
@@ -145,22 +145,22 @@ public class AstronomicalTheater {
             panels[BACK_WEST_PANEL].theaterRect.setupZero();
 
         } else {
-            // Y軸の ＋90°をまたいでいる場合
-            panels[FACE_EAST_PANEL].theaterRect.yT = +90;
+            // Y軸の －90°をまたいでいる場合
+            panels[FACE_EAST_PANEL].theaterRect.yT = -90;
             panels[FACE_EAST_PANEL].theaterRect.yB = theaterRect.yB;
 
-            panels[FACE_WEST_PANEL].theaterRect.yT = +90;
+            panels[FACE_WEST_PANEL].theaterRect.yT = -90;
             panels[FACE_WEST_PANEL].theaterRect.yB = theaterRect.yB;
 
             panels[BACK_EAST_PANEL].theaterRect.yT = theaterRect.yT;
-            panels[BACK_EAST_PANEL].theaterRect.yB = +90;
+            panels[BACK_EAST_PANEL].theaterRect.yB = -90;
             panels[BACK_EAST_PANEL].theaterRect.xL = panels[FACE_EAST_PANEL].theaterRect.xL;
             panels[BACK_EAST_PANEL].theaterRect.xR = panels[FACE_EAST_PANEL].theaterRect.xR;
 
             panels[BACK_WEST_PANEL].theaterRect.yT = theaterRect.yT;
-            panels[BACK_WEST_PANEL].theaterRect.yB = +90;
-            panels[BACK_WEST_PANEL].theaterRect.xL = panels[FACE_EAST_PANEL].theaterRect.xL;
-            panels[BACK_WEST_PANEL].theaterRect.xR = panels[FACE_EAST_PANEL].theaterRect.xR;
+            panels[BACK_WEST_PANEL].theaterRect.yB = -90;
+            panels[BACK_WEST_PANEL].theaterRect.xL = panels[FACE_WEST_PANEL].theaterRect.xL;
+            panels[BACK_WEST_PANEL].theaterRect.xR = panels[FACE_WEST_PANEL].theaterRect.xR;
         }
     }
 
