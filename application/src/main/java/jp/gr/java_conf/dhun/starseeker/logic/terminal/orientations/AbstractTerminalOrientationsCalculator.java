@@ -83,7 +83,11 @@ public abstract class AbstractTerminalOrientationsCalculator implements SensorEv
 
     /**
      * {@inheritDoc}<br/>
-     * センサーマネージャにリスナを登録します.
+     * <br/>
+     * センサーマネージャにリスナを登録します.<br/>
+     * {@link SensorManager#registerListener(SensorEventListener, Sensor, int)} の際にエラーレベルのログがlogcatへ出力されるがバグのようなため気にしていません.
+     * 
+     * @see http://stackoverflow.com/questions/10938131/android-sensormanager-error-in-logcat
      */
     @Override
     public void prepare() {
@@ -97,7 +101,11 @@ public abstract class AbstractTerminalOrientationsCalculator implements SensorEv
 
     /**
      * {@inheritDoc}<br/>
-     * センサーマネージャをリスナから削除します.
+     * <br/>
+     * センサーマネージャをリスナから削除します.<br/>
+     * {@link SensorManager#unregisterListener(SensorEventListener)} の際にエラーレベルのログがlogcatへ出力されるがバグのようなため気にしていません.
+     * 
+     * @see http://stackoverflow.com/questions/10938131/android-sensormanager-error-in-logcat
      */
     @Override
     public void pause() {
