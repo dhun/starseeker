@@ -13,9 +13,9 @@ import android.view.Surface;
  * 
  */
 public class Orientations {
-    public double azimuth; // 方位.
-    public double pitch;   // ピッチ.
-    public double roll;    // ロール.
+    public float azimuth;   // 方位.
+    public float pitch;     // ピッチ.
+    public float roll;      // ロール.
 
     private DisplayRotation displayRotation = DisplayRotation.ROTATION_0;    // 端末の回転状態
 

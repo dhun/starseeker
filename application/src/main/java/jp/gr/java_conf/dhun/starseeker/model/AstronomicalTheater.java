@@ -3,7 +3,6 @@
  */
 package jp.gr.java_conf.dhun.starseeker.model;
 
-import jp.gr.java_conf.dhun.starseeker.model.Orientations.DisplayRotation;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -51,17 +50,17 @@ public class AstronomicalTheater {
         for (int i = 0; i < panels.length; i++) {
             panels[i] = new AstronomicalTheaterPanel();
         }
+
+        setTheaterSizeToDefault();
     }
 
     /**
-     * 天体シアターのサイズを、端末の回転状態に応じた規定値に設定します
-     * 
-     * @param displayRotation 端末の回転状態
+     * 天体シアターのサイズを、ディスプレイサイズに応じた規定値に設定します
      */
-    public void setTheaterSizeToDefault(DisplayRotation displayRotation) {
+    public void setTheaterSizeToDefault() {
         // 端末の回転状態から、天体シアターのサイズを算出
         float theaterWidth, theaterHeight;
-        if (displayRotation.isPortrait()) {
+        if (displayWidth < displayHeight) {
             theaterWidth = DEFAULT_PORTRAIT_THEATER_WIDTH;
             theaterHeight = DEFAULT_PORTRAIT_THEATER_HEIGHT;
         } else {

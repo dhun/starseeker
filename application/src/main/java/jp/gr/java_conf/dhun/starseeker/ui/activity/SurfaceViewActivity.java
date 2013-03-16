@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
  */
 public class SurfaceViewActivity extends Activity {
 
+    private AstronomicalTheaterView theaterView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +23,21 @@ public class SurfaceViewActivity extends Activity {
         LinearLayout rootLayout = new LinearLayout(this);
         this.setContentView(rootLayout);
 
-        AstronomicalTheaterView theaterView = new AstronomicalTheaterView(this);
+        theaterView = new AstronomicalTheaterView(this);
         rootLayout.addView(theaterView);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        theaterView.resume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        theaterView.pause();
     }
 }

@@ -44,6 +44,6 @@ public interface ITerminalOrientationsCalculator {
      * 
      */
     interface OnChangeTerminalOrientationsListener {
-        void onChangeTerminalOrientations(Orientations siteLocation);
+        void onChangeTerminalOrientations(Orientations orientations);
     }
 }
