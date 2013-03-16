@@ -18,15 +18,23 @@ public final class LogUtils {
     private LogUtils() {
     }
 
-    public static final void i(Class<?> clazz, String message) {
-        Log.i(APP_NAME + ":" + clazz.getSimpleName(), message);
+    public static final void v(Class<?> clazz, String message) {
+        Log.v(APP_NAME + ":" + clazz.getSimpleName(), message);
     }
 
     public static final void d(Class<?> clazz, String message) {
         Log.d(APP_NAME + ":" + clazz.getSimpleName(), message);
     }
 
-    public static final void v(Class<?> clazz, String message) {
-        Log.v(APP_NAME + ":" + clazz.getSimpleName(), message);
+    public static final void i(Class<?> clazz, String message) {
+        Log.i(APP_NAME + ":" + clazz.getSimpleName(), message);
+    }
+
+    public static final void e(Class<?> clazz, String message) {
+        Log.e(APP_NAME + ":" + clazz.getSimpleName(), message);
+    }
+
+    public static final void e(Class<?> clazz, String message, Throwable throwable) {
+        Log.e(APP_NAME + ":" + clazz.getSimpleName(), message, throwable);
     }
 }

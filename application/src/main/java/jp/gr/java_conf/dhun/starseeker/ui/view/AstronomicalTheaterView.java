@@ -7,25 +7,29 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import jp.gr.java_conf.dhun.starseeker.system.StarSeekerEngine;
+import jp.gr.java_conf.dhun.starseeker.system.listener.IStarSeekerListener;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 /**
+ * 天体シアターのビュー.<br/>
+ * 
  * @author jun
  * 
  */
 public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolder.Callback2 {
 
-    private static final int FPS = 60;
-    private static final int FPS_OF_MILLIS = 1000 / FPS;
+    private static final int EXPECTED_FPS = 60; // FPSの期待値
+    private static final int EXPECTED_FPS_OF_MILLIS = 1000 / EXPECTED_FPS; // FPSの期待値に対するミリ秒
 
-    private ScheduledExecutorService executorService;
+    private StarSeekerEngine starSeekerEngine;          // スターシーカーシステムのエンジン
+    private ScheduledExecutorService executorService;   // スターシーカーシステムの実行スレッド
 
     public AstronomicalTheaterView(Context context) {
         super(context);
@@ -38,7 +42,8 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
     }
 
     private void initialize() {
-        this.getHolder().addCallback(this);
+        starSeekerEngine = new StarSeekerEngine();
+        getHolder().addCallback(this);
     }
 
     // ================================================================================
@@ -50,19 +55,25 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
         Runnable command = new Runnable() {
             @Override
             public void run() {
-                try {
-                    draw();
-                } catch (Exception e) {
-                    executorService.shutdown();
-                    if (astronomicalTheaterViewListener != null) {
-                        astronomicalTheaterViewListener.onException(e);
-                    }
-                }
+                Canvas canvas = getHolder().lockCanvas();
+                starSeekerEngine.main(canvas);
+                getHolder().unlockCanvasAndPost(canvas);
             }
         };
 
+        starSeekerEngine.setStarSeekerListener(new IStarSeekerListener() {
+            @Override
+            public void onException(Exception e) {
+                executorService.shutdown();
+
+                String message = "システムエラーが発生しました. 処理を中断します.\n" //
+                        + e.getMessage();
+                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+            }
+        });
+
         executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(command, FPS_OF_MILLIS, FPS_OF_MILLIS, TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(command, EXPECTED_FPS_OF_MILLIS, EXPECTED_FPS_OF_MILLIS, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -78,37 +89,5 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
     @Override
     public void surfaceRedrawNeeded(SurfaceHolder holder) {
         LogUtils.d(getClass(), "surfaceRedrawNeeded.");
-    }
-
-    // ================================================================================
-    // custom
-    private int count = 0;
-    private final Paint paint = new Paint() {
-        {
-            setFlags(Paint.ANTI_ALIAS_FLAG);
-            setColor(Color.WHITE);
-        }
-    };
-
-    private final void draw() {
-        Canvas canvas = getHolder().lockCanvas();
-
-        canvas.drawColor(Color.BLACK);
-        canvas.drawText("" + count, 100, 100, paint);
-        count++;
-
-        getHolder().unlockCanvasAndPost(canvas);
-    }
-
-    // ================================================================================
-    // リスナ
-    private AstronomicalTheaterViewListener astronomicalTheaterViewListener;
-
-    public void setAstronomicalTheaterViewListener(AstronomicalTheaterViewListener listener) {
-        this.astronomicalTheaterViewListener = listener;
-    }
-
-    public interface AstronomicalTheaterViewListener {
-        void onException(Exception e);
     }
 }
