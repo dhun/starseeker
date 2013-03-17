@@ -434,11 +434,22 @@ public class AstronomicalTheater {
         float starAzimuth = (float) star.getAzimuth();
         float starAltitude = (float) star.getAltitude();
 
+        AstronomicalTheaterPanel panel = null;
+        for (AstronomicalTheaterPanel e : panels) {
+            if (e.theaterRect.contains(star)) {
+                panel = e;
+                break;
+            }
+        }
+        if (null == panel) {
+            return;
+        }
+
         RectF rectF = new RectF();
-        rectF.left = 50;
-        rectF.top = 50;
-        rectF.right = 100;
-        rectF.bottom = 100;
+        rectF.left = starAzimuth / 2;
+        rectF.top = starAltitude / 2;
+        rectF.right = starAzimuth;
+        rectF.bottom = starAltitude;
 
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -476,6 +487,18 @@ public class AstronomicalTheater {
 
         public float height() {
             return Math.abs((yT - yB));
+        }
+
+        public boolean contains(Star star) {
+            float starAzimuth = (float) star.getAzimuth();
+            float starAltitude = (float) star.getAltitude();
+            if (starAzimuth < xL || xR < starAzimuth) {
+                return false;
+            }
+            if (starAltitude < yT || yB < starAltitude) {
+                return false;
+            }
+            return true;
         }
     }
 
