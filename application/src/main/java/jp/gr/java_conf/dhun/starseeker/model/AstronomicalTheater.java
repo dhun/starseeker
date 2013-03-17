@@ -3,9 +3,6 @@
  */
 package jp.gr.java_conf.dhun.starseeker.model;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -260,19 +257,23 @@ public class AstronomicalTheater {
         }
     }
 
-    Paint tickPaint = new Paint() {
-        {
-            setColor(Color.WHITE);
-        }
-    };
-    Paint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG) {
-        {
-            setColor(Color.WHITE);
-            setTextSize(12);
-            setTextAlign(Align.CENTER);
-        }
-    };
-    NumberFormat nf = new DecimalFormat("0");
+    Paint tickPaint = new Paint();
+    {
+        tickPaint.setColor(Color.WHITE);
+    }
+
+    private Paint textPaint;
+    private float positiveSignHalfWidth;
+    private float negativeSignHalfWidth;
+    {
+        textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        textPaint.setColor(Color.WHITE);
+        textPaint.setTextSize(12);
+        textPaint.setTextAlign(Paint.Align.CENTER);
+
+        positiveSignHalfWidth = textPaint.measureText("+") / 2;
+        negativeSignHalfWidth = textPaint.measureText("-") / 2;
+    }
 
     /**
      * 描画します.<br/>
@@ -291,13 +292,7 @@ public class AstronomicalTheater {
     private void drawAxisX(Canvas canvas) {
         float degreeFractions = theaterRect.xL % 1;
         int currDegree = (int) (theaterRect.xL - degreeFractions);
-
-        int incrDegree;
-        if (0 < theaterRect.xL && 0 > theaterRect.xR) {
-            incrDegree = +1; // 180度をまたいだ場合
-        } else {
-            incrDegree = (theaterRect.xL < theaterRect.xR) ? +1 : -1;
-        }
+        int incrDegree = +1;
 
         float degreeOnePixcel = displayWidth / theaterWidth;
 
@@ -306,17 +301,34 @@ public class AstronomicalTheater {
         float majorTickYT = displayHeight - 10;
         float minorTickYT = displayHeight - 5;
 
+        String tickText;
+        float signWidth;
+
         while (x < displayWidth) {
             if (currDegree % 10 == 0) {
+                if (currDegree == 0) {
+                    tickText = "0";
+                    signWidth = 0;
+                } else if (currDegree == +180 || currDegree == -180) {
+                    tickText = "180";
+                    signWidth = 0;
+                } else if (currDegree < 0) {
+                    tickText = String.valueOf(currDegree);
+                    signWidth = positiveSignHalfWidth;
+                } else {
+                    tickText = "+" + String.valueOf(currDegree);
+                    signWidth = negativeSignHalfWidth;
+                }
+
                 canvas.drawLine(x, majorTickYT, x, tickYBottom, tickPaint);
-                canvas.drawText(nf.format(currDegree), x, majorTickYT, textPaint);
+                canvas.drawText(tickText, x - signWidth, majorTickYT, textPaint);
             } else {
                 canvas.drawLine(x, minorTickYT, x, tickYBottom, tickPaint);
             }
 
             currDegree += incrDegree;
             if (currDegree == 0) {
-                incrDegree = +1;
+                // incrDegree = +1;
             } else if (currDegree == 180) {
                 currDegree = -180;
             }

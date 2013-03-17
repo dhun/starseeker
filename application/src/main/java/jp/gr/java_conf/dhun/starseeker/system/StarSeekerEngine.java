@@ -63,7 +63,6 @@ public class StarSeekerEngine implements //
     }
 
     // ＞＞＞ 開発中のコード
-    private int count = 0;
     private final Paint paint = new Paint() {
         {
             setFlags(Paint.ANTI_ALIAS_FLAG);
@@ -89,7 +88,6 @@ public class StarSeekerEngine implements //
 
         try {
             astronomicalTheater.calculateTheaterRect(orientations.azimuth, orientations.pitch);
-            count++;
 
         } catch (Exception e) {
             LogUtils.e(getClass(), "演算処理で例外が発生しました.", e);

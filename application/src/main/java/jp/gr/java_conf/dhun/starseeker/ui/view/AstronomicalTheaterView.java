@@ -99,7 +99,6 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
         }
 
         // エンジンの設定
-        starSeekerEngine = new StarSeekerEngine();
         starSeekerEngine.prepare(width, height);
         starSeekerEngine.setStarSeekerListener(new IStarSeekerListener() {
             @Override
