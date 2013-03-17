@@ -19,6 +19,13 @@ public class Orientations {
 
     private DisplayRotation displayRotation = DisplayRotation.ROTATION_0;    // 端末の回転状態
 
+    public void copyFrom(Orientations orientations) {
+        this.azimuth = orientations.azimuth;
+        this.pitch = orientations.pitch;
+        this.roll = orientations.roll;
+        this.displayRotation = orientations.displayRotation;
+    }
+
     /**
      * 端末の回転状態を取得します.<br/>
      */

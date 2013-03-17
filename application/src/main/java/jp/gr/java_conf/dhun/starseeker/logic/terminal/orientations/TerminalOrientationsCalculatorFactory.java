@@ -28,11 +28,13 @@ public class TerminalOrientationsCalculatorFactory {
         switch (displayRotation) {
         case Surface.ROTATION_0:
         case Surface.ROTATION_180:
-            return new PortraitTerminalOrientationsCalculator(context, displayRotation);
+            return new FazzyPortraitTerminalOrientationsCalculator(context, displayRotation);
+            // return new PortraitTerminalOrientationsCalculator(context, displayRotation);
 
         case Surface.ROTATION_90:
         case Surface.ROTATION_270:
-            return new LandscapeTerminalOrientationsCalculator(context, displayRotation);
+            // return new LandscapeTerminalOrientationsCalculator(context, displayRotation);
+            return new FazzyLandscapeTerminalOrientationsCalculator(context, displayRotation);
 
         default:
             throw new IllegalStateException("displayRotationの値が不正です. value=" + displayRotation);

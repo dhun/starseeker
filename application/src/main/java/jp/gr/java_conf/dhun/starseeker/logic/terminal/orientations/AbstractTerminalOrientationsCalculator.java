@@ -33,8 +33,8 @@ public abstract class AbstractTerminalOrientationsCalculator implements SensorEv
     private boolean readyAccelerometerValues = false; // accelerometerValuesに値が格納されたかどうか
     private boolean readyMagneticFieldValues = false; // magneticFieldValuesに値が格納されたかどうか
 
-    private OnChangeTerminalOrientationsListener onChangeSiteLocationListener;
-    private final Orientations siteLocation = new Orientations(); // リスナが通知する変数をキャッシュ
+    protected OnChangeTerminalOrientationsListener onChangeSiteLocationListener;
+    protected final Orientations siteLocation = new Orientations(); // リスナが通知する変数をキャッシュ
 
     // 以下はonSensorChangedでのみ利用するローカル変数. キャッシュ
     private final float[] R = new float[MATRIX_SIZE];
@@ -173,7 +173,11 @@ public abstract class AbstractTerminalOrientationsCalculator implements SensorEv
             siteLocation.pitch = orientationValues[1];
             siteLocation.roll = orientationValues[2];
 
-            onChangeSiteLocationListener.onChangeTerminalOrientations(siteLocation);
+            raiseChangeTerminalOrientations();
         }
+    }
+
+    protected void raiseChangeTerminalOrientations() {
+        onChangeSiteLocationListener.onChangeTerminalOrientations(siteLocation);
     }
 }

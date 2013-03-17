@@ -39,7 +39,7 @@ public class StarSeekerEngine implements //
     private IStarSeekerListener starSeekerListener; // スターシーカーシステムのリスナ
 
     private AstronomicalTheater astronomicalTheater;
-    private Orientations orientations;
+    private final Orientations orientations;
 
     private float lastFps;
     private long lastTime;
@@ -130,6 +130,6 @@ public class StarSeekerEngine implements //
     // ITerminalOrientationsCalculator.OnChangeTerminalOrientationsListener
     @Override
     public void onChangeTerminalOrientations(Orientations orientations) {
-        this.orientations = orientations;
+        this.orientations.copyFrom(orientations);
     }
 }
