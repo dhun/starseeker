@@ -3,9 +3,14 @@
  */
 package jp.gr.java_conf.dhun.starseeker.model;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.text.TextPaint;
 
 /**
  * 天体シアター.<br/>
@@ -23,19 +28,27 @@ public class AstronomicalTheater {
     private static final float DEFAULT_LANDSCAPE_THEATER_WIDTH = 90;  // 横向き）天体シアターの基底の横幅
     private static final float DEFAULT_LANDSCAPE_THEATER_HEIGHT = 60; // 横向き）天体シアターの基底の高さ
 
+    private static final int PANEL_COUNT = 4;
     private static final int FACE_EAST_PANEL = 0; // X=-180～0, Y=0～+90にあたるパネル
     private static final int FACE_WEST_PANEL = 1; // X=+180～0, Y=0～+90にあたるパネル
     private static final int BACK_EAST_PANEL = 2; // X=-180～0, Y=+90より背面にあたるパネル
     private static final int BACK_WEST_PANEL = 3; // X=+180～0, Y=+90より背面にあたるパネル
 
-    private final AstronomicalTheaterPanel[] panels = new AstronomicalTheaterPanel[4];
+    private final AstronomicalTheaterPanel[] panels = new AstronomicalTheaterPanel[PANEL_COUNT];
 
-    private final int displayWidth;                    // ディスプレイの横幅
-    private final int displayHeight;                   // ディスプレイの高さ
-    private final Rect theaterRect = new Rect();       // 天体シアターの座標
+    private float terminalAzimuth;
+    private float terminalPitch;
 
-    private float theaterWidth;  // 天体シアターの横幅
-    private float theaterHeight; // 天体シアターの高さ
+    // サイズ系
+    private final int displayWidth;     // ディスプレイの横幅
+    private final int displayHeight;    // ディスプレイの高さ
+
+    private float theaterWidth;                  // 天体シアターの横幅
+    private float theaterHeight;                 // 天体シアターの高さ
+    private final Rect theaterRect = new Rect(); // 天体シアターの座標
+
+    // 描画系
+    private final Paint backgroundPaint;
 
     /**
      * コンストラクタ.<br/>
@@ -52,6 +65,10 @@ public class AstronomicalTheater {
         }
 
         setTheaterSizeToDefault();
+
+        // 描画系の設定
+        backgroundPaint = new Paint();
+        backgroundPaint.setColor(Color.BLACK);
     }
 
     /**
@@ -88,6 +105,9 @@ public class AstronomicalTheater {
      * @param terminalPitch 端末のピッチ
      */
     public void calculateTheaterRect(float terminalAzimuth, float terminalPitch) {
+        this.terminalAzimuth = terminalAzimuth;
+        this.terminalPitch = terminalPitch;
+
         // 端末の方位とピッチから、天体シアターの座標を算出
         theaterRect.xL = adjustAzimuth(terminalAzimuth - theaterWidth / 2);
         theaterRect.xR = adjustAzimuth(theaterRect.xL + theaterWidth);
@@ -237,6 +257,66 @@ public class AstronomicalTheater {
         } else {
             panels[indexFaceL].displayRect.setupZero();
             panels[indexFaceR].displayRect.setupZero();
+        }
+    }
+
+    Paint tickPaint = new Paint() {
+        {
+            setColor(Color.WHITE);
+        }
+    };
+    Paint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG) {
+        {
+            setColor(Color.WHITE);
+            setTextSize(12);
+            setTextAlign(Align.CENTER);
+        }
+    };
+    NumberFormat nf = new DecimalFormat("0");
+
+    /**
+     * 描画します.<br/>
+     * 
+     * @param canvas Androidキャンバス
+     */
+    public void draw(Canvas canvas) {
+        canvas.drawPaint(backgroundPaint);
+        for (int i = 0; i < PANEL_COUNT; i++) {
+            panels[i].draw(canvas);
+        }
+
+        // X軸の目盛り
+        float degreeFractions = theaterRect.xL % 1;
+        int currDegree = (int) (theaterRect.xL - degreeFractions);
+
+        int incrDegree;
+        if (0 < theaterRect.xL && 0 > theaterRect.xR) {
+            incrDegree = +1; //
+        } else {
+            incrDegree = (theaterRect.xL < theaterRect.xR) ? +1 : -1;
+        }
+
+        float degreeOnePixcel = displayWidth / theaterWidth;
+
+        float x = degreeFractions * degreeOnePixcel;
+        float y = displayHeight - 10;
+        float tickYB = displayHeight;
+        float majorTickYT = displayHeight - 10;
+        float minorTickYT = displayHeight - 5;
+
+        while (x < displayWidth) {
+            if (currDegree % 10 == 0) {
+                canvas.drawLine(x, majorTickYT, x, tickYB, tickPaint);
+                canvas.drawText(nf.format(currDegree), x, y, textPaint);
+            } else {
+                canvas.drawLine(x, minorTickYT, x, tickYB, tickPaint);
+            }
+
+            currDegree += incrDegree;
+            if (currDegree == 180) {
+                currDegree = -180;
+            }
+            x += degreeOnePixcel;
         }
     }
 

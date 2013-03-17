@@ -3,6 +3,9 @@
  */
 package jp.gr.java_conf.dhun.starseeker.system;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.ITerminalOrientationsCalculator;
 import jp.gr.java_conf.dhun.starseeker.model.AstronomicalTheater;
 import jp.gr.java_conf.dhun.starseeker.model.Orientations;
@@ -38,6 +41,10 @@ public class StarSeekerEngine implements //
     private AstronomicalTheater astronomicalTheater;
     private Orientations orientations;
 
+    private float lastFps;
+    private long lastTime;
+    private final NumberFormat fpsFormat = new DecimalFormat("'FPS='0.0");
+
     /**
      * デフォルト・コンストラクタ
      */
@@ -63,6 +70,12 @@ public class StarSeekerEngine implements //
             setColor(Color.WHITE);
         }
     };
+    private final NumberFormat decFormat = new DecimalFormat("0.0") {
+        {
+            setPositivePrefix("+");
+            setNegativePrefix("-");
+        }
+    };
 
     // ＜＜＜ 開発中のコード. ここまで
 
@@ -70,6 +83,10 @@ public class StarSeekerEngine implements //
      * 演算処理を行います.<br/>
      */
     public void calculate() {
+        long now = System.currentTimeMillis();
+        lastFps = 1000 / (now - lastTime);
+        lastTime = now;
+
         try {
             astronomicalTheater.calculateTheaterRect(orientations.azimuth, orientations.pitch);
             count++;
@@ -89,8 +106,12 @@ public class StarSeekerEngine implements //
      */
     public void draw(Canvas canvas) {
         try {
-            canvas.drawColor(Color.BLACK);
-            canvas.drawText("" + count, 100, 100, paint);
+            astronomicalTheater.draw(canvas);
+
+            canvas.drawText(fpsFormat.format(lastFps), 100, 100, paint);
+            canvas.drawText("azimuth=" + decFormat.format(orientations.azimuth), 100, 120, paint);
+            canvas.drawText("pitch=" + decFormat.format(orientations.pitch), 100, 130, paint);
+            canvas.drawText("roll=" + decFormat.format(orientations.roll), 100, 140, paint);
 
         } catch (Exception e) {
             LogUtils.e(getClass(), "描画処理で例外が発生しました.", e);
