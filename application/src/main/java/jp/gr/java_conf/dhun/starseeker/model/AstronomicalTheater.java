@@ -297,6 +297,7 @@ public class AstronomicalTheater {
         float degreeOnePixcel = displayWidth / theaterWidth;
 
         float x = degreeFractions * degreeOnePixcel;
+
         float tickYBottom = displayHeight;
         float majorTickYT = displayHeight - 10;
         float minorTickYT = displayHeight - 5;
