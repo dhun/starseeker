@@ -6,6 +6,7 @@ package jp.gr.java_conf.dhun.starseeker.model;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.FontMetrics;
 import android.graphics.RectF;
 import android.text.TextPaint;
 
@@ -275,6 +276,23 @@ public class AstronomicalTheater {
         negativeSignHalfWidth = textPaint.measureText("-") / 2;
     }
 
+    private Paint yAxisTextPaint;
+    private float yAxisTextMaxWidth;
+    private float yAxisTextAdjustHeight;
+    {
+        yAxisTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        yAxisTextPaint.setColor(Color.WHITE);
+        yAxisTextPaint.setTextSize(12);
+        // yAxisTextPaint.setTextAlign(Paint.Align.RIGHT);
+        yAxisTextPaint.setTextAlign(Paint.Align.LEFT);
+
+        // yAxisTextMaxWidth = textPaint.measureText("+000");
+        yAxisTextMaxWidth = 0;
+
+        FontMetrics fontMetrics = yAxisTextPaint.getFontMetrics();
+        yAxisTextAdjustHeight = (fontMetrics.ascent + fontMetrics.descent) / 2;
+    }
+
     /**
      * 描画します.<br/>
      * 
@@ -287,6 +305,7 @@ public class AstronomicalTheater {
         }
 
         drawAxisX(canvas); // X軸の目盛り
+        drawAxisY(canvas); // Y軸の目盛り
     }
 
     private void drawAxisX(Canvas canvas) {
@@ -334,6 +353,56 @@ public class AstronomicalTheater {
                 currDegree = -180;
             }
             x += degreeOnePixcel;
+        }
+    }
+
+    private void drawAxisY(Canvas canvas) {
+        float degreeFractions = theaterRect.yT % 1;
+        int currDegree = (int) (theaterRect.yT - degreeFractions);
+        int incrDegree = +1;
+        if (theaterRect.yT < -90) {
+            currDegree = -90 - (currDegree + 90); // -100 -> -90
+            incrDegree = -1;
+        } else {
+            incrDegree = +1;
+        }
+
+        float degreeOnePixcel = displayHeight / theaterHeight;
+
+        float y = degreeFractions * degreeOnePixcel;
+
+        float tickXLeft = 0;
+        float majorTickXR = +10;
+        float minorTickXR = +5;
+
+        String tickText;
+        float margin = 3;
+
+        while (y < displayHeight) {
+            if (currDegree % 10 == 0) {
+                if (currDegree == 0) {
+                    tickText = "0";
+                } else if (currDegree == +90 || currDegree == -90) {
+                    tickText = "90";
+                } else if (currDegree < 0) {
+                    tickText = String.valueOf(currDegree);
+                } else {
+                    tickText = "+" + String.valueOf(currDegree);
+                }
+
+                canvas.drawLine(tickXLeft, y, majorTickXR, y, tickPaint);
+                canvas.drawText(tickText, majorTickXR + yAxisTextMaxWidth + margin, y - yAxisTextAdjustHeight, yAxisTextPaint);
+            } else {
+                canvas.drawLine(tickXLeft, y, minorTickXR, y, tickPaint);
+            }
+
+            currDegree += incrDegree;
+            if (currDegree == 0) {
+                // incrDegree = +1;
+            } else if (currDegree == -90) {
+                incrDegree = +1;
+            }
+            y += degreeOnePixcel;
         }
     }
 
