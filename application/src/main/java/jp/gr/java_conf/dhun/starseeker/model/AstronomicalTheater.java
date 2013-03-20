@@ -290,7 +290,9 @@ public class AstronomicalTheater {
         yAxisTextMaxWidth = 0;
 
         FontMetrics fontMetrics = yAxisTextPaint.getFontMetrics();
-        yAxisTextAdjustHeight = (fontMetrics.ascent + fontMetrics.descent) / 2;
+        if (null != fontMetrics) { // FIXME for robolectric
+            yAxisTextAdjustHeight = (fontMetrics.ascent + fontMetrics.descent) / 2;
+        }
     }
 
     /**

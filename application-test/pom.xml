@@ -7,7 +7,6 @@
     <artifactId>starseeker-parent</artifactId>
     <version>1.0-parent-SNAPSHOT</version>
   </parent>
-  
   <groupId>jp.gr.java_conf.dhun.starseeker</groupId>
   <artifactId>starseeker-test</artifactId>
   <version>1.0-SNAPSHOT</version>
@@ -31,5 +30,31 @@
       <version>4.8.1</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- ＞＞＞robolectricのために追加した設定 -->
+    <dependency>
+      <groupId>com.google.android</groupId>
+      <artifactId>android</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.android.maps</groupId>
+      <artifactId>maps</artifactId>
+      <version>10</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.android</groupId>
+      <artifactId>android-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.pivotallabs</groupId>
+      <artifactId>robolectric</artifactId>
+      <version>0.9.4</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- ＜＜＜ -->
+
   </dependencies>
 </project>

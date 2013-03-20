@@ -13,11 +13,15 @@ import jp.gr.java_conf.dhun.starseeker.model.AstronomicalTheater.Rect;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
  * @author jun
  * 
  */
+@RunWith(RobolectricTestRunner.class)
 public class AstronomicalTheaterTest {
 
     private AstronomicalTheater target;
