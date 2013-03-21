@@ -3,6 +3,9 @@
  */
 package jp.gr.java_conf.dhun.starseeker.ui.view;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -12,6 +15,7 @@ import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.TerminalOrien
 import jp.gr.java_conf.dhun.starseeker.system.StarSeekerEngine;
 import jp.gr.java_conf.dhun.starseeker.system.listener.IStarSeekerListener;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
+import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Handler;
@@ -53,7 +57,12 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
         getHolder().addCallback(this);
 
         // スターシーカーシステムのエンジンを設定
-        starSeekerEngine = new StarSeekerEngine();
+        float longitude = (float) StarLocationUtil.convertAngleStringToDouble("+135°44'"); // FIXME
+        float latitude = (float) StarLocationUtil.convertAngleStringToDouble("+35°01'");
+        final Calendar cal = Calendar.getInstance(Locale.JAPAN);
+        cal.set(2000, 0, 1, 21, 0);
+        Date baseDateTime = cal.getTime();
+        starSeekerEngine = new StarSeekerEngine(longitude, latitude, baseDateTime);
 
         // 端末ステートリゾルバを設定
         int displayRotation = getDisplayRotation(context);

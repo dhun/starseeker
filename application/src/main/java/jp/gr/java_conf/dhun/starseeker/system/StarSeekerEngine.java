@@ -5,8 +5,10 @@ package jp.gr.java_conf.dhun.starseeker.system;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Date;
 import java.util.Set;
 
+import jp.gr.java_conf.dhun.starseeker.logic.StarLocator;
 import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.ITerminalOrientationsCalculator;
 import jp.gr.java_conf.dhun.starseeker.model.AstronomicalTheater;
 import jp.gr.java_conf.dhun.starseeker.model.EquatorialCoordinateSystem;
@@ -48,11 +50,18 @@ public class StarSeekerEngine implements //
     private long lastTime;
     private final NumberFormat fpsFormat = new DecimalFormat("'FPS='0.0");
 
+    private final StarLocator starLocator;
+
     /**
      * デフォルト・コンストラクタ
      */
-    public StarSeekerEngine() {
+    public StarSeekerEngine(float longitude, float latitude, Date baseDateTime) {
         orientations = new Orientations();
+        starLocator = new StarLocator(longitude, latitude, baseDateTime);
+
+        for (Star star : EquatorialCoordinateSystem.STARS) {
+            starLocator.locate(star);
+        }
     }
 
     /**
@@ -111,7 +120,7 @@ public class StarSeekerEngine implements //
         try {
             astronomicalTheater.draw(canvas);
             for (Star star : stars) {
-                astronomicalTheater.draw(star, canvas);
+                astronomicalTheater.draw(canvas, star);
             }
 
             canvas.drawText(fpsFormat.format(lastFps), 100, 100, paint);

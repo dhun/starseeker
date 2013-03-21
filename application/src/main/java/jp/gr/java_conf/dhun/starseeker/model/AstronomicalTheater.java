@@ -3,6 +3,7 @@
  */
 package jp.gr.java_conf.dhun.starseeker.model;
 
+import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -414,16 +415,13 @@ public class AstronomicalTheater {
      * @param star 星
      * @return 描画領域に含まれる場合はtrue
      */
-    public boolean contains(Star star) {
-        float starAzimuth = (float) star.getAzimuth();
-        float starAltitude = (float) star.getAltitude();
-        if (starAzimuth < theaterRect.xL || theaterRect.xR < starAzimuth) {
-            return false;
+    public AstronomicalTheaterPanel containsPanel(Star star) {
+        for (AstronomicalTheaterPanel panel : panels) {
+            if (panel.contains(star)) {
+                return panel;
+            }
         }
-        if (starAltitude < theaterRect.yT || theaterRect.yB < starAltitude) {
-            return false;
-        }
-        return true;
+        return null;
     }
 
     /**
@@ -432,17 +430,11 @@ public class AstronomicalTheater {
      * @param star 星
      * @param canvas キャンバス
      */
-    public void draw(Star star, Canvas canvas) {
+    public void draw(Canvas canvas, Star star) {
         float starAzimuth = (float) star.getAzimuth();
         float starAltitude = (float) star.getAltitude();
 
-        AstronomicalTheaterPanel panel = null;
-        for (AstronomicalTheaterPanel e : panels) {
-            if (e.theaterRect.contains(star)) {
-                panel = e;
-                break;
-            }
-        }
+        AstronomicalTheaterPanel panel = containsPanel(star);
         if (null == panel) {
             return;
         }
@@ -458,6 +450,7 @@ public class AstronomicalTheater {
         canvas.drawOval(rectF, paint);
     }
 
+    @SuppressLint("DefaultLocale")
     public static class Rect {
         public float xL;
         public float xR;
@@ -501,6 +494,12 @@ public class AstronomicalTheater {
                 return false;
             }
             return true;
+        }
+
+        @SuppressLint("DefaultLocale")
+        @Override
+        public String toString() {
+            return String.format("x=[%6.2f - %6.2f], y=[%6.2f - %6.2f]]", xL, xR, yT, yB);
         }
     }
 

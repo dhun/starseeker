@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import jp.gr.java_conf.dhun.starseeker.model.Star;
+import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import jp.gr.java_conf.dhun.starseeker.util.MathUtils;
 
 /**
@@ -88,6 +89,8 @@ public class StarLocator {
 
         // 星を再配置
         star.relocate(azimuth, altitude);
+
+        LogUtils.v(getClass(), star.toString());
     }
 
     /**
