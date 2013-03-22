@@ -35,9 +35,6 @@ public class AstronomicalTheater {
 
     private final AstronomicalTheaterPanel[] panels = new AstronomicalTheaterPanel[PANEL_COUNT];
 
-    private float terminalAzimuth;
-    private float terminalPitch;
-
     // サイズ系
     private final int displayWidth;     // ディスプレイの横幅
     private final int displayHeight;    // ディスプレイの高さ
@@ -104,15 +101,12 @@ public class AstronomicalTheater {
      * @param terminalPitch 端末のピッチ
      */
     public void calculateTheaterRect(float terminalAzimuth, float terminalPitch) {
-        this.terminalAzimuth = terminalAzimuth;
-        this.terminalPitch = terminalPitch;
-
         // 端末の方位とピッチから、天体シアターの座標を算出
         theaterRect.xL = adjustAzimuth(terminalAzimuth - theaterWidth / 2);
         theaterRect.xR = adjustAzimuth(theaterRect.xL + theaterWidth);
 
-        theaterRect.yT = terminalPitch - theaterHeight / 2;
-        theaterRect.yB = theaterRect.yT + theaterHeight;
+        theaterRect.yT = -terminalPitch + theaterHeight / 2;
+        theaterRect.yB = theaterRect.yT - theaterHeight;
 
         assignPanelTheaterRect();
         assignPanelDisplayRect();
@@ -149,8 +143,8 @@ public class AstronomicalTheater {
             panels[FACE_WEST_PANEL].theaterRect.xR = theaterRect.xR;
         }
 
-        if (theaterRect.yT >= -90) {
-            // Y軸の －90°をまたいでいない場合
+        if (theaterRect.yT <= +90) {
+            // Y軸の +90°をまたいでいない場合
             if (panels[FACE_EAST_PANEL].theaterRect.hasWidth()) {
                 panels[FACE_EAST_PANEL].theaterRect.yT = theaterRect.yT;
                 panels[FACE_EAST_PANEL].theaterRect.yB = theaterRect.yB;
@@ -163,20 +157,20 @@ public class AstronomicalTheater {
             panels[BACK_WEST_PANEL].theaterRect.setupZero();
 
         } else {
-            // Y軸の －90°をまたいでいる場合
-            panels[FACE_EAST_PANEL].theaterRect.yT = -90;
-            panels[FACE_EAST_PANEL].theaterRect.yB = theaterRect.yB;
+            // Y軸の +90°をまたいでいる場合
+            panels[FACE_EAST_PANEL].theaterRect.yT = +90;
+            panels[FACE_EAST_PANEL].theaterRect.yB = +theaterRect.yB;
 
-            panels[FACE_WEST_PANEL].theaterRect.yT = -90;
-            panels[FACE_WEST_PANEL].theaterRect.yB = theaterRect.yB;
+            panels[FACE_WEST_PANEL].theaterRect.yT = +90;
+            panels[FACE_WEST_PANEL].theaterRect.yB = +theaterRect.yB;
 
-            panels[BACK_EAST_PANEL].theaterRect.yT = theaterRect.yT;
-            panels[BACK_EAST_PANEL].theaterRect.yB = -90;
+            panels[BACK_EAST_PANEL].theaterRect.yT = +90 - (theaterRect.yT - 90);
+            panels[BACK_EAST_PANEL].theaterRect.yB = +90;
             panels[BACK_EAST_PANEL].theaterRect.xL = panels[FACE_EAST_PANEL].theaterRect.xL;
             panels[BACK_EAST_PANEL].theaterRect.xR = panels[FACE_EAST_PANEL].theaterRect.xR;
 
-            panels[BACK_WEST_PANEL].theaterRect.yT = theaterRect.yT;
-            panels[BACK_WEST_PANEL].theaterRect.yB = -90;
+            panels[BACK_WEST_PANEL].theaterRect.yT = +90 - (theaterRect.yT - 90);
+            panels[BACK_WEST_PANEL].theaterRect.yB = +90;
             panels[BACK_WEST_PANEL].theaterRect.xL = panels[FACE_WEST_PANEL].theaterRect.xL;
             panels[BACK_WEST_PANEL].theaterRect.xR = panels[FACE_WEST_PANEL].theaterRect.xR;
         }
@@ -363,11 +357,11 @@ public class AstronomicalTheater {
         float degreeFractions = theaterRect.yT % 1;
         int currDegree = (int) (theaterRect.yT - degreeFractions);
         int incrDegree = +1;
-        if (theaterRect.yT < -90) {
-            currDegree = -90 - (currDegree + 90); // -100 -> -90
-            incrDegree = -1;
-        } else {
+        if (theaterRect.yT > +90) {
+            currDegree = +90 - (currDegree - 90); // +100 -> +80
             incrDegree = +1;
+        } else {
+            incrDegree = -1;
         }
 
         float degreeOnePixcel = displayHeight / theaterHeight;
@@ -385,8 +379,6 @@ public class AstronomicalTheater {
             if (currDegree % 10 == 0) {
                 if (currDegree == 0) {
                     tickText = "0";
-                } else if (currDegree == +90 || currDegree == -90) {
-                    tickText = "90";
                 } else if (currDegree < 0) {
                     tickText = String.valueOf(currDegree);
                 } else {
@@ -402,8 +394,8 @@ public class AstronomicalTheater {
             currDegree += incrDegree;
             if (currDegree == 0) {
                 // incrDegree = +1;
-            } else if (currDegree == -90) {
-                incrDegree = +1;
+            } else if (currDegree == +90) {
+                incrDegree = -1;
             }
             y += degreeOnePixcel;
         }
