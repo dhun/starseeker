@@ -205,6 +205,25 @@ public class StarLocatorTest {
     }
 
     @Test
+    public void test_calculateAzimuth2() {
+        double convertValue1 = +0.93884;
+        double convertValue2 = -0.35122;
+        double actual = target.calculateAzimuth(convertValue1, convertValue2);
+        double expect = 110.14;
+        TestUtils.asserAllowingError(actual, expect, 0.4); // XXX 誤差が大きすぎ？ TestUtils.DELTA_ANGLE);
+    }
+
+    @Test
+    public void test_calculateAzimuth3() {
+        double convertValue1 = -0.93884;
+        double convertValue2 = -0.35122;
+        double actual = target.calculateAzimuth(convertValue1, convertValue2);
+        double expect = -110.14;   // 0 ... ±180ならこっち
+        // double expect = 249.86; // 0 ... ＋360ならこっち
+        TestUtils.asserAllowingError(actual, expect, 0.4); // XXX 誤差が大きすぎ？ TestUtils.DELTA_ANGLE);
+    }
+
+    @Test
     public void test_calculateAltitude() {
         double convertValue2 = -0.62350;
         double convertValue3 = +0.38860;

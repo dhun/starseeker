@@ -159,7 +159,7 @@ public class StarLocator {
         final double DAYS_OF_HOUR = 24;
         double result = greenwichSiderealTime - (-longitude / 15);
 
-        // return result - DAYS_OF_HOUR; // TODO サイトの例題では常に24を引いてるけど、違う気がしたので訂正
+        // return result - DAYS_OF_HOUR; // TODO サイトの例題では常に24を引いてるけど、違う気がしたので訂正してみた
         if (result > +DAYS_OF_HOUR) {
             return result - DAYS_OF_HOUR;
         }
@@ -222,27 +222,64 @@ public class StarLocator {
     /**
      * 方位を算出します.<br/>
      * 
-     * @param convertValue1 変換式(1)の値
-     * @param convertValue2 変換式(2)の値
+     * @param convertValue1 変換式(1)の値. cosh x sinA
+     * @param convertValue2 変換式(2)の値. cosh x cosA
      * @return 方位(A)
      */
     protected double calculateAzimuth(double convertValue1, double convertValue2) {
-        double angle = atan(convertValue1 / convertValue2);
-        double quadrant;
+        // TODO サイトに具体的な数式が書いてなかったので、三角関数のサイトと照らし合わせて想像で書いた
+        // http://topicmaps.u-gakugei.ac.jp/phys/matsuura/lecture/dyna/contents/triangle/triangle.asp
+        // http://mysteryart.web.fc2.com/library/calsmpl/clcord.html
+
+        // final double angle = atan(convertValue1 / convertValue2);
+        // final double result;
+        // if (convertValue1 >= 0) {
+        // if (convertValue2 >= 0) {
+        // result = +angle; // 第１象限
+        // } else {
+        // result = 90 + (90 + angle); // 第２象限
+        // }
+        // } else {
+        // if (convertValue2 < 0) {
+        // result = 180 + angle; // 第３象限
+        // } else {
+        // result = 270 + (90 + angle); // 第４象限
+        // }
+        // }
+        // return result;
+
+        final double atan = Math.atan(convertValue1 / convertValue2);
+        final double result;
         if (convertValue1 >= 0) {
-            quadrant = 2; // 第２象限
+            if (convertValue2 >= 0) {
+                result = Math.toDegrees(atan);           // 第１象限
+            } else {
+                result = Math.toDegrees(atan + Math.PI); // 第２象限
+            }
         } else {
-            quadrant = 3; // 第３象限 TODO サイトに解説がなかったので正しいか分からない
+            // 0 ... ±180ならこっち
+            if (convertValue2 < 0) {
+                result = Math.toDegrees(atan - Math.PI); // 第３象限
+            } else {
+                result = Math.toDegrees(atan);           // 第４象限
+            }
+
+            // 0 ... ＋360ならこっち
+            // if (convertValue2 < 0) {
+            // result = 360 + Math.toDegrees(atan - Math.PI); // 第３象限
+            // } else {
+            // result = 360 + Math.toDegrees(atan); // 第４象限
+            // }
         }
-        double result = 180 + (angle * (quadrant == 2 ? +1 : -1)); // TODO サイトに解説がなかったので正しいか分からない
+
         return result;
     }
 
     /**
      * 高度を算出します.<br/>
      * 
-     * @param convertValue2 変換式(2)の値
-     * @param convertValue3 変換式(3)の値
+     * @param convertValue2 変換式(2)の値. cosh x cosA
+     * @param convertValue3 変換式(3)の値. sinh
      * @param azimuth 方位(A)
      * @return 高度(h)
      */

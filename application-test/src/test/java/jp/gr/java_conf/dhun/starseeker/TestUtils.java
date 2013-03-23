@@ -24,6 +24,6 @@ public final class TestUtils {
 
     public static void asserAllowingError(double actual, double expect, double delta) {
         double diff = Math.abs(actual - expect);
-        assertTrue(String.format("誤差が許容値より大きい, 誤差=[%f], 許容値=[%f]", diff, delta), diff < delta);
+        assertTrue(String.format("誤差が許容値より大きい, 期待値=[%f], 実測値=[%f], 誤差=[%f], 許容値=[%f]", expect, actual, diff, delta), diff < delta);
     }
 }
