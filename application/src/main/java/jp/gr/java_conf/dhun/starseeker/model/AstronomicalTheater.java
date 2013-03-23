@@ -3,6 +3,8 @@
  */
 package jp.gr.java_conf.dhun.starseeker.model;
 
+import jp.gr.java_conf.dhun.starseeker.system.renderer.indicator.IAzimuthIndicator;
+import jp.gr.java_conf.dhun.starseeker.system.renderer.indicator.NumericAzimuthIndicator;
 import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -45,6 +47,9 @@ public class AstronomicalTheater {
     // 描画系
     private final Paint backgroundPaint;
 
+    // レンダラ
+    private final IAzimuthIndicator azimuthIndicator;
+
     /**
      * コンストラクタ.<br/>
      * 
@@ -64,6 +69,9 @@ public class AstronomicalTheater {
         // 描画系の設定
         backgroundPaint = new Paint();
         backgroundPaint.setColor(Color.BLACK);
+
+        // レンダラ
+        azimuthIndicator = new NumericAzimuthIndicator(displayWidth, displayHeight, theaterWidth);
     }
 
     /**
@@ -91,6 +99,8 @@ public class AstronomicalTheater {
     public void setTheaterSize(float theaterWidth, float theaterHeight) {
         this.theaterWidth = theaterWidth;
         this.theaterHeight = theaterHeight;
+
+        azimuthIndicator.setTheaterWidthAngle(theaterWidth);
     }
 
     /**
@@ -257,19 +267,6 @@ public class AstronomicalTheater {
         tickPaint.setColor(Color.WHITE);
     }
 
-    private Paint textPaint;
-    private float positiveSignHalfWidth;
-    private float negativeSignHalfWidth;
-    {
-        textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.WHITE);
-        textPaint.setTextSize(12);
-        textPaint.setTextAlign(Paint.Align.CENTER);
-
-        positiveSignHalfWidth = textPaint.measureText("+") / 2;
-        negativeSignHalfWidth = textPaint.measureText("-") / 2;
-    }
-
     private Paint yAxisTextPaint;
     private float yAxisTextMaxWidth;
     private float yAxisTextAdjustHeight;
@@ -300,56 +297,8 @@ public class AstronomicalTheater {
             panels[i].draw(canvas);
         }
 
-        drawAxisX(canvas); // X軸の目盛り
+        azimuthIndicator.draw(canvas, theaterRect); // 方位インジケータの描画
         drawAxisY(canvas); // Y軸の目盛り
-    }
-
-    private void drawAxisX(Canvas canvas) {
-        float degreeFractions = theaterRect.xL % 1;
-        int currDegree = (int) (theaterRect.xL - degreeFractions);
-        int incrDegree = +1;
-
-        float degreeOnePixcel = displayWidth / theaterWidth;
-
-        float x = degreeFractions * degreeOnePixcel;
-
-        float tickYBottom = displayHeight;
-        float majorTickYT = displayHeight - 10;
-        float minorTickYT = displayHeight - 5;
-
-        String tickText;
-        float signWidth;
-
-        while (x < displayWidth) {
-            if (currDegree % 10 == 0) {
-                if (currDegree == 0) {
-                    tickText = "0";
-                    signWidth = 0;
-                } else if (currDegree == +180 || currDegree == -180) {
-                    tickText = "180";
-                    signWidth = 0;
-                } else if (currDegree < 0) {
-                    tickText = String.valueOf(currDegree);
-                    signWidth = positiveSignHalfWidth;
-                } else {
-                    tickText = "+" + String.valueOf(currDegree);
-                    signWidth = negativeSignHalfWidth;
-                }
-
-                canvas.drawLine(x, majorTickYT, x, tickYBottom, tickPaint);
-                canvas.drawText(tickText, x - signWidth, majorTickYT, textPaint);
-            } else {
-                canvas.drawLine(x, minorTickYT, x, tickYBottom, tickPaint);
-            }
-
-            currDegree += incrDegree;
-            if (currDegree == 0) {
-                // incrDegree = +1;
-            } else if (currDegree == 180) {
-                currDegree = -180;
-            }
-            x += degreeOnePixcel;
-        }
     }
 
     private void drawAxisY(Canvas canvas) {
@@ -465,8 +414,8 @@ public class AstronomicalTheater {
         }
 
         public boolean contains(Star star) {
-            float starAzimuth = (float) star.getAzimuth();
-            float starAltitude = (float) star.getAltitude();
+            float starAzimuth = star.getAzimuth();
+            float starAltitude = star.getAltitude();
             if (starAzimuth < xL || xR < starAzimuth) {
                 return false;
             }
