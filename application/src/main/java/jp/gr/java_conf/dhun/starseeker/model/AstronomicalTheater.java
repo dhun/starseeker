@@ -8,7 +8,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
-import android.graphics.RectF;
 import android.text.TextPaint;
 
 /**
@@ -423,23 +422,12 @@ public class AstronomicalTheater {
      * @param canvas キャンバス
      */
     public void draw(Canvas canvas, Star star) {
-        float starAzimuth = (float) star.getAzimuth();
-        float starAltitude = (float) star.getAltitude();
-
         AstronomicalTheaterPanel panel = containsPanel(star);
         if (null == panel) {
             return;
         }
 
-        RectF rectF = new RectF();
-        rectF.left = starAzimuth / 2;
-        rectF.top = starAltitude / 2;
-        rectF.right = starAzimuth;
-        rectF.bottom = starAltitude;
-
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-        canvas.drawOval(rectF, paint);
+        panel.draw(canvas, star);
     }
 
     @SuppressLint("DefaultLocale")
@@ -491,7 +479,7 @@ public class AstronomicalTheater {
         @SuppressLint("DefaultLocale")
         @Override
         public String toString() {
-            return String.format("x=[%6.2f - %6.2f], y=[%6.2f - %6.2f]]", xL, xR, yT, yB);
+            return String.format("x[L - R, width]=[%6.2f - %6.2f, %6.2f], y[T - B, height]=[%6.2f - %6.2f, %6.2f]]", xL, xR, width(), yT, yB, height());
         }
     }
 
