@@ -6,8 +6,10 @@ package jp.gr.java_conf.dhun.starseeker.model;
 import jp.gr.java_conf.dhun.starseeker.model.AstronomicalTheater.Rect;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.text.TextPaint;
 
 /**
  * 天体シアターのパネル.<br/>
@@ -32,13 +34,28 @@ public class AstronomicalTheaterPanel {
         return true;
     }
 
+    // ＞＞＞開発コード
+    private TextPaint textPaint;
+    private Paint gridPaint;
+    {
+        textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        textPaint.setColor(Color.WHITE);
+
+        gridPaint = new Paint();
+        gridPaint.setColor(Color.WHITE);
+        gridPaint.setStyle(Paint.Style.STROKE);
+        gridPaint.setPathEffect(new DashPathEffect(new float[] { 2, 2 }, 0));
+    }
+
+    // ＜＜＜開発コード
+
     /**
      * 描画します.<br/>
      * 
      * @param canvas Androidキャンバス
      */
     public void draw(Canvas canvas) {
-
+        canvas.drawRect(displayRect.xL, displayRect.yT, displayRect.xR, displayRect.yB, gridPaint);
     }
 
     /**
@@ -48,12 +65,32 @@ public class AstronomicalTheaterPanel {
      * @param canvas キャンバス
      */
     public void draw(Canvas canvas, Star star) {
-        // FIXME -180度ができてない. BACK系もNGくさい. 正だけOKくさい
-        float starAzimuth = (float) star.getAzimuth();
-        float starAltitude = (float) star.getAltitude();
+        final float displayRatioX; // = Math.abs(starAzimuth - theaterRect.xL) / theaterRect.width();
+        final float displayRatioY; // = Math.abs(starAltitude - theaterRect.yT) / theaterRect.height();
 
-        float displayRatioX = Math.abs(starAzimuth - theaterRect.xL) / theaterRect.width();
-        float displayRatioY = Math.abs(starAltitude - theaterRect.yT) / theaterRect.height();
+        if (theaterRect.xL >= 0) {
+            // 東側のパネル
+            // ・star.getAzimuth() >= 0
+            // ・theaterRect.xL <= star.getAzimuth() <= theaterRect.xR
+            displayRatioX = ((float) star.getAzimuth() - theaterRect.xL) / theaterRect.width();
+        } else {
+            // 西側のパネル
+            // ・star.getAzimuth() < 0
+            // ・theaterRect.xL <= star.getAzimuth() <= theaterRect.xR
+            displayRatioX = ((float) star.getAzimuth() + Math.abs(theaterRect.xL)) / theaterRect.width();
+        }
+
+        if (theaterRect.yT > theaterRect.yB) {
+            // 正面のパネル
+            // ・star.getAltitude() は不定
+            // ・theaterRect.yT >= star.getAltitude() >= theaterRect.yB
+            displayRatioY = (theaterRect.yT - (float) star.getAltitude()) / theaterRect.height();
+        } else {
+            // 背面のパネル
+            // ・star.getAltitude() >= 0
+            // ・theaterRect.yT <= star.getAltitude() <= theaterRect.yB(+90)
+            displayRatioY = ((float) star.getAltitude() - theaterRect.yT) / theaterRect.height();
+        }
 
         float displayX = displayRect.xL + (displayRect.width() * displayRatioX);
         float displayY = displayRect.yT + (displayRect.height() * displayRatioY);
