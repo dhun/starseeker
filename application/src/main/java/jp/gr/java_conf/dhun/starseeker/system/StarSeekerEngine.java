@@ -148,5 +148,8 @@ public class StarSeekerEngine implements //
     @Override
     public void onChangeTerminalOrientations(Orientations orientations) {
         this.orientations.copyFrom(orientations);
+        // this.orientations.azimuth = -130; // FIXME コミットされていたら後で戻す
+        // this.orientations.pitch = -80;
+        // this.orientations.roll = 0;
     }
 }
