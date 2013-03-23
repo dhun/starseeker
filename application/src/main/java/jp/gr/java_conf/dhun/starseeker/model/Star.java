@@ -109,11 +109,18 @@ public class Star {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
+    public String toLongString() {
         return String.format("赤経(α)=[%s], 赤緯(δ)=[%s], 方位(A)=[%s], 高度(h)=[%s], 名前=[%s]" //
                 , StarLocationUtil.convertAngleDoubleToString(getRightAscension())  //
                 , StarLocationUtil.convertAngleDoubleToString(getDeclination())     //
+                , StarLocationUtil.convertAngleDoubleToString(getAzimuth())         //
+                , StarLocationUtil.convertAngleDoubleToString(getAltitude())        //
+                , getName());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s]" //
                 , StarLocationUtil.convertAngleDoubleToString(getAzimuth())         //
                 , StarLocationUtil.convertAngleDoubleToString(getAltitude())        //
                 , getName());
