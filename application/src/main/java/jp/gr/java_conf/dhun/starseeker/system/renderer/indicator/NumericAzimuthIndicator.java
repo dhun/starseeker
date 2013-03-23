@@ -23,21 +23,12 @@ public class NumericAzimuthIndicator extends AbstractAzimuthIndicator implements
      * 
      * @param displayWidth ディスプレイの横幅(pixel)
      * @param displayHeight ディスプレイの高さ(pixel)
-     * @param theaterWidthAngle 天体シアターの横幅(角度)
      */
-    public NumericAzimuthIndicator(int displayWidth, int displayHeight, float theaterWidthAngle) {
-        super(displayWidth, displayHeight, theaterWidthAngle);
+    public NumericAzimuthIndicator(int displayWidth, int displayHeight) {
+        super(displayWidth, displayHeight);
 
         positiveSignHalfWidth = textPaint.measureText("+") / 2;
         negativeSignHalfWidth = textPaint.measureText("-") / 2;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setTheaterWidthAngle(float theaterWidthAngle) {
-        this.theaterWidthAngle = theaterWidthAngle;
     }
 
     /**

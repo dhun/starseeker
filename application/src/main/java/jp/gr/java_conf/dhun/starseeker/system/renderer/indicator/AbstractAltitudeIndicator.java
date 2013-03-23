@@ -5,17 +5,17 @@ import android.graphics.Paint;
 import android.text.TextPaint;
 
 /**
- * 方位インジケータの抽象実装
+ * 高度インジケータの抽象実装
  * 
  * @author jun
  * 
  */
-public abstract class AbstractAzimuthIndicator implements IAzimuthIndicator {
+public abstract class AbstractAltitudeIndicator implements IAltitudeIndicator {
 
     // サイズ系
     protected final int displayWidth;     // ディスプレイの横幅(pixel)
     protected final int displayHeight;    // ディスプレイの高さ(pixel)
-    protected float theaterWidthAngle;    // 天体シアターの横幅(角度)
+    protected float theaterHeightAngle;   // 天体シアターの高さ(角度)
 
     // 描画系
     protected final Paint tickPaint;
@@ -27,7 +27,7 @@ public abstract class AbstractAzimuthIndicator implements IAzimuthIndicator {
      * @param displayWidth ディスプレイの横幅(pixel)
      * @param displayHeight ディスプレイの高さ(pixel)
      */
-    public AbstractAzimuthIndicator(int displayWidth, int displayHeight) {
+    public AbstractAltitudeIndicator(int displayWidth, int displayHeight) {
         this.displayWidth = displayWidth;
         this.displayHeight = displayHeight;
 
@@ -37,14 +37,14 @@ public abstract class AbstractAzimuthIndicator implements IAzimuthIndicator {
         textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setColor(Color.WHITE);
         textPaint.setTextSize(12);
-        textPaint.setTextAlign(Paint.Align.CENTER);
+        textPaint.setTextAlign(Paint.Align.LEFT);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setTheaterWidthAngle(float theaterWidthAngle) {
-        this.theaterWidthAngle = theaterWidthAngle;
+    public void setTheaterHeightAngle(float theaterHeightAngle) {
+        this.theaterHeightAngle = theaterHeightAngle;
     }
 }

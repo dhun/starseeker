@@ -3,14 +3,14 @@
  */
 package jp.gr.java_conf.dhun.starseeker.model;
 
+import jp.gr.java_conf.dhun.starseeker.system.renderer.indicator.IAltitudeIndicator;
 import jp.gr.java_conf.dhun.starseeker.system.renderer.indicator.IAzimuthIndicator;
+import jp.gr.java_conf.dhun.starseeker.system.renderer.indicator.NumericAltitudeIndicator;
 import jp.gr.java_conf.dhun.starseeker.system.renderer.indicator.NumericAzimuthIndicator;
 import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.FontMetrics;
-import android.text.TextPaint;
 
 /**
  * 天体シアター.<br/>
@@ -49,6 +49,7 @@ public class AstronomicalTheater {
 
     // レンダラ
     private final IAzimuthIndicator azimuthIndicator;
+    private final IAltitudeIndicator altitudeIndicator;
 
     /**
      * コンストラクタ.<br/>
@@ -60,18 +61,20 @@ public class AstronomicalTheater {
         this.displayWidth = displayWidth;
         this.displayHeight = displayHeight;
 
+        // レンダラ
+        azimuthIndicator = new NumericAzimuthIndicator(displayWidth, displayHeight);
+        altitudeIndicator = new NumericAltitudeIndicator(displayWidth, displayHeight);
+
+        setTheaterSizeToDefault();
+
+        // 天体シアターのパネル
         for (int i = 0; i < panels.length; i++) {
             panels[i] = new AstronomicalTheaterPanel();
         }
 
-        setTheaterSizeToDefault();
-
         // 描画系の設定
         backgroundPaint = new Paint();
         backgroundPaint.setColor(Color.BLACK);
-
-        // レンダラ
-        azimuthIndicator = new NumericAzimuthIndicator(displayWidth, displayHeight, theaterWidth);
     }
 
     /**
@@ -101,6 +104,7 @@ public class AstronomicalTheater {
         this.theaterHeight = theaterHeight;
 
         azimuthIndicator.setTheaterWidthAngle(theaterWidth);
+        altitudeIndicator.setTheaterHeightAngle(theaterHeight);
     }
 
     /**
@@ -262,30 +266,6 @@ public class AstronomicalTheater {
         }
     }
 
-    Paint tickPaint = new Paint();
-    {
-        tickPaint.setColor(Color.WHITE);
-    }
-
-    private Paint yAxisTextPaint;
-    private float yAxisTextMaxWidth;
-    private float yAxisTextAdjustHeight;
-    {
-        yAxisTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        yAxisTextPaint.setColor(Color.WHITE);
-        yAxisTextPaint.setTextSize(12);
-        // yAxisTextPaint.setTextAlign(Paint.Align.RIGHT);
-        yAxisTextPaint.setTextAlign(Paint.Align.LEFT);
-
-        // yAxisTextMaxWidth = textPaint.measureText("+000");
-        yAxisTextMaxWidth = 0;
-
-        FontMetrics fontMetrics = yAxisTextPaint.getFontMetrics();
-        if (null != fontMetrics) { // FIXME for robolectric
-            yAxisTextAdjustHeight = (fontMetrics.ascent + fontMetrics.descent) / 2;
-        }
-    }
-
     /**
      * 描画します.<br/>
      * 
@@ -297,56 +277,8 @@ public class AstronomicalTheater {
             panels[i].draw(canvas);
         }
 
-        azimuthIndicator.draw(canvas, theaterRect); // 方位インジケータの描画
-        drawAxisY(canvas); // Y軸の目盛り
-    }
-
-    private void drawAxisY(Canvas canvas) {
-        float degreeFractions = theaterRect.yT % 1;
-        int currDegree = (int) (theaterRect.yT - degreeFractions);
-        int incrDegree = +1;
-        if (theaterRect.yT > +90) {
-            currDegree = +90 - (currDegree - 90); // +100 -> +80
-            incrDegree = +1;
-        } else {
-            incrDegree = -1;
-        }
-
-        float degreeOnePixcel = displayHeight / theaterHeight;
-
-        float y = degreeFractions * degreeOnePixcel;
-
-        float tickXLeft = 0;
-        float majorTickXR = +10;
-        float minorTickXR = +5;
-
-        String tickText;
-        float margin = 3;
-
-        while (y < displayHeight) {
-            if (currDegree % 10 == 0) {
-                if (currDegree == 0) {
-                    tickText = "0";
-                } else if (currDegree < 0) {
-                    tickText = String.valueOf(currDegree);
-                } else {
-                    tickText = "+" + String.valueOf(currDegree);
-                }
-
-                canvas.drawLine(tickXLeft, y, majorTickXR, y, tickPaint);
-                canvas.drawText(tickText, majorTickXR + yAxisTextMaxWidth + margin, y - yAxisTextAdjustHeight, yAxisTextPaint);
-            } else {
-                canvas.drawLine(tickXLeft, y, minorTickXR, y, tickPaint);
-            }
-
-            currDegree += incrDegree;
-            if (currDegree == 0) {
-                // incrDegree = +1;
-            } else if (currDegree == +90) {
-                incrDegree = -1;
-            }
-            y += degreeOnePixcel;
-        }
+        azimuthIndicator.draw(canvas, theaterRect);  // 方位インジケータの描画
+        altitudeIndicator.draw(canvas, theaterRect); // 高度インジケータの描画
     }
 
     /**
