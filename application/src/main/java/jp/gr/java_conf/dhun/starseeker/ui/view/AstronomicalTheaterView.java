@@ -57,8 +57,8 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
         getHolder().addCallback(this);
 
         // スターシーカーシステムのエンジンを設定
-        float longitude = (float) StarLocationUtil.convertAngleStringToDouble("+135°44'"); // FIXME
-        float latitude = (float) StarLocationUtil.convertAngleStringToDouble("+35°01'");
+        float longitude = StarLocationUtil.convertAngleStringToFloat("+135°44'"); // FIXME
+        float latitude = StarLocationUtil.convertAngleStringToFloat("+35°01'");
         final Calendar cal = Calendar.getInstance(Locale.JAPAN);
         cal.set(2000, 0, 1, 21, 0);
         Date baseDateTime = cal.getTime();

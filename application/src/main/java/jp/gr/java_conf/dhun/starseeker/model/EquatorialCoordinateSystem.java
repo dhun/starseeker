@@ -38,12 +38,12 @@ public class EquatorialCoordinateSystem {
             }
 
             @Override
-            public double getAzimuth() {
+            public float getAzimuth() {
                 return -120;
             }
 
             @Override
-            public double getAltitude() {
+            public float getAltitude() {
                 return +80;
             }
         });
@@ -55,12 +55,12 @@ public class EquatorialCoordinateSystem {
             }
 
             @Override
-            public double getAzimuth() {
+            public float getAzimuth() {
                 return +120;
             }
 
             @Override
-            public double getAltitude() {
+            public float getAltitude() {
                 return +80;
             }
         });

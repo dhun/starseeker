@@ -13,6 +13,8 @@ import jp.gr.java_conf.dhun.starseeker.util.MathUtils;
 
 /**
  * 星の座標配置クラス.<br/>
+ * 観測地点の精度はdouble、星の座標系の精度はfloatのため、floatとdoubleが混在している.<br/>
+ * Math系メソッドのシグネチャがdoubleなのでキャストを最小限に抑える効果もある(ハズ)
  * 
  * @author jun
  * 
@@ -88,7 +90,7 @@ public class StarLocator {
         double altitude = calculateAltitude(convertValue2, convertValue3, azimuth);
 
         // 星を再配置
-        star.relocate(azimuth, altitude);
+        star.relocate((float) azimuth, (float) altitude);
 
         LogUtils.v(getClass(), star.toString());
     }

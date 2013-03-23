@@ -101,7 +101,7 @@ public class ResolveTerminalStateActivity extends Activity {
     }
 
     // 方位の範囲を-180～180度から0～359度に変換
-    private double to360Degrees(double degrees) {
+    private float to360Degrees(float degrees) {
         if (degrees >= 0) {
             return degrees;
         } else {

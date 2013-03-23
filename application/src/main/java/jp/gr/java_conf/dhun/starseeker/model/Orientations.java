@@ -8,6 +8,7 @@ import android.view.Surface;
 
 /**
  * 方位.<br/>
+ * 精度はSensorEventListenerから取得できる値と同じfloat.
  * 
  * @author jun
  * 

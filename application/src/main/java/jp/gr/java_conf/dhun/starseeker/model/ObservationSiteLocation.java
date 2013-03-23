@@ -3,8 +3,10 @@
  */
 package jp.gr.java_conf.dhun.starseeker.model;
 
+
 /**
  * 観測地点の位置.<br/>
+ * 精度はLocationListenerから取得できる値と同じdouble.
  * 
  * @author jun
  * 
@@ -14,7 +16,7 @@ public class ObservationSiteLocation {
     private double latitude;  // 緯度
     private double longitude; // 経度
     private double altitude;  // 高度
-    private String name;      // 観測地点の名前
+    private String name;     // 観測地点の名前
 
     /**
      * コンストラクタ.<br/>
@@ -24,7 +26,7 @@ public class ObservationSiteLocation {
      * @param altitude 高度
      */
     public ObservationSiteLocation(double latitude, double longitude) {
-        this(latitude, longitude, 0.0, "");
+        this(latitude, longitude, 0, "");
     }
 
     /**
@@ -35,7 +37,7 @@ public class ObservationSiteLocation {
      * @param altitude 高度
      */
     public ObservationSiteLocation(double latitude, double longitude, String name) {
-        this(latitude, longitude, 0.0, "");
+        this(latitude, longitude, 0, "");
     }
 
     /**

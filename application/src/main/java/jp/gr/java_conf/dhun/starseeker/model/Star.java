@@ -7,18 +7,19 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
 
 /**
  * 星.<br/>
+ * 精度はfloat. 厳密な値より処理速度を優先させた.
  * 
  * @author jun
  * 
  */
 public class Star {
 
-    private final double rightAscension; // 赤経(α)の数値表現
-    private final double declination;    // 赤緯(δ)の数値表現
+    private final float rightAscension; // 赤経(α)の数値表現
+    private final float declination;    // 赤緯(δ)の数値表現
 
     private boolean locaated;   // 配置済であるかどうか
-    private double azimuth;     // 方位(A)の数値表現
-    private double altitude;    // 高度(h)の数値表現
+    private float azimuth;      // 方位(A)の数値表現
+    private float altitude;     // 高度(h)の数値表現
 
     private String name; // 名前
 
@@ -30,8 +31,8 @@ public class Star {
      */
     public Star(String rightAscension, String declination) {
         this( //
-                StarLocationUtil.convertHourStringToDouble(rightAscension), //
-                StarLocationUtil.convertAngleStringToDouble(declination));
+                StarLocationUtil.convertHourStringToFloat(rightAscension), //
+                StarLocationUtil.convertAngleStringToFloat(declination));
     }
 
     /**
@@ -40,7 +41,7 @@ public class Star {
      * @param rightAscension 赤経(α)の数値表現
      * @param declination 赤緯(δ)の数値表現
      */
-    public Star(double rightAscension, double declination) {
+    public Star(float rightAscension, float declination) {
         this.rightAscension = rightAscension;
         this.declination = declination;
         this.locaated = false;
@@ -52,7 +53,7 @@ public class Star {
      * @param azimuth 方位(A)の数値表現
      * @param altitude 高度(h)の数値表現
      */
-    public void relocate(double azimuth, double altitude) {
+    public void relocate(float azimuth, float altitude) {
         this.locaated = true;
         this.azimuth = azimuth;
         this.altitude = altitude;
@@ -61,14 +62,14 @@ public class Star {
     /**
      * 赤経(α)の数値表現を取得します.<br/>
      */
-    public double getRightAscension() {
+    public float getRightAscension() {
         return rightAscension;
     }
 
     /**
      * 赤緯(δ)の数値表現を取得します.<br/>
      */
-    public double getDeclination() {
+    public float getDeclination() {
         return declination;
     }
 
@@ -82,7 +83,7 @@ public class Star {
     /**
      * 方位(A)の数値表現を取得します.<br/>
      */
-    public double getAzimuth() {
+    public float getAzimuth() {
         assert (isLocated());
         return azimuth;
     }
@@ -90,7 +91,7 @@ public class Star {
     /**
      * 高度(h)の数値表現を取得します.<br/>
      */
-    public double getAltitude() {
+    public float getAltitude() {
         assert (isLocated());
         return altitude;
     }
@@ -111,18 +112,18 @@ public class Star {
 
     public String toLongString() {
         return String.format("赤経(α)=[%s], 赤緯(δ)=[%s], 方位(A)=[%s], 高度(h)=[%s], 名前=[%s]" //
-                , StarLocationUtil.convertAngleDoubleToString(getRightAscension())  //
-                , StarLocationUtil.convertAngleDoubleToString(getDeclination())     //
-                , StarLocationUtil.convertAngleDoubleToString(getAzimuth())         //
-                , StarLocationUtil.convertAngleDoubleToString(getAltitude())        //
+                , StarLocationUtil.convertAngleFloatToString(getRightAscension())  //
+                , StarLocationUtil.convertAngleFloatToString(getDeclination())     //
+                , StarLocationUtil.convertAngleFloatToString(getAzimuth())         //
+                , StarLocationUtil.convertAngleFloatToString(getAltitude())        //
                 , getName());
     }
 
     @Override
     public String toString() {
         return String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s]" //
-                , StarLocationUtil.convertAngleDoubleToString(getAzimuth())         //
-                , StarLocationUtil.convertAngleDoubleToString(getAltitude())        //
+                , StarLocationUtil.convertAngleFloatToString(getAzimuth())         //
+                , StarLocationUtil.convertAngleFloatToString(getAltitude())        //
                 , getName());
     }
 
@@ -131,9 +132,9 @@ public class Star {
         final int prime = 31;
         int result = 1;
         long temp;
-        temp = Double.doubleToLongBits(rightAscension);
+        temp = Float.floatToIntBits(rightAscension);
         result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(declination);
+        temp = Float.floatToIntBits(declination);
         result = prime * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
@@ -150,10 +151,10 @@ public class Star {
             return false;
         }
         Star other = (Star) obj;
-        if (Double.doubleToLongBits(rightAscension) != Double.doubleToLongBits(other.rightAscension)) {
+        if (Float.floatToIntBits(rightAscension) != Float.floatToIntBits(other.rightAscension)) {
             return false;
         }
-        if (Double.doubleToLongBits(declination) != Double.doubleToLongBits(other.declination)) {
+        if (Float.floatToIntBits(declination) != Float.floatToIntBits(other.declination)) {
             return false;
         }
         return true;

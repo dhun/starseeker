@@ -56,9 +56,9 @@ public class ChooseObservationSiteLocationResolver implements IObservationSiteLo
 
     private static ObservationSiteLocation newObservationSiteLocation(String latitude, String longitude, String altitude, String name) {
         ObservationSiteLocation result = new ObservationSiteLocation(   //
-                StarLocationUtil.convertAngleStringToDouble(latitude),  // 緯度
-                StarLocationUtil.convertAngleStringToDouble(longitude), // 経度
-                StarLocationUtil.convertAngleStringToDouble(altitude),  // 高度
+                StarLocationUtil.convertAngleStringToFloat(latitude),  // 緯度
+                StarLocationUtil.convertAngleStringToFloat(longitude), // 経度
+                StarLocationUtil.convertAngleStringToFloat(altitude),  // 高度
                 name);
         return result;
     }
@@ -110,7 +110,7 @@ public class ChooseObservationSiteLocationResolver implements IObservationSiteLo
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 setObservationSiteLocation(locations.get(which));
-                dialog = null;
+                ChooseObservationSiteLocationResolver.this.dialog = null;
             }
         };
 
@@ -121,7 +121,7 @@ public class ChooseObservationSiteLocationResolver implements IObservationSiteLo
         builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                dialog = null;
+                ChooseObservationSiteLocationResolver.this.dialog = null;
             }
         });
 

@@ -55,7 +55,7 @@ public class StarSeekerEngine implements //
     /**
      * デフォルト・コンストラクタ
      */
-    public StarSeekerEngine(float longitude, float latitude, Date baseDateTime) {
+    public StarSeekerEngine(double longitude, double latitude, Date baseDateTime) {
         orientations = new Orientations();
         starLocator = new StarLocator(longitude, latitude, baseDateTime);
 
