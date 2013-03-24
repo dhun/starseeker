@@ -16,10 +16,11 @@ public class Star {
 
     private final float rightAscension; // 赤経(α)の数値表現
     private final float declination;    // 赤緯(δ)の数値表現
+    private float magnitude;            // 等星
 
     private boolean locaated;   // 配置済であるかどうか
-    private float azimuth;      // 方位(A)の数値表現
-    private float altitude;     // 高度(h)の数値表現
+    private float azimuth;      // 方位(A)の数値表現, -180 <= 0 <= + 180
+    private float altitude;     // 高度(h)の数値表現. -90 <= 0 <= +90
 
     private String name; // 名前
 
@@ -108,6 +109,20 @@ public class Star {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * 等星を取得します.<br/>
+     */
+    public float getMagnitude() {
+        return magnitude;
+    }
+
+    /**
+     * 等星を設定します.<br/>
+     */
+    public void setMagnitude(float magnitude) {
+        this.magnitude = magnitude;
     }
 
     public String toLongString() {
