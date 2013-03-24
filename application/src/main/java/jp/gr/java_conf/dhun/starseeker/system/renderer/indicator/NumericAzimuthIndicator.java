@@ -3,7 +3,7 @@
  */
 package jp.gr.java_conf.dhun.starseeker.system.renderer.indicator;
 
-import jp.gr.java_conf.dhun.starseeker.model.AstronomicalTheater.Rect;
+import jp.gr.java_conf.dhun.starseeker.system.model.coordinates.CoordinatesRect;
 import android.graphics.Canvas;
 
 /**
@@ -35,9 +35,9 @@ public class NumericAzimuthIndicator extends AbstractAzimuthIndicator implements
      * {@inheritDoc}
      */
     @Override
-    public void draw(Canvas canvas, Rect theaterRect) {
-        float degreeFractions = theaterRect.xL % 1;
-        int currDegree = (int) (theaterRect.xL - degreeFractions);
+    public void draw(Canvas canvas, CoordinatesRect theaterHorizontalCoordinatesRect) {
+        float degreeFractions = theaterHorizontalCoordinatesRect.xL % 1;
+        int currDegree = (int) (theaterHorizontalCoordinatesRect.xL - degreeFractions);
         int incrDegree = +1;
 
         float degreeOnePixcel = displayWidth / theaterWidthAngle;

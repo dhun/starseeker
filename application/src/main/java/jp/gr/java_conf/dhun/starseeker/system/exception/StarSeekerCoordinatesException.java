@@ -3,7 +3,7 @@
  */
 package jp.gr.java_conf.dhun.starseeker.system.exception;
 
-import jp.gr.java_conf.dhun.starseeker.model.AstronomicalTheater.Rect;
+import jp.gr.java_conf.dhun.starseeker.system.model.coordinates.CoordinatesRect;
 import jp.gr.java_conf.dhun.starseeker.system.model.panel.IAstronomicalTheaterPanel;
 
 /**
@@ -14,7 +14,7 @@ import jp.gr.java_conf.dhun.starseeker.system.model.panel.IAstronomicalTheaterPa
  */
 public class StarSeekerCoordinatesException extends RuntimeException {
 
-    public StarSeekerCoordinatesException(IAstronomicalTheaterPanel.AstronomicalTheaterPanelType panelType, Rect coordinatesRect, String detailMessage) {
+    public StarSeekerCoordinatesException(IAstronomicalTheaterPanel.AstronomicalTheaterPanelType panelType, CoordinatesRect coordinatesRect, String detailMessage) {
         super(String.format("type=[%s], coordinatesRect=[%s], reason=[%s]", panelType, coordinatesRect, detailMessage));
     }
 }

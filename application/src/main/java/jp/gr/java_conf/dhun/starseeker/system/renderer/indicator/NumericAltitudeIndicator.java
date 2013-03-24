@@ -3,7 +3,7 @@
  */
 package jp.gr.java_conf.dhun.starseeker.system.renderer.indicator;
 
-import jp.gr.java_conf.dhun.starseeker.model.AstronomicalTheater.Rect;
+import jp.gr.java_conf.dhun.starseeker.system.model.coordinates.CoordinatesRect;
 import android.graphics.Canvas;
 import android.graphics.Paint.FontMetrics;
 
@@ -39,11 +39,11 @@ public class NumericAltitudeIndicator extends AbstractAltitudeIndicator implemen
      * {@inheritDoc}
      */
     @Override
-    public void draw(Canvas canvas, Rect theaterRect) {
-        float degreeFractions = theaterRect.yT % 1;
-        int currDegree = (int) (theaterRect.yT - degreeFractions);
+    public void draw(Canvas canvas, CoordinatesRect theaterHorizontalCoordinatesRect) {
+        float degreeFractions = theaterHorizontalCoordinatesRect.yT % 1;
+        int currDegree = (int) (theaterHorizontalCoordinatesRect.yT - degreeFractions);
         int incrDegree = +1;
-        if (theaterRect.yT > +90) {
+        if (theaterHorizontalCoordinatesRect.yT > +90) {
             currDegree = +90 - (currDegree - 90); // +100 -> +80
             incrDegree = +1;
         } else {

@@ -1,6 +1,5 @@
 package jp.gr.java_conf.dhun.starseeker.system.model.panel;
 
-
 /**
  * 天体シアターの東側背面のパネル.<br/>
  * 
@@ -35,7 +34,7 @@ package jp.gr.java_conf.dhun.starseeker.system.model.panel;
  * @author jun
  * 
  */
-public class AstronomicalTheaterEastBackPanel extends AbstractAstronomicalTheaterPanel {
+public class AstronomicalTheaterEastBackPanel extends AstronomicalTheaterPanel {
 
     public AstronomicalTheaterEastBackPanel(int displayWidth, int displayHeight) {
         super(AstronomicalTheaterPanelType.EAST_BACK, displayWidth, displayHeight);
