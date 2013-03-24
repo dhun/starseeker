@@ -10,11 +10,11 @@ import java.util.Set;
 
 import jp.gr.java_conf.dhun.starseeker.logic.StarLocator;
 import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.ITerminalOrientationsCalculator;
-import jp.gr.java_conf.dhun.starseeker.model.AstronomicalTheater;
 import jp.gr.java_conf.dhun.starseeker.model.EquatorialCoordinateSystem;
 import jp.gr.java_conf.dhun.starseeker.model.Orientations;
 import jp.gr.java_conf.dhun.starseeker.model.Star;
 import jp.gr.java_conf.dhun.starseeker.system.listener.IStarSeekerListener;
+import jp.gr.java_conf.dhun.starseeker.system.model.panel.AstronomicalTheater;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -101,7 +101,7 @@ public class StarSeekerEngine implements //
         lastTime = now;
 
         try {
-            astronomicalTheater.calculateTheaterRect(orientations.azimuth, orientations.pitch);
+            astronomicalTheater.calculateCoordinatesRect(orientations.azimuth, orientations.pitch);
 
         } catch (Exception e) {
             LogUtils.e(getClass(), "演算処理で例外が発生しました.", e);

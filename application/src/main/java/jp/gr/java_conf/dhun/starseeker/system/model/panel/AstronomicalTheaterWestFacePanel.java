@@ -34,7 +34,7 @@ package jp.gr.java_conf.dhun.starseeker.system.model.panel;
  * @author jun
  * 
  */
-public class AstronomicalTheaterWestFacePanel extends AbstractAstronomicalTheaterPanel {
+public class AstronomicalTheaterWestFacePanel extends AstronomicalTheaterPanel {
 
     public AstronomicalTheaterWestFacePanel(int displayWidth, int displayHeight) {
         super(AstronomicalTheaterPanelType.WEST_FACE, displayWidth, displayHeight);

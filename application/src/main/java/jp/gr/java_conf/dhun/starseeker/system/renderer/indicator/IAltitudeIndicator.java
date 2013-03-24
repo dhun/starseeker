@@ -1,6 +1,6 @@
 package jp.gr.java_conf.dhun.starseeker.system.renderer.indicator;
 
-import jp.gr.java_conf.dhun.starseeker.model.AstronomicalTheater.Rect;
+import jp.gr.java_conf.dhun.starseeker.system.model.coordinates.CoordinatesRect;
 import android.graphics.Canvas;
 
 /**
@@ -20,8 +20,7 @@ public interface IAltitudeIndicator {
      * 描画します.<br/>
      * 
      * @param canvas Androidキャンバス
-     * @param theaterRect 天体シアターの座標
+     * @param theaterHorizontalCoordinatesRect 天体シアターの地平座標
      */
-    void draw(Canvas canvas, Rect theaterRect);
-
+    void draw(Canvas canvas, CoordinatesRect theaterHorizontalCoordinatesRect);
 }
