@@ -9,6 +9,7 @@ import jp.gr.java_conf.dhun.starseeker.system.renderer.indicator.IAltitudeIndica
 import jp.gr.java_conf.dhun.starseeker.system.renderer.indicator.IAzimuthIndicator;
 import jp.gr.java_conf.dhun.starseeker.system.renderer.indicator.NumericAltitudeIndicator;
 import jp.gr.java_conf.dhun.starseeker.system.renderer.indicator.NumericAzimuthIndicator;
+import jp.gr.java_conf.dhun.starseeker.system.renderer.star.StarRenderer;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -48,6 +49,7 @@ public class AstronomicalTheater {
     private final Paint backgroundPaint;
 
     // レンダラ
+    private final StarRenderer starRenderer;
     private final IAzimuthIndicator azimuthIndicator;
     private final IAltitudeIndicator altitudeIndicator;
 
@@ -62,6 +64,7 @@ public class AstronomicalTheater {
         this.displayHeight = displayHeight;
 
         // レンダラ
+        starRenderer = new StarRenderer();
         azimuthIndicator = new NumericAzimuthIndicator(displayWidth, displayHeight);
         altitudeIndicator = new NumericAltitudeIndicator(displayWidth, displayHeight);
 
@@ -350,7 +353,8 @@ public class AstronomicalTheater {
             return;
         }
 
-        panel.drawStar(canvas, star);
+        panel.remapDisplayCoordinates(star);
+        starRenderer.drawStar(canvas, star);
     }
 
 }

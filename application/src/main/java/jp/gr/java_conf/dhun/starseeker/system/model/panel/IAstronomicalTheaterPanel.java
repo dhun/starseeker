@@ -1,7 +1,6 @@
 package jp.gr.java_conf.dhun.starseeker.system.model.panel;
 
 import jp.gr.java_conf.dhun.starseeker.model.Star;
-import android.graphics.PointF;
 
 /**
  * 天体シアターのパネルのインターフェース.<br/>
@@ -25,12 +24,11 @@ public interface IAstronomicalTheaterPanel {
     boolean contains(Star star);
 
     /**
-     * 指定された星の座標をディスプレイ座標に変換して、displayCoordinatesに割り当てます.<br/>
+     * 指定された星の地平座標をディスプレイ座標に変換して、星のディスプレイ座標に割り当てます.<br/>
      * 
      * @param star 星
-     * @param displayCoordinates 星のディスプレイ座標を割り当てる変数
      */
-    void remapToDisplayCoordinates(Star star, PointF displayCoordinates);
+    void remapDisplayCoordinates(Star star);
 
     /**
      * 天体シアターパネルの種類

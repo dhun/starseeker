@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
-import android.graphics.PointF;
 import android.text.TextPaint;
 
 /**
@@ -29,9 +28,7 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
     protected final CoordinatesRect displayCoordinatesRect = new CoordinatesRect();    // パネルのディスプレイ座標(pixel)
 
     // 描画系
-    private final Paint textPaint;
     private final Paint gridPaint;
-    private final Paint starPaint;
 
     private final Paint pointPaint;
     private final float pointTextAdjustToTop;
@@ -49,16 +46,10 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
         this.displayWidth = displayWidth;
         this.displayHeight = displayHeight;
 
-        textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.WHITE);
-
         gridPaint = new Paint();
         gridPaint.setColor(Color.WHITE);
         gridPaint.setStyle(Paint.Style.STROKE);
         gridPaint.setPathEffect(new DashPathEffect(new float[] { 2, 2 }, 0));
-
-        starPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        starPaint.setColor(Color.WHITE);
 
         pointPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         pointPaint.setColor(Color.WHITE);
@@ -94,18 +85,17 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
     }
 
     /**
-     * 指定された星の地平座標をディスプレイ座標に変換して、displayCoordinatesに割り当てます.<br/>
+     * 指定された星の地平座標をディスプレイ座標に変換して、星のディスプレイ座標に割り当てます.<br/>
      * 
      * @param star 星
-     * @param starDisplayCoordinates 星のディスプレイ座標を割り当てる変数
      */
     @Override
-    public void remapToDisplayCoordinates(Star star, PointF starDisplayCoordinates) {
+    public void remapDisplayCoordinates(Star star) {
         float displayRatioX = calcAzimuthDisplayVector(star) / horizontalCoordinatesRect.width();
         float displayRatioY = calcAltitudeDisplayVector(star) / horizontalCoordinatesRect.height();
 
-        starDisplayCoordinates.x = displayCoordinatesRect.xL + (displayCoordinatesRect.width() * displayRatioX);
-        starDisplayCoordinates.y = displayCoordinatesRect.yT + (displayCoordinatesRect.height() * displayRatioY);
+        star.setDisplayX(displayCoordinatesRect.xL + (displayCoordinatesRect.width() * displayRatioX));
+        star.setDisplayY(displayCoordinatesRect.yT + (displayCoordinatesRect.height() * displayRatioY));
     }
 
     /**
@@ -180,23 +170,6 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
         String text = " [" + (int) horizontalCoordinatesX + ", " + (int) horizontalCoordinatesY + "] ";
         pointPaint.setTextAlign(align);
         canvas.drawText(text, displayCoordinatesX, displayCoordinatesY - offsetY, pointPaint);
-    }
-
-    /**
-     * 指定された星をキャンバスへ描画します.<br/>
-     * 
-     * @param star 星
-     * @param canvas キャンバス
-     */
-    public void drawStar(Canvas canvas, Star star) {
-        PointF starDisplayCoordinates = new PointF();
-        remapToDisplayCoordinates(star, starDisplayCoordinates);
-
-        final float STAR_RADIUS = 15;
-        canvas.drawCircle(starDisplayCoordinates.x, starDisplayCoordinates.y, STAR_RADIUS, starPaint);
-
-        final float TEXT_MARGIN_X = 3;
-        canvas.drawText(star.toString(), starDisplayCoordinates.x + TEXT_MARGIN_X, starDisplayCoordinates.y, textPaint);
     }
 
     /**

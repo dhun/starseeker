@@ -16,13 +16,16 @@ public class Star {
 
     private final float rightAscension; // 赤経(α)の数値表現
     private final float declination;    // 赤緯(δ)の数値表現
-    private float magnitude;            // 等星
+    private float magnitude;            // 等級
 
     private boolean locaated;   // 配置済であるかどうか
     private float azimuth;      // 方位(A)の数値表現, -180 <= 0 <= + 180
     private float altitude;     // 高度(h)の数値表現. -90 <= 0 <= +90
 
-    private String name; // 名前
+    private String name;        // 名前
+
+    private float displayX;     // ディスプレイのX座標
+    private float displayY;     // ディスプレイのY座標
 
     /**
      * コンストラクタ.<br/>
@@ -112,17 +115,45 @@ public class Star {
     }
 
     /**
-     * 等星を取得します.<br/>
+     * 等級を取得します.<br/>
      */
     public float getMagnitude() {
         return magnitude;
     }
 
     /**
-     * 等星を設定します.<br/>
+     * 等級を設定します.<br/>
      */
     public void setMagnitude(float magnitude) {
         this.magnitude = magnitude;
+    }
+
+    /**
+     * ディスプレイのX座標を取得します.<br/>
+     */
+    public float getDisplayX() {
+        return displayX;
+    }
+
+    /**
+     * ディスプレイのX座標を設定します.<br/>
+     */
+    public void setDisplayX(float displayX) {
+        this.displayX = displayX;
+    }
+
+    /**
+     * ディスプレイのY座標を取得します.<br/>
+     */
+    public float getDisplayY() {
+        return displayY;
+    }
+
+    /**
+     * ディスプレイのY座標を設定します.<br/>
+     */
+    public void setDisplayY(float displayY) {
+        this.displayY = displayY;
     }
 
     public String toLongString() {
