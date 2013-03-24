@@ -18,7 +18,7 @@ public class EquatorialCoordinateSystem {
         // http://seiza-zukan.com/first.html
         STARS = new HashSet<Star>();
         STARS.add(newStar("02h 31.8m", "+89°16'", "+2.00", "ポラリス", "こぐま", "ご存知北極星。赤緯９０°ではありません。変光星らしいが２等星固定にした"));
-        STARS.add(newStar("04h 35.9m", "+16°31'", "+0.85", "アルデバラン", "おうし")); // XXX 値を確認する
+        STARS.add(newStar("04h 35.9m", "+16°31'", "+0.85", "アルデバラン", "おうし"));
         STARS.add(newStar("05h 14.5m", "-08°12'", "+0.12", "リゲル", "オリオン"));
         STARS.add(newStar("05h 16.7m", "+46°00'", "+0.08", "カペラ", "ぎょしゃ"));
         STARS.add(newStar("05h 55.2m", "+07°24'", "+0.40", "ベテルギウス", "オリオン"));
