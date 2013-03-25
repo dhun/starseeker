@@ -44,15 +44,13 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
 
     public AstronomicalTheaterView(Context context) {
         super(context);
-        this.initialize(context);
     }
 
     public AstronomicalTheaterView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.initialize(context);
     }
 
-    private void initialize(Context context) {
+    public void setup() {
         // SurfaceViewを設定
         getHolder().addCallback(this);
 
@@ -65,13 +63,13 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
         starSeekerEngine = new StarSeekerEngine(longitude, latitude, baseDateTime);
 
         // 端末ステートリゾルバを設定
-        int displayRotation = getDisplayRotation(context);
-        terminalStateResolver = TerminalOrientationsCalculatorFactory.create(context, displayRotation);
+        int displayRotation = getDisplayRotation();
+        terminalStateResolver = TerminalOrientationsCalculatorFactory.create(getContext(), displayRotation);
         terminalStateResolver.setOnChangeTerminalOrientationsListener(starSeekerEngine);
     }
 
-    private int getDisplayRotation(Context context) {
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+    private int getDisplayRotation() {
+        WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
         return display.getRotation();
     }
@@ -104,7 +102,7 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
         if (null != executorService) {
             // surfaceChangedの呼び出しは「called at least once」と記載されているため、
             // ２回以上呼ばれたらひとまずエラーにしてみる
-            throw new RuntimeException("starSeekerEngine is not null.");
+            // throw new RuntimeException("starSeekerEngine is not null."); // FIXME 非表示にしてから再表示すると２回呼ばれるかんじ...
         }
 
         // エンジンの設定

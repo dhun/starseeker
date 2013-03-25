@@ -17,7 +17,7 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
         <activity
-            android:name="jp.gr.java_conf.dhun.starseeker.ui.activity.DevelopmentMenuActivity"
+            android:name=".ui.activity.DevelopmentMenuActivity"
             android:label="@string/title_activity_development_menu" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,14 +25,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="jp.gr.java_conf.dhun.starseeker.ui.activity.ResolveTerminalStateActivity" >
+        <activity android:name=".ui.activity.ResolveTerminalStateActivity" >
         </activity>
-        <activity android:name="jp.gr.java_conf.dhun.starseeker.ui.activity.ResolveObservationSiteByGpsActivity" >
+        <activity android:name=".ui.activity.ResolveObservationSiteByGpsActivity" >
         </activity>
-        <activity android:name="jp.gr.java_conf.dhun.starseeker.ui.activity.ResolveObservationSiteByChooseActivity" >
+        <activity android:name=".ui.activity.ResolveObservationSiteByChooseActivity" >
         </activity>
-        <activity android:name="jp.gr.java_conf.dhun.starseeker.ui.activity.SurfaceViewActivity" >
+        <activity android:name=".ui.activity.SurfaceViewActivity" >
         </activity>
-        </application>
+        <activity android:name=".ui.activity.AstronomicalTheaterActivity" >
+        </activity>
+    </application>
 
 </manifest>

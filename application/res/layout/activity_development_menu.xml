@@ -36,6 +36,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="サーフェースビューのサンプル" />
+
+        <Button
+            android:id="@+id/astronomicalTheaterActivity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="天体シアター・アクティビティ" />
+
     </LinearLayout>
 
 </ScrollView>

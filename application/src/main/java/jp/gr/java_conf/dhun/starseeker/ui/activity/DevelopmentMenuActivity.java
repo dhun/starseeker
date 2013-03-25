@@ -18,8 +18,9 @@ public class DevelopmentMenuActivity extends Activity implements View.OnClickLis
         findViewById(R.id.resolveObservationSiteByGpsActivity).setOnClickListener(this);
         findViewById(R.id.resolveObservationSiteByManualActivity).setOnClickListener(this);
         findViewById(R.id.surfaceViewActivity).setOnClickListener(this);
+        findViewById(R.id.astronomicalTheaterActivity).setOnClickListener(this);
 
-        ((Button) findViewById(R.id.surfaceViewActivity)).performClick();
+        ((Button) findViewById(R.id.astronomicalTheaterActivity)).performClick();
     }
 
     @Override
@@ -43,6 +44,12 @@ public class DevelopmentMenuActivity extends Activity implements View.OnClickLis
             intent = new Intent(this, SurfaceViewActivity.class);
             startActivity(intent);
             break;
+        case R.id.astronomicalTheaterActivity:
+            intent = new Intent(this, AstronomicalTheaterActivity.class);
+            startActivity(intent);
+            break;
+        default:
+            throw new IllegalStateException("unknown view.id. value=[" + view.getId() + "]");
         }
     }
 }
