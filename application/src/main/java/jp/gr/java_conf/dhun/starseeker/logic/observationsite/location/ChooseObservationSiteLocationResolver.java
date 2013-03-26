@@ -4,6 +4,7 @@
 package jp.gr.java_conf.dhun.starseeker.logic.observationsite.location;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import jp.gr.java_conf.dhun.starseeker.model.ObservationSiteLocation;
@@ -61,6 +62,10 @@ public class ChooseObservationSiteLocationResolver implements IObservationSiteLo
                 StarLocationUtil.convertAngleStringToFloat(altitude),  // 高度
                 name);
         return result;
+    }
+
+    public static List<ObservationSiteLocation> getObservationSiteLocations() {
+        return Collections.unmodifiableList(locations);
     }
 
     // ********************************************************************************

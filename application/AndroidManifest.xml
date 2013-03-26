@@ -25,16 +25,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.ResolveTerminalStateActivity" >
-        </activity>
-        <activity android:name=".ui.activity.ResolveObservationSiteByGpsActivity" >
-        </activity>
-        <activity android:name=".ui.activity.ResolveObservationSiteByChooseActivity" >
-        </activity>
-        <activity android:name=".ui.activity.SurfaceViewActivity" >
-        </activity>
-        <activity android:name=".ui.activity.AstronomicalTheaterActivity" >
-        </activity>
+        <activity android:name=".ui.activity.ResolveTerminalStateActivity" />
+        <activity android:name=".ui.activity.ResolveObservationSiteByGpsActivity" />
+        <activity android:name=".ui.activity.ResolveObservationSiteByChooseActivity" />
+        <activity android:name=".ui.activity.SurfaceViewActivity" />
+        <activity android:name=".ui.activity.AstronomicalTheaterActivity" />
+        <activity android:name=".ui.activity.ChooseLocationActivity" />
     </application>
 
 </manifest>

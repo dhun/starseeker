@@ -6,6 +6,7 @@ package jp.gr.java_conf.dhun.starseeker.ui.activity;
 import jp.gr.java_conf.dhun.starseeker.R;
 import jp.gr.java_conf.dhun.starseeker.ui.view.AstronomicalTheaterView;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -63,6 +64,7 @@ public class AstronomicalTheaterActivity extends Activity //
 
     @Override
     public void onClick(View view) {
+        Intent intent;
         String name;
         switch (view.getId()) {
         case R.id.zoomControls:
@@ -74,9 +76,12 @@ public class AstronomicalTheaterActivity extends Activity //
         case R.id.chooseTodayButton:
             name = "chooseTodayButton";
             break;
+
         case R.id.chooseLocationButton:
-            name = "chooseLocationButton";
-            break;
+            intent = new Intent(this, ChooseLocationActivity.class);
+            startActivity(intent);
+            return;
+
         case R.id.settingsButton:
             name = "settingsButton";
             break;
