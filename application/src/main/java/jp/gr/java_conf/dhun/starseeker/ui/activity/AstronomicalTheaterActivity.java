@@ -14,6 +14,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 /**
@@ -31,6 +32,8 @@ public class AstronomicalTheaterActivity extends Activity //
     private AstronomicalTheaterView theaterMasterView;
     private AstronomicalTheaterView theaterSecondView;
 
+    private ImageButton switchShowSecondTheaterButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +42,12 @@ public class AstronomicalTheaterActivity extends Activity //
         theaterMasterView = (AstronomicalTheaterView) findViewById(R.id.astronomicalTheaterMasterView);
         theaterSecondView = (AstronomicalTheaterView) findViewById(R.id.astronomicalTheaterSecondView);
 
+        switchShowSecondTheaterButton = (ImageButton) findViewById(R.id.switchShowSecondTheaterButton);
+
         theaterMasterView.setup();
         theaterSecondView.setup();
+
+        setSecondaryTheaterVisible(false); // 最初はセカンドパネルは非表示
 
         findViewById(R.id.zoomControls).setOnClickListener(this);
         findViewById(R.id.chooseMagnitudeButton).setOnClickListener(this);
@@ -50,8 +57,9 @@ public class AstronomicalTheaterActivity extends Activity //
         findViewById(R.id.switchStarLocateIndicatorButton).setOnClickListener(this);
         findViewById(R.id.switchLockDisplayRotateButton).setOnClickListener(this);
         findViewById(R.id.photographButton).setOnClickListener(this);
-        findViewById(R.id.switchShowSecondTheaterButton).setOnClickListener(this);
         findViewById(R.id.imageButton2).setOnClickListener(this);
+        switchShowSecondTheaterButton.setOnClickListener(this);
+
     }
 
     @Override
@@ -103,9 +111,11 @@ public class AstronomicalTheaterActivity extends Activity //
         case R.id.photographButton:
             name = "photographButton";
             break;
+
         case R.id.switchShowSecondTheaterButton:
-            onClickSwitchShowSecondTheaterButton();
+            setSecondaryTheaterVisible(theaterSecondView.getVisibility() != View.VISIBLE);
             return;
+
         case R.id.imageButton2:
             name = "imageButton2";
             break;
@@ -141,11 +151,13 @@ public class AstronomicalTheaterActivity extends Activity //
         return super.onCreateDialog(id, bundle);
     }
 
-    private void onClickSwitchShowSecondTheaterButton() {
-        if (theaterSecondView.getVisibility() != View.VISIBLE) {
+    private void setSecondaryTheaterVisible(boolean visible) {
+        if (visible) {
             theaterSecondView.setVisibility(View.VISIBLE);
+            switchShowSecondTheaterButton.setImageLevel(1);
         } else {
             theaterSecondView.setVisibility(View.GONE);
+            switchShowSecondTheaterButton.setImageLevel(0);
         }
     }
 }

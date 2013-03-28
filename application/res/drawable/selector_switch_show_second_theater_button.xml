@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:drawable="@android:drawable/ic_input_add"
+        android:maxLevel="0" />
+    <item
+        android:drawable="@android:drawable/ic_input_delete"
+        android:maxLevel="1" />
+</level-list>
