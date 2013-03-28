@@ -30,7 +30,7 @@
                 android:id="@+id/setNowButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="現在日時をセット" />
+                android:text="現在日時をセット" /> <!-- XXX strings.xml -->
         </LinearLayout>
     </LinearLayout>
 

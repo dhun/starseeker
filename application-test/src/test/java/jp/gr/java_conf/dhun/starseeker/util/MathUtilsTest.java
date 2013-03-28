@@ -2,7 +2,6 @@ package jp.gr.java_conf.dhun.starseeker.util;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-import jp.gr.java_conf.dhun.starseeker.util.MathUtils;
 
 import org.junit.After;
 import org.junit.Before;

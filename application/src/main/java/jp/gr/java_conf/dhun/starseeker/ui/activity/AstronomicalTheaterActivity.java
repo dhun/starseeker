@@ -117,7 +117,7 @@ public class AstronomicalTheaterActivity extends Activity //
     }
 
     @Override
-    protected Dialog onCreateDialog(final int id, Bundle args) {
+    protected Dialog onCreateDialog(final int id, Bundle bundle) {
         if (id == DIALOG_CHOOSE_NOW) {
             // 現在時刻の選択ダイアログ
             DateTimePickerDialogBuilder builder = new DateTimePickerDialogBuilder(this);
@@ -138,7 +138,7 @@ public class AstronomicalTheaterActivity extends Activity //
             dialog.setCanceledOnTouchOutside(true);
             return dialog;
         }
-        return super.onCreateDialog(id, args);
+        return super.onCreateDialog(id, bundle);
     }
 
     private void onClickSwitchShowSecondTheaterButton() {
