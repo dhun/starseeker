@@ -8,14 +8,11 @@ import java.util.Date;
 import jp.gr.java_conf.dhun.starseeker.R;
 import jp.gr.java_conf.dhun.starseeker.model.ObservationSiteLocation;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseLocationDialogBuilder;
-import jp.gr.java_conf.dhun.starseeker.ui.dialog.DateTimePickerDialogBuilder;
+import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseDateTimeDialogBuilder;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.listener.OnChooseDataListener;
 import jp.gr.java_conf.dhun.starseeker.ui.view.AstronomicalTheaterView;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -85,7 +82,7 @@ public class AstronomicalTheaterActivity extends Activity //
 
     @Override
     public void onClick(View view) {
-        Intent intent;
+        // Intent intent;
         String name;
         switch (view.getId()) {
         case R.id.zoomControls:
@@ -136,43 +133,28 @@ public class AstronomicalTheaterActivity extends Activity //
     protected Dialog onCreateDialog(final int id, Bundle bundle) {
         if (id == DIALOG_CHOOSE_NOW) {
             // 現在時刻の選択ダイアログ
-            DateTimePickerDialogBuilder builder = new DateTimePickerDialogBuilder(this);
-            builder.setOnClickPositiveButtonListener(new DateTimePickerDialogBuilder.OnClickPositiveButtonListener() {
+            ChooseDateTimeDialogBuilder builder = new ChooseDateTimeDialogBuilder(this);
+            builder.setDialogId(id);
+            builder.setOnChooseDataListener(new OnChooseDataListener<Date>() {
                 @Override
-                public void onClickPositiveButtonListener(Date date) {
-                    Toast.makeText(getApplicationContext(), date.toString(), Toast.LENGTH_SHORT).show();
-                    removeDialog(id);
+                public void onChooseData(Date data) {
+                    Toast.makeText(getApplicationContext(), data.toString(), Toast.LENGTH_SHORT).show();
                 }
             });
-            builder.setOnClickNegativeButtonListener(new DateTimePickerDialogBuilder.OnClickNegativeButtonListener() {
-                @Override
-                public void onClickNegativeButtonListener() {
-                    removeDialog(id);
-                }
-            });
-            AlertDialog dialog = builder.create();
-            dialog.setCanceledOnTouchOutside(true);
-            return dialog;
+            return builder.create();
         }
 
         if (id == DIALOG_CHOOSE_LOCATION) {
             // 観測地点の選択
             ChooseLocationDialogBuilder builder = new ChooseLocationDialogBuilder(this);
+            builder.setDialogId(id);
             builder.setOnChooseDataListener(new OnChooseDataListener<ObservationSiteLocation>() {
                 @Override
                 public void onChooseData(ObservationSiteLocation data) {
                     Toast.makeText(getApplicationContext(), data.getName(), Toast.LENGTH_SHORT).show();
                 }
             });
-            AlertDialog dialog = builder.create();
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    removeDialog(id);
-                }
-            });
-            return dialog;
+            return builder.create();
         }
         return super.onCreateDialog(id, bundle);
     }

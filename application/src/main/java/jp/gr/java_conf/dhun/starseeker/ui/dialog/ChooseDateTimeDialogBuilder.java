@@ -7,8 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import jp.gr.java_conf.dhun.starseeker.R;
-import android.app.AlertDialog;
-import android.content.Context;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,27 +21,26 @@ import android.widget.TimePicker;
  * @author jun
  * 
  */
-public class DateTimePickerDialogBuilder {
-
-    private final Context context;
+public class ChooseDateTimeDialogBuilder extends AbstractChooseDataDialogBuilder<Date> {
 
     private Date initialDateTime = new Date();
-    private OnClickPositiveButtonListener onClickPositiveButtonListener;
-    private OnClickNegativeButtonListener onClickNegativeButtonListener;
 
     private DatePicker datePicker;
     private TimePicker timePicker;
 
-    public DateTimePickerDialogBuilder(Context context) {
-        this.context = context;
+    /**
+     * コンストラクタ
+     */
+    public ChooseDateTimeDialogBuilder(Activity activity) {
+        super(activity);
+        dialogTitle = "表示する日時の指定"; // XXX strings.xml
     }
 
-    public AlertDialog create() {
-        if (null == onClickPositiveButtonListener && null == onClickNegativeButtonListener) {
-            throw new IllegalStateException("initialDateTime must be null.");
-        }
+    @Override
+    protected void setupBuilder() {
+        super.setupBuilder();
 
-        ViewGroup contentView = (ViewGroup) View.inflate(context, R.layout.dialog_choose_datetime, null);
+        ViewGroup contentView = (ViewGroup) View.inflate(activity, R.layout.dialog_choose_datetime, null);
 
         datePicker = (DatePicker) contentView.findViewById(R.id.datePicker);
 
@@ -59,27 +57,14 @@ public class DateTimePickerDialogBuilder {
 
         setCurrentDateTime(initialDateTime);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("表示する日時の指定"); // XXX strings.xml
         builder.setView(contentView);
-        builder.setCancelable(true);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (null != onClickPositiveButtonListener) {
-                    onClickPositiveButtonListener.onClickPositiveButtonListener(getCurrentDateTime());
-                }
+                onChooseDataListener.onChooseData(getCurrentDateTime());
             }
         });
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (null != onClickNegativeButtonListener) {
-                    onClickNegativeButtonListener.onClickNegativeButtonListener();
-                }
-            }
-        });
-        return builder.create();
+        builder.setNegativeButton(android.R.string.cancel, null);
     }
 
     private void setCurrentDateTime(Date currentDateTime) {
@@ -105,23 +90,10 @@ public class DateTimePickerDialogBuilder {
         return cal.getTime();
     }
 
+    /**
+     * 初期表示する日時を設定します
+     */
     public void setInitialDateTime(Date initialDateTime) {
         this.initialDateTime = initialDateTime;
-    }
-
-    public void setOnClickPositiveButtonListener(OnClickPositiveButtonListener listener) {
-        this.onClickPositiveButtonListener = listener;
-    }
-
-    public void setOnClickNegativeButtonListener(OnClickNegativeButtonListener listener) {
-        this.onClickNegativeButtonListener = listener;
-    }
-
-    public interface OnClickPositiveButtonListener {
-        void onClickPositiveButtonListener(Date date);
-    }
-
-    public interface OnClickNegativeButtonListener {
-        void onClickNegativeButtonListener();
     }
 }
