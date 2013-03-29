@@ -6,11 +6,15 @@ package jp.gr.java_conf.dhun.starseeker.ui.activity;
 import java.util.Date;
 
 import jp.gr.java_conf.dhun.starseeker.R;
+import jp.gr.java_conf.dhun.starseeker.model.ObservationSiteLocation;
+import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseLocationDialogBuilder;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.DateTimePickerDialogBuilder;
+import jp.gr.java_conf.dhun.starseeker.ui.dialog.listener.OnChooseDataListener;
 import jp.gr.java_conf.dhun.starseeker.ui.view.AstronomicalTheaterView;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -28,6 +32,7 @@ public class AstronomicalTheaterActivity extends Activity //
 
     // ダイアログID
     private static final int DIALOG_CHOOSE_NOW = 1; // 現在時刻の選択
+    private static final int DIALOG_CHOOSE_LOCATION = 2; // 観測地点の選択
 
     private AstronomicalTheaterView theaterMasterView;
     private AstronomicalTheaterView theaterSecondView;
@@ -95,8 +100,9 @@ public class AstronomicalTheaterActivity extends Activity //
             return;
 
         case R.id.chooseLocationButton:
-            intent = new Intent(this, ChooseLocationActivity.class);
-            startActivity(intent);
+            // intent = new Intent(this, ChooseLocationActivity.class);
+            // startActivity(intent);
+            showDialog(DIALOG_CHOOSE_LOCATION);
             return;
 
         case R.id.settingsButton:
@@ -146,6 +152,26 @@ public class AstronomicalTheaterActivity extends Activity //
             });
             AlertDialog dialog = builder.create();
             dialog.setCanceledOnTouchOutside(true);
+            return dialog;
+        }
+
+        if (id == DIALOG_CHOOSE_LOCATION) {
+            // 観測地点の選択
+            ChooseLocationDialogBuilder builder = new ChooseLocationDialogBuilder(this);
+            builder.setOnChooseDataListener(new OnChooseDataListener<ObservationSiteLocation>() {
+                @Override
+                public void onChooseData(ObservationSiteLocation data) {
+                    Toast.makeText(getApplicationContext(), data.getName(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.setCanceledOnTouchOutside(true);
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    removeDialog(id);
+                }
+            });
             return dialog;
         }
         return super.onCreateDialog(id, bundle);

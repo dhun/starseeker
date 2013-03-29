@@ -37,8 +37,8 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
     private static final int EXPECTED_FPS = 60; // FPSの期待値
     private static final int EXPECTED_FPS_OF_MILLIS = 1000 / EXPECTED_FPS; // FPSの期待値に対するミリ秒
 
-    private StarSeekerEngine starSeekerEngine;          // スターシーカーシステムのエンジン
-    private ScheduledExecutorService executorService;   // スターシーカーシステムのスレッドエクスキュータ
+    private StarSeekerEngine starSeekerEngine; // スターシーカーシステムのエンジン
+    private ScheduledExecutorService executorService; // スターシーカーシステムのスレッドエクスキュータ
 
     private ITerminalOrientationsCalculator terminalStateResolver;
 
@@ -60,12 +60,16 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
         final Calendar cal = Calendar.getInstance(Locale.JAPAN);
         cal.set(2000, 0, 1, 21, 0);
         Date baseDateTime = cal.getTime();
-        starSeekerEngine = new StarSeekerEngine(longitude, latitude, baseDateTime);
+        refreshEngine(longitude, latitude, baseDateTime);
 
         // 端末ステートリゾルバを設定
         int displayRotation = getDisplayRotation();
         terminalStateResolver = TerminalOrientationsCalculatorFactory.create(getContext(), displayRotation);
         terminalStateResolver.setOnChangeTerminalOrientationsListener(starSeekerEngine);
+    }
+
+    public void refreshEngine(float longitude, float latitude, Date baseDateTime) {
+        starSeekerEngine = new StarSeekerEngine(longitude, latitude, baseDateTime);
     }
 
     private int getDisplayRotation() {
