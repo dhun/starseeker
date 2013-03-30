@@ -5,7 +5,7 @@ package jp.gr.java_conf.dhun.starseeker.system;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Set;
 
 import jp.gr.java_conf.dhun.starseeker.logic.StarLocator;
@@ -15,6 +15,7 @@ import jp.gr.java_conf.dhun.starseeker.model.Orientations;
 import jp.gr.java_conf.dhun.starseeker.model.Star;
 import jp.gr.java_conf.dhun.starseeker.system.listener.IStarSeekerListener;
 import jp.gr.java_conf.dhun.starseeker.system.model.panel.AstronomicalTheater;
+import jp.gr.java_conf.dhun.starseeker.util.DateTimeUtils;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -50,18 +51,14 @@ public class StarSeekerEngine implements //
     private long lastTime;
     private final NumberFormat fpsFormat = new DecimalFormat("'FPS='0.0");
 
-    private final StarLocator starLocator;
+    private String locationTitle;
+    private StarLocator starLocator;
 
     /**
-     * デフォルト・コンストラクタ
+     * コンストラクタ
      */
-    public StarSeekerEngine(double longitude, double latitude, Date baseDateTime) {
+    public StarSeekerEngine() {
         orientations = new Orientations();
-        starLocator = new StarLocator(longitude, latitude, baseDateTime);
-
-        for (Star star : EquatorialCoordinateSystem.STARS) {
-            starLocator.locate(star);
-        }
     }
 
     /**
@@ -72,6 +69,22 @@ public class StarSeekerEngine implements //
      */
     public void prepare(int displayWidth, int displayHeight) {
         astronomicalTheater = new AstronomicalTheater(displayWidth, displayHeight);
+    }
+
+    /**
+     * 観測地点の位置を設定します.<br/>
+     * 
+     * @param longitude 観測地点の経度
+     * @param latitude 観測地点の緯度
+     * @param baseCalendar 座標算出の基準日時となるカレンダー
+     */
+    public void configureObservationSiteLocation(double longitude, double latitude, Calendar baseCalendar) {
+        locationTitle = String.format("経度=[%6.2f], 緯度=[%6.2f], 日時=[%s]", longitude, latitude, DateTimeUtils.toLocalYYYYMMDDHHMMSSWithSegment(baseCalendar));
+
+        starLocator = new StarLocator(longitude, latitude, baseCalendar.getTime()); // FIXME UTC? localtime?
+        for (Star star : EquatorialCoordinateSystem.STARS) {
+            starLocator.locate(star);
+        }
     }
 
     // ＞＞＞ 開発中のコード
@@ -127,6 +140,8 @@ public class StarSeekerEngine implements //
             canvas.drawText("azimuth=" + decFormat.format(orientations.azimuth), 100, 120, paint);
             canvas.drawText("pitch=" + decFormat.format(orientations.pitch), 100, 130, paint);
             canvas.drawText("roll=" + decFormat.format(orientations.roll), 100, 140, paint);
+
+            canvas.drawText(locationTitle, 100, 200, paint);
 
         } catch (Exception e) {
             LogUtils.e(getClass(), "描画処理で例外が発生しました.", e);

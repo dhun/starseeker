@@ -16,12 +16,12 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 /**
- * 日時を選択するダイアログのビルダ
+ * 観測地点の日時を選択するダイアログのビルダ
  * 
  * @author jun
  * 
  */
-public class ChooseDateTimeDialogBuilder extends AbstractChooseDataDialogBuilder<Date> {
+public class ChooseObservationSiteTimeDialogBuilder extends AbstractChooseDataDialogBuilder<Date> {
 
     private Date initialDateTime = new Date();
 
@@ -31,7 +31,7 @@ public class ChooseDateTimeDialogBuilder extends AbstractChooseDataDialogBuilder
     /**
      * コンストラクタ
      */
-    public ChooseDateTimeDialogBuilder(Activity activity) {
+    public ChooseObservationSiteTimeDialogBuilder(Activity activity) {
         super(activity);
         dialogTitle = "表示する日時の指定"; // XXX strings.xml
     }
@@ -40,7 +40,7 @@ public class ChooseDateTimeDialogBuilder extends AbstractChooseDataDialogBuilder
     protected void setupBuilder() {
         super.setupBuilder();
 
-        ViewGroup contentView = (ViewGroup) View.inflate(activity, R.layout.dialog_choose_datetime, null);
+        ViewGroup contentView = (ViewGroup) View.inflate(activity, R.layout.dialog_choose_observation_site_time, null);
 
         datePicker = (DatePicker) contentView.findViewById(R.id.datePicker);
 

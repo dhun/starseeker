@@ -6,6 +6,7 @@ package jp.gr.java_conf.dhun.starseeker.logic.observationsite.location;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 
 import jp.gr.java_conf.dhun.starseeker.model.ObservationSiteLocation;
 import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
@@ -42,25 +43,26 @@ public class ChooseObservationSiteLocationResolver implements IObservationSiteLo
      */
     static {
         locations = new ArrayList<ObservationSiteLocation>();
-        locations.add(newObservationSiteLocation("+139°41'", "+35°41'", "0°0'", "東京－都庁")); // XXX strings.xml
-        locations.add(newObservationSiteLocation("+135°45'", "+35°01'", "0°0'", "京都－府庁"));
-        locations.add(newObservationSiteLocation("+138°43'", "+35°21'", "0°0'", "山梨－富士山"));
-        locations.add(newObservationSiteLocation("+141°56'", "+45°31'", "0°0'", "北端－北海道－宗谷岬"));
-        locations.add(newObservationSiteLocation("+136°04'", "+20°25'", "0°0'", "南端－東京－沖ノ鳥島"));
-        locations.add(newObservationSiteLocation("+153°59'", "+24°16'", "0°0'", "東端－東京－南鳥島"));
-        locations.add(newObservationSiteLocation("+122°56'", "+24°26'", "0°0'", "西端－沖縄－与那国島"));
-        locations.add(newObservationSiteLocation("+105°83'", "+21°03'", "0°0'", "ベトナム－ハノイ"));
-        locations.add(newObservationSiteLocation("-000°12'", "+51°49'", "0°0'", "イギリス－ロンドン"));
-        locations.add(newObservationSiteLocation("-154°40'", "+18°55'", "0°0'", "アメリカ－ハワイ"));
-        locations.add(newObservationSiteLocation("+059°33'", "+18°07'", "0°0'", "スウェーデン－ストックホルム"));
+        locations.add(newObservationSiteLocation("+139°41'", "+35°41'", "0°0'", "Asia/Tokyo", "東京－都庁")); // XXX strings.xml
+        locations.add(newObservationSiteLocation("+135°45'", "+35°01'", "0°0'", "Asia/Tokyo", "京都－府庁"));
+        locations.add(newObservationSiteLocation("+138°43'", "+35°21'", "0°0'", "Asia/Tokyo", "山梨－富士山"));
+        locations.add(newObservationSiteLocation("+141°56'", "+45°31'", "0°0'", "Asia/Tokyo", "北端－北海道－宗谷岬"));
+        locations.add(newObservationSiteLocation("+136°04'", "+20°25'", "0°0'", "Asia/Tokyo", "南端－東京－沖ノ鳥島"));
+        locations.add(newObservationSiteLocation("+153°59'", "+24°16'", "0°0'", "Asia/Tokyo", "東端－東京－南鳥島"));
+        locations.add(newObservationSiteLocation("+122°56'", "+24°26'", "0°0'", "Asia/Tokyo", "西端－沖縄－与那国島"));
+        locations.add(newObservationSiteLocation("+105°83'", "+21°03'", "0°0'", "Asia/Ho_Chi_Minh", "ベトナム－ホーチミン"));
+        locations.add(newObservationSiteLocation("-000°12'", "+51°49'", "0°0'", "Europe/London", "イギリス－ロンドン"));
+        locations.add(newObservationSiteLocation("-154°40'", "+18°55'", "0°0'", "US/Hawaii", "アメリカ－ハワイ"));
+        locations.add(newObservationSiteLocation("+059°33'", "+18°07'", "0°0'", "Europe/Stockholm", "スウェーデン－ストックホルム"));
     }
 
-    private static ObservationSiteLocation newObservationSiteLocation(String latitude, String longitude, String altitude, String name) {
-        ObservationSiteLocation result = new ObservationSiteLocation(   //
+    private static ObservationSiteLocation newObservationSiteLocation(String latitude, String longitude, String altitude, String timezoneName, String name) {
+        ObservationSiteLocation result = new ObservationSiteLocation(  //
                 StarLocationUtil.convertAngleStringToFloat(latitude),  // 緯度
                 StarLocationUtil.convertAngleStringToFloat(longitude), // 経度
-                StarLocationUtil.convertAngleStringToFloat(altitude),  // 高度
-                name);
+                StarLocationUtil.convertAngleStringToFloat(altitude)); // 高度
+        result.setName(name);
+        result.setTimeZone(TimeZone.getTimeZone(timezoneName));
         return result;
     }
 

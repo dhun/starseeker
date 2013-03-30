@@ -3,14 +3,17 @@
  */
 package jp.gr.java_conf.dhun.starseeker.ui.activity;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import jp.gr.java_conf.dhun.starseeker.R;
+import jp.gr.java_conf.dhun.starseeker.logic.observationsite.location.ChooseObservationSiteLocationResolver;
 import jp.gr.java_conf.dhun.starseeker.model.ObservationSiteLocation;
-import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseLocationDialogBuilder;
-import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseDateTimeDialogBuilder;
+import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseObservationSiteLocationDialogBuilder;
+import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseObservationSiteTimeDialogBuilder;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.listener.OnChooseDataListener;
 import jp.gr.java_conf.dhun.starseeker.ui.view.AstronomicalTheaterView;
+import jp.gr.java_conf.dhun.starseeker.util.DateTimeUtils;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -28,56 +31,69 @@ public class AstronomicalTheaterActivity extends Activity //
         implements View.OnClickListener {
 
     // ダイアログID
-    private static final int DIALOG_CHOOSE_NOW = 1; // 現在時刻の選択
-    private static final int DIALOG_CHOOSE_LOCATION = 2; // 観測地点の選択
+    private static final int DIALOG_CHOOSE_OBSERVATION_SITE_TIME = 1;       // 観測地点の時刻選択ダイアログ
+    private static final int DIALOG_CHOOSE_OBSERVATION_SITE_LOCATION = 2;   // 観測地点の位置選択ダイアログ
 
-    private AstronomicalTheaterView theaterMasterView;
-    private AstronomicalTheaterView theaterSecondView;
-
+    private AstronomicalTheaterView masterTheaterView;
+    private AstronomicalTheaterView secondTheaterView;
     private ImageButton switchShowSecondTheaterButton;
+
+    private ObservationSiteLocation masterObservationSiteLocation;
+    private ObservationSiteLocation secondObservationSiteLocation;
+
+    private Calendar masterCurrentCalendar;
+    private Calendar secondCurrentCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.content_astronomical_theater);
 
-        theaterMasterView = (AstronomicalTheaterView) findViewById(R.id.astronomicalTheaterMasterView);
-        theaterSecondView = (AstronomicalTheaterView) findViewById(R.id.astronomicalTheaterSecondView);
-
+        // ビューの取得
+        masterTheaterView = (AstronomicalTheaterView) findViewById(R.id.masterTheaterView);
+        secondTheaterView = (AstronomicalTheaterView) findViewById(R.id.secondTheaterView);
         switchShowSecondTheaterButton = (ImageButton) findViewById(R.id.switchShowSecondTheaterButton);
 
-        theaterMasterView.setup();
-        theaterSecondView.setup();
+        // 天体シアターの設定
+        masterObservationSiteLocation = ChooseObservationSiteLocationResolver.getObservationSiteLocations().get(0);
+        secondObservationSiteLocation = ChooseObservationSiteLocationResolver.getObservationSiteLocations().get(8);
+
+        masterCurrentCalendar = Calendar.getInstance();
+        secondCurrentCalendar = Calendar.getInstance();
+
+        masterTheaterView.setup();
+        secondTheaterView.setup();
 
         setSecondaryTheaterVisible(false); // 最初はセカンドパネルは非表示
 
+        // クリックイベントの設定
         findViewById(R.id.zoomControls).setOnClickListener(this);
         findViewById(R.id.chooseMagnitudeButton).setOnClickListener(this);
-        findViewById(R.id.chooseTodayButton).setOnClickListener(this);
-        findViewById(R.id.chooseLocationButton).setOnClickListener(this);
+        findViewById(R.id.chooseObservationSiteTimeButton).setOnClickListener(this);
+        findViewById(R.id.chooseMasterObservationSiteLocationButton).setOnClickListener(this);
+        findViewById(R.id.chooseSecondObservationSiteLocationButton).setOnClickListener(this);
         findViewById(R.id.settingsButton).setOnClickListener(this);
         findViewById(R.id.switchStarLocateIndicatorButton).setOnClickListener(this);
         findViewById(R.id.switchLockDisplayRotateButton).setOnClickListener(this);
         findViewById(R.id.photographButton).setOnClickListener(this);
         findViewById(R.id.imageButton2).setOnClickListener(this);
         switchShowSecondTheaterButton.setOnClickListener(this);
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        theaterMasterView.resume();
-        theaterSecondView.resume();
+        masterTheaterView.resume();
+        secondTheaterView.resume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        theaterMasterView.pause();
-        theaterSecondView.pause();
+        masterTheaterView.pause();
+        secondTheaterView.pause();
     }
 
     @Override
@@ -92,14 +108,15 @@ public class AstronomicalTheaterActivity extends Activity //
             name = "chooseMagnitudeButton";
             break;
 
-        case R.id.chooseTodayButton:
-            showDialog(DIALOG_CHOOSE_NOW);
+        case R.id.chooseObservationSiteTimeButton:
+            showDialog(DIALOG_CHOOSE_OBSERVATION_SITE_TIME);
             return;
 
-        case R.id.chooseLocationButton:
-            // intent = new Intent(this, ChooseLocationActivity.class);
-            // startActivity(intent);
-            showDialog(DIALOG_CHOOSE_LOCATION);
+        case R.id.chooseMasterObservationSiteLocationButton:
+        case R.id.chooseSecondObservationSiteLocationButton:
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("isMaster", view.getId() == R.id.chooseMasterObservationSiteLocationButton);
+            showDialog(DIALOG_CHOOSE_OBSERVATION_SITE_LOCATION, bundle);
             return;
 
         case R.id.settingsButton:
@@ -116,7 +133,7 @@ public class AstronomicalTheaterActivity extends Activity //
             break;
 
         case R.id.switchShowSecondTheaterButton:
-            setSecondaryTheaterVisible(theaterSecondView.getVisibility() != View.VISIBLE);
+            setSecondaryTheaterVisible(secondTheaterView.getVisibility() != View.VISIBLE);
             return;
 
         case R.id.imageButton2:
@@ -131,27 +148,41 @@ public class AstronomicalTheaterActivity extends Activity //
 
     @Override
     protected Dialog onCreateDialog(final int id, Bundle bundle) {
-        if (id == DIALOG_CHOOSE_NOW) {
-            // 現在時刻の選択ダイアログ
-            ChooseDateTimeDialogBuilder builder = new ChooseDateTimeDialogBuilder(this);
+        if (id == DIALOG_CHOOSE_OBSERVATION_SITE_TIME) {
+            // 観測地点の時刻選択ダイアログ
+            ChooseObservationSiteTimeDialogBuilder builder = new ChooseObservationSiteTimeDialogBuilder(this);
             builder.setDialogId(id);
             builder.setOnChooseDataListener(new OnChooseDataListener<Date>() {
                 @Override
                 public void onChooseData(Date data) {
-                    Toast.makeText(getApplicationContext(), data.toString(), Toast.LENGTH_SHORT).show();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(data);
+
+                    masterCurrentCalendar = DateTimeUtils.toSameDateTime(cal, masterObservationSiteLocation.getTimeZone());
+                    secondCurrentCalendar = DateTimeUtils.toSameDateTime(cal, secondObservationSiteLocation.getTimeZone());
+
+                    masterTheaterView.configureObservationSiteLocation(masterObservationSiteLocation.getLongitude(), masterObservationSiteLocation.getLatitude(), masterCurrentCalendar);
+                    secondTheaterView.configureObservationSiteLocation(secondObservationSiteLocation.getLongitude(), secondObservationSiteLocation.getLatitude(), secondCurrentCalendar);
                 }
             });
             return builder.create();
         }
 
-        if (id == DIALOG_CHOOSE_LOCATION) {
-            // 観測地点の選択
-            ChooseLocationDialogBuilder builder = new ChooseLocationDialogBuilder(this);
+        if (id == DIALOG_CHOOSE_OBSERVATION_SITE_LOCATION) {
+            // 観測地点の位置選択ダイアログ
+            final boolean isMaster = bundle.getBoolean("isMaster");
+            ChooseObservationSiteLocationDialogBuilder builder = new ChooseObservationSiteLocationDialogBuilder(this);
             builder.setDialogId(id);
             builder.setOnChooseDataListener(new OnChooseDataListener<ObservationSiteLocation>() {
                 @Override
                 public void onChooseData(ObservationSiteLocation data) {
-                    Toast.makeText(getApplicationContext(), data.getName(), Toast.LENGTH_SHORT).show();
+                    if (isMaster) {
+                        masterObservationSiteLocation = data;
+                        masterTheaterView.configureObservationSiteLocation(masterObservationSiteLocation.getLongitude(), masterObservationSiteLocation.getLatitude(), masterCurrentCalendar);
+                    } else {
+                        secondObservationSiteLocation = data;
+                        secondTheaterView.configureObservationSiteLocation(secondObservationSiteLocation.getLongitude(), secondObservationSiteLocation.getLatitude(), secondCurrentCalendar);
+                    }
                 }
             });
             return builder.create();
@@ -161,10 +192,10 @@ public class AstronomicalTheaterActivity extends Activity //
 
     private void setSecondaryTheaterVisible(boolean visible) {
         if (visible) {
-            theaterSecondView.setVisibility(View.VISIBLE);
+            secondTheaterView.setVisibility(View.VISIBLE);
             switchShowSecondTheaterButton.setImageLevel(1);
         } else {
-            theaterSecondView.setVisibility(View.GONE);
+            secondTheaterView.setVisibility(View.GONE);
             switchShowSecondTheaterButton.setImageLevel(0);
         }
     }

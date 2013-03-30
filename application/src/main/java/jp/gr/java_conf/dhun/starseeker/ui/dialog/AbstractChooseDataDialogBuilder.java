@@ -20,7 +20,7 @@ public abstract class AbstractChooseDataDialogBuilder<T> {
     protected final Activity activity;
     protected final AlertDialog.Builder builder;
 
-    protected int dialogId;
+    protected Integer dialogId = null;
     protected String dialogTitle;
     protected OnChooseDataListener<T> onChooseDataListener;
 
@@ -46,6 +46,9 @@ public abstract class AbstractChooseDataDialogBuilder<T> {
      * ビルダをセットアップします
      */
     protected void setupBuilder() {
+        if (null == dialogId) {
+            throw new IllegalStateException("dialogId must be null.");
+        }
         if (null == onChooseDataListener) {
             throw new IllegalStateException("onChooseDataListener must be null.");
         }

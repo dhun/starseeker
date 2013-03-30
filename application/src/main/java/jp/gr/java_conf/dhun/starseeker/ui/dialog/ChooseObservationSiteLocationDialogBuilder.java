@@ -12,12 +12,12 @@ import android.app.Activity;
 import android.content.DialogInterface;
 
 /**
- * 観測地点を選択するダイアログのビルダ
+ * 観測地点の位置を選択するダイアログのビルダ
  * 
  * @author j_hosoya
  * 
  */
-public class ChooseLocationDialogBuilder extends AbstractChooseDataDialogBuilder<ObservationSiteLocation> {
+public class ChooseObservationSiteLocationDialogBuilder extends AbstractChooseDataDialogBuilder<ObservationSiteLocation> {
 
     private final List<ObservationSiteLocation> locations;
     private final List<String> locationNames;
@@ -25,7 +25,7 @@ public class ChooseLocationDialogBuilder extends AbstractChooseDataDialogBuilder
     /**
      * コンストラクタ
      */
-    public ChooseLocationDialogBuilder(Activity activity) {
+    public ChooseObservationSiteLocationDialogBuilder(Activity activity) {
         super(activity);
         dialogTitle = "左側のシアターの場所"; // XXX strings.xml
 

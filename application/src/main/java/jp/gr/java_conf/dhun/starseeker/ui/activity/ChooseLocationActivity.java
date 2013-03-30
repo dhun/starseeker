@@ -25,6 +25,7 @@ import android.widget.ListView;
  * 
  * @author jun
  */
+@Deprecated
 public class ChooseLocationActivity extends Activity {
 
     @Override

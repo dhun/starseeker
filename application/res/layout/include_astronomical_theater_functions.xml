@@ -26,12 +26,17 @@
             android:src="@android:drawable/star_big_on" />
 
         <ImageButton
-            android:id="@+id/chooseTodayButton"
+            android:id="@+id/chooseObservationSiteTimeButton"
             style="@style/astronomical_theater_function"
             android:src="@android:drawable/ic_menu_today" />
 
         <ImageButton
-            android:id="@+id/chooseLocationButton"
+            android:id="@+id/chooseMasterObservationSiteLocationButton"
+            style="@style/astronomical_theater_function"
+            android:src="@android:drawable/ic_menu_myplaces" />
+
+        <ImageButton
+            android:id="@+id/chooseSecondObservationSiteLocationButton"
             style="@style/astronomical_theater_function"
             android:src="@android:drawable/ic_menu_myplaces" />
 
