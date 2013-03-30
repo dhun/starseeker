@@ -40,10 +40,9 @@ public class ChooseObservationSiteTimeDialogBuilder extends AbstractChooseDataDi
         super.setupBuilder();
 
         ViewGroup contentView = (ViewGroup) View.inflate(activity, R.layout.dialog_choose_observation_site_time, null);
-
         datePicker = (DatePicker) contentView.findViewById(R.id.datePicker);
-
         timePicker = (TimePicker) contentView.findViewById(R.id.timePicker);
+
         timePicker.setIs24HourView(true);
 
         Button setNowButton = (Button) contentView.findViewById(R.id.setNowButton);
@@ -76,6 +75,10 @@ public class ChooseObservationSiteTimeDialogBuilder extends AbstractChooseDataDi
     }
 
     private Date getCurrentDateTime() {
+        // Focus移動により入力中の値を確定させる. これがないと最後に手入力した値が取得できない
+        datePicker.requestFocus(View.FOCUS_DOWN);
+        timePicker.requestFocus(View.FOCUS_DOWN);
+
         Calendar cal = Calendar.getInstance();
         cal.clear();
 

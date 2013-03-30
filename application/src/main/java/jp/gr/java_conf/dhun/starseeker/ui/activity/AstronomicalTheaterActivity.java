@@ -46,6 +46,7 @@ public class AstronomicalTheaterActivity extends Activity //
     private ObservationSiteLocation masterObservationSiteLocation;
     private ObservationSiteLocation secondObservationSiteLocation;
 
+    private Date baseDate;
     private Calendar masterCurrentCalendar;
     private Calendar secondCurrentCalendar;
 
@@ -64,7 +65,8 @@ public class AstronomicalTheaterActivity extends Activity //
         masterObservationSiteLocation = ChooseObservationSiteLocationResolver.getObservationSiteLocations().get(0);
         secondObservationSiteLocation = ChooseObservationSiteLocationResolver.getObservationSiteLocations().get(8);
 
-        refreshBaseCalendar(new Date());    // 基準日時はシステム日時
+        baseDate = new Date();
+        refreshBaseCalendar(baseDate);    // 基準日時はシステム日時
 
         masterTheaterView.initialize();
         secondTheaterView.initialize();
@@ -160,6 +162,7 @@ public class AstronomicalTheaterActivity extends Activity //
             // 観測地点の時刻選択ダイアログ
             ChooseObservationSiteTimeDialogBuilder builder = new ChooseObservationSiteTimeDialogBuilder(this);
             builder.setDialogId(id);
+            builder.setInitialDateTime(baseDate);
             builder.setOnChooseDataListener(new OnChooseDataListener<Date>() {
                 @Override
                 public void onChooseData(Date data) {
@@ -214,6 +217,8 @@ public class AstronomicalTheaterActivity extends Activity //
     }
 
     private void refreshBaseCalendar(Date baseDate) {
+        this.baseDate = baseDate;
+
         Calendar baseCalendar = Calendar.getInstance();
         baseCalendar.setTime(baseDate);
 
