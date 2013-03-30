@@ -39,6 +39,8 @@ public class ChooseObservationSiteLocationDialogBuilder extends AbstractChooseDa
     }
 
     private void setupLocations() {
+        // FIXME ここでGPSリゾルバを追加
+        // FIXME マニュアルリゾルバも追加する？
         this.locations.addAll(ChooseObservationSiteLocationResolver.getObservationSiteLocations());
     }
 

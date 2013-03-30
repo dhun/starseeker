@@ -33,7 +33,6 @@ public class ChooseObservationSiteTimeDialogBuilder extends AbstractChooseDataDi
      */
     public ChooseObservationSiteTimeDialogBuilder(Activity activity) {
         super(activity);
-        dialogTitle = "表示する日時の指定"; // XXX strings.xml
     }
 
     @Override

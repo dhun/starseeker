@@ -16,8 +16,12 @@ import jp.gr.java_conf.dhun.starseeker.ui.view.AstronomicalTheaterView;
 import jp.gr.java_conf.dhun.starseeker.util.DateTimeUtils;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.Display;
+import android.view.Surface;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -171,8 +175,21 @@ public class AstronomicalTheaterActivity extends Activity //
         if (id == DIALOG_CHOOSE_OBSERVATION_SITE_LOCATION) {
             // 観測地点の位置選択ダイアログ
             final boolean isMaster = bundle.getBoolean("isMaster");
+            String title = null;
+            switch (getDisplayRotation()) {
+            case Surface.ROTATION_0:
+            case Surface.ROTATION_180:
+                title = isMaster ? "上側" : "下側"; // XXX strings.xml
+                break;
+            case Surface.ROTATION_90:
+            case Surface.ROTATION_270:
+                title = isMaster ? "左側" : "右側"; // XXX strings.xml
+                break;
+            }
+
             ChooseObservationSiteLocationDialogBuilder builder = new ChooseObservationSiteLocationDialogBuilder(this);
             builder.setDialogId(id);
+            builder.setDialogTitle(title + "のシアターの場所"); // XXX strings.xml
             builder.setOnChooseDataListener(new OnChooseDataListener<ObservationSiteLocation>() {
                 @Override
                 public void onChooseData(ObservationSiteLocation data) {
@@ -188,6 +205,12 @@ public class AstronomicalTheaterActivity extends Activity //
             return builder.create();
         }
         return super.onCreateDialog(id, bundle);
+    }
+
+    private int getDisplayRotation() {
+        WindowManager windowManager = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        return display.getRotation();
     }
 
     private void setSecondaryTheaterVisible(boolean visible) {
