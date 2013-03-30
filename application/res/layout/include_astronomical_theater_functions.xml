@@ -53,7 +53,7 @@
         <ImageButton
             android:id="@+id/switchLockDisplayRotateButton"
             style="@style/astronomical_theater_function"
-            android:src="@android:drawable/ic_lock_idle_lock" />
+            android:src="@drawable/selector_switch_lock_display_rotate_button" />
 
         <ImageButton
             android:id="@+id/photographButton"

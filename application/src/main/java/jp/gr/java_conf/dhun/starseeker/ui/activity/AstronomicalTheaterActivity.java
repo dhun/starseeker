@@ -45,6 +45,7 @@ public class AstronomicalTheaterActivity extends Activity //
     private AstronomicalTheaterView secondTheaterView;
     private ImageButton switchShowSecondTheaterButton;
     private ImageButton chooseSecondObservationSiteLocationButton;
+    private ImageButton switchLockDisplayRotateButton;
 
     private ObservationSiteLocation masterObservationSiteLocation;
     private ObservationSiteLocation secondObservationSiteLocation;
@@ -64,6 +65,7 @@ public class AstronomicalTheaterActivity extends Activity //
         secondTheaterView = (AstronomicalTheaterView) findViewById(R.id.secondTheaterView);
         switchShowSecondTheaterButton = (ImageButton) findViewById(R.id.switchShowSecondTheaterButton);
         chooseSecondObservationSiteLocationButton = (ImageButton) findViewById(R.id.chooseSecondObservationSiteLocationButton);
+        switchLockDisplayRotateButton = (ImageButton) findViewById(R.id.switchLockDisplayRotateButton);
 
         // 天体シアターの設定
         masterObservationSiteLocation = ChooseObservationSiteLocationResolver.getObservationSiteLocations().get(0);
@@ -76,6 +78,7 @@ public class AstronomicalTheaterActivity extends Activity //
         secondTheaterView.initialize();
 
         setSecondTheaterViewVisible(false); // 最初はセカンドパネルは非表示
+        changeScreenOrientation(true);      // 最初は回転ロック
 
         refreshMasterTheaterView();
         refreshSecondTheaterView();
@@ -87,11 +90,11 @@ public class AstronomicalTheaterActivity extends Activity //
         findViewById(R.id.chooseMasterObservationSiteLocationButton).setOnClickListener(this);
         findViewById(R.id.settingsButton).setOnClickListener(this);
         findViewById(R.id.switchStarLocateIndicatorButton).setOnClickListener(this);
-        findViewById(R.id.switchLockDisplayRotateButton).setOnClickListener(this);
         findViewById(R.id.photographButton).setOnClickListener(this);
         findViewById(R.id.imageButton2).setOnClickListener(this);
         switchShowSecondTheaterButton.setOnClickListener(this);
         chooseSecondObservationSiteLocationButton.setOnClickListener(this);
+        switchLockDisplayRotateButton.setOnClickListener(this);
     }
 
     @Override
@@ -149,7 +152,7 @@ public class AstronomicalTheaterActivity extends Activity //
             break;
 
         case R.id.switchLockDisplayRotateButton:
-            changeScreenOrientation();
+            changeScreenOrientationWithToast(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             return;
 
         case R.id.photographButton:
@@ -242,34 +245,35 @@ public class AstronomicalTheaterActivity extends Activity //
         secondTheaterView.configureObservationSiteLocation(secondObservationSiteLocation.getLongitude(), secondObservationSiteLocation.getLatitude(), secondCurrentCalendar);
     }
 
-    private void changeScreenOrientation() {
-        if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
-            lockScreenOrientation();
-            Toast.makeText(getApplicationContext(), "画面回転をロックしました", Toast.LENGTH_SHORT).show(); // XXX strings.xml
+    private void changeScreenOrientationWithToast(boolean lock) {
+        changeScreenOrientation(lock);
+        if (lock) {
+            Toast.makeText(getApplicationContext(), "画面を回転ロックしました", Toast.LENGTH_SHORT).show(); // XXX strings.xml
         } else {
-            unlockScreenOrientation();
-            Toast.makeText(getApplicationContext(), "画面回転のロックを解除しました", Toast.LENGTH_SHORT).show(); // XXX strings.xml
+            Toast.makeText(getApplicationContext(), "画面の回転ロックを解除しました", Toast.LENGTH_SHORT).show(); // XXX strings.xml
         }
     }
 
-    private void unlockScreenOrientation() {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-    }
-
-    private void lockScreenOrientation() {
-        switch (getDisplayRotation()) {
-        case Surface.ROTATION_0:
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            break;
-        case Surface.ROTATION_180:
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
-            break;
-        case Surface.ROTATION_90:
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            break;
-        case Surface.ROTATION_270:
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
-            break;
+    private void changeScreenOrientation(boolean lock) {
+        if (lock) {
+            switch (getDisplayRotation()) {
+            case Surface.ROTATION_0:
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                break;
+            case Surface.ROTATION_180:
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+                break;
+            case Surface.ROTATION_90:
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                break;
+            case Surface.ROTATION_270:
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+                break;
+            }
+            switchLockDisplayRotateButton.setImageLevel(1);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            switchLockDisplayRotateButton.setImageLevel(0);
         }
     }
 
