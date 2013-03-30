@@ -3,7 +3,6 @@
  */
 package jp.gr.java_conf.dhun.starseeker.model;
 
-import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarEntity;
 import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
 
 /**
@@ -13,13 +12,17 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
  * @author jun
  * 
  */
-public class Star {
+public class StarOriginal {
 
-    private final StarEntity starEntity;    // 星エンティティ
+    private final float rightAscension; // 赤経(α)の数値表現
+    private final float declination;    // 赤緯(δ)の数値表現
+    private float magnitude;            // 等級
 
     private boolean locaated;   // 配置済であるかどうか
     private float azimuth;      // 方位(A)の数値表現, -180 <= 0 <= + 180
     private float altitude;     // 高度(h)の数値表現. -90 <= 0 <= +90
+
+    private String name;        // 名前
 
     private float displayX;     // ディスプレイのX座標
     private float displayY;     // ディスプレイのY座標
@@ -30,8 +33,7 @@ public class Star {
      * @param rightAscension 赤経(α)の文字列表現
      * @param declination 赤緯(δ)の文字列表現
      */
-    @Deprecated
-    public Star(String rightAscension, String declination) {
+    public StarOriginal(String rightAscension, String declination) {
         this( //
                 StarLocationUtil.convertHourStringToFloat(rightAscension), //
                 StarLocationUtil.convertAngleStringToFloat(declination));
@@ -43,22 +45,9 @@ public class Star {
      * @param rightAscension 赤経(α)の数値表現
      * @param declination 赤緯(δ)の数値表現
      */
-    @Deprecated
-    public Star(float rightAscension, float declination) {
-        this(new StarEntity());
-        this.starEntity.setRightAscension(rightAscension);
-        this.starEntity.setDeclination(declination);
-        this.starEntity.setMagnitude(null);
-        this.starEntity.setName(null);
-    }
-
-    /**
-     * コンストラクタ.<br/>
-     * 
-     * @param starEntity 星のエンティティ
-     */
-    public Star(StarEntity starEntity) {
-        this.starEntity = starEntity;
+    public StarOriginal(float rightAscension, float declination) {
+        this.rightAscension = rightAscension;
+        this.declination = declination;
         this.locaated = false;
     }
 
@@ -78,44 +67,14 @@ public class Star {
      * 赤経(α)の数値表現を取得します.<br/>
      */
     public float getRightAscension() {
-        return starEntity.getRightAscension();
+        return rightAscension;
     }
 
     /**
      * 赤緯(δ)の数値表現を取得します.<br/>
      */
     public float getDeclination() {
-        return starEntity.getDeclination();
-    }
-
-    /**
-     * 名前を取得します.<br/>
-     */
-    public String getName() {
-        return starEntity.getName();
-    }
-
-    /**
-     * 名前を設定します.<br/>
-     */
-    @Deprecated
-    public void setName(String name) {
-        starEntity.setName(name);
-    }
-
-    /**
-     * 等級を取得します.<br/>
-     */
-    public float getMagnitude() {
-        return starEntity.getMagnitude();
-    }
-
-    /**
-     * 等級を設定します.<br/>
-     */
-    @Deprecated
-    public void setMagnitude(float magnitude) {
-        starEntity.setMagnitude(magnitude);
+        return declination;
     }
 
     /**
@@ -139,6 +98,34 @@ public class Star {
     public float getAltitude() {
         assert (isLocated());
         return altitude;
+    }
+
+    /**
+     * 名前を取得します.<br/>
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 名前を設定します.<br/>
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * 等級を取得します.<br/>
+     */
+    public float getMagnitude() {
+        return magnitude;
+    }
+
+    /**
+     * 等級を設定します.<br/>
+     */
+    public void setMagnitude(float magnitude) {
+        this.magnitude = magnitude;
     }
 
     /**
@@ -191,9 +178,9 @@ public class Star {
         final int prime = 31;
         int result = 1;
         long temp;
-        temp = Float.floatToIntBits(getRightAscension());
+        temp = Float.floatToIntBits(rightAscension);
         result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Float.floatToIntBits(getDeclination());
+        temp = Float.floatToIntBits(declination);
         result = prime * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
@@ -206,14 +193,14 @@ public class Star {
         if (obj == null) {
             return false;
         }
-        if (!(obj instanceof Star)) {
+        if (!(obj instanceof StarOriginal)) {
             return false;
         }
-        Star other = (Star) obj;
-        if (Float.floatToIntBits(getRightAscension()) != Float.floatToIntBits(other.getRightAscension())) {
+        StarOriginal other = (StarOriginal) obj;
+        if (Float.floatToIntBits(rightAscension) != Float.floatToIntBits(other.rightAscension)) {
             return false;
         }
-        if (Float.floatToIntBits(getDeclination()) != Float.floatToIntBits(other.getDeclination())) {
+        if (Float.floatToIntBits(declination) != Float.floatToIntBits(other.declination)) {
             return false;
         }
         return true;

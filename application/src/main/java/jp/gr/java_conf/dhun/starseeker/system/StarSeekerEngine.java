@@ -6,14 +6,12 @@ package jp.gr.java_conf.dhun.starseeker.system;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Calendar;
-import java.util.Set;
 
-import jp.gr.java_conf.dhun.starseeker.logic.StarLocator;
 import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.ITerminalOrientationsCalculator;
-import jp.gr.java_conf.dhun.starseeker.model.EquatorialCoordinateSystem;
 import jp.gr.java_conf.dhun.starseeker.model.Orientations;
 import jp.gr.java_conf.dhun.starseeker.model.Star;
 import jp.gr.java_conf.dhun.starseeker.system.listener.IStarSeekerListener;
+import jp.gr.java_conf.dhun.starseeker.system.logic.StarManager;
 import jp.gr.java_conf.dhun.starseeker.system.model.panel.AstronomicalTheater;
 import jp.gr.java_conf.dhun.starseeker.util.DateTimeUtils;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
@@ -45,6 +43,8 @@ public class StarSeekerEngine implements //
     private IStarSeekerListener starSeekerListener; // スターシーカーシステムのリスナ
 
     private AstronomicalTheater astronomicalTheater;
+    private final StarManager starManager;
+
     private final Orientations orientations;
 
     private float lastFps;
@@ -52,12 +52,14 @@ public class StarSeekerEngine implements //
     private final NumberFormat fpsFormat = new DecimalFormat("'FPS='0.0");
 
     private String locationTitle;
-    private StarLocator starLocator;
 
     /**
      * コンストラクタ
      */
     public StarSeekerEngine() {
+        starManager = new StarManager();
+        starManager.configure(0);
+
         orientations = new Orientations();
     }
 
@@ -81,15 +83,10 @@ public class StarSeekerEngine implements //
     public void configureObservationSiteLocation(double longitude, double latitude, Calendar baseCalendar) {
         locationTitle = String.format("経度=[%6.2f], 緯度=[%6.2f], 日時=[%s]", longitude, latitude, DateTimeUtils.toLocalYYYYMMDDHHMMSSWithSegment(baseCalendar));
 
-        starLocator = new StarLocator(longitude, latitude, baseCalendar.getTime()); // FIXME UTC? localtime?
-        for (Star star : EquatorialCoordinateSystem.STARS) {
-            starLocator.locate(star);
-        }
+        starManager.relocate(longitude, latitude, baseCalendar);
     }
 
     // ＞＞＞ 開発中のコード
-    private final Set<Star> stars = EquatorialCoordinateSystem.STARS;
-
     private final Paint paint = new Paint() {
         {
             setFlags(Paint.ANTI_ALIAS_FLAG);
@@ -132,7 +129,7 @@ public class StarSeekerEngine implements //
     public void draw(Canvas canvas) {
         try {
             astronomicalTheater.draw(canvas);
-            for (Star star : stars) {
+            for (Star star : starManager.iterate()) {
                 astronomicalTheater.draw(canvas, star);
             }
 

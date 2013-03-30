@@ -13,7 +13,7 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
  * @author jun
  * 
  */
-public class Star {
+public class CopyOfStar {
 
     private final StarEntity starEntity;    // 星エンティティ
 
@@ -31,7 +31,7 @@ public class Star {
      * @param declination 赤緯(δ)の文字列表現
      */
     @Deprecated
-    public Star(String rightAscension, String declination) {
+    public CopyOfStar(String rightAscension, String declination) {
         this( //
                 StarLocationUtil.convertHourStringToFloat(rightAscension), //
                 StarLocationUtil.convertAngleStringToFloat(declination));
@@ -44,7 +44,7 @@ public class Star {
      * @param declination 赤緯(δ)の数値表現
      */
     @Deprecated
-    public Star(float rightAscension, float declination) {
+    public CopyOfStar(float rightAscension, float declination) {
         this(new StarEntity());
         this.starEntity.setRightAscension(rightAscension);
         this.starEntity.setDeclination(declination);
@@ -57,7 +57,7 @@ public class Star {
      * 
      * @param starEntity 星のエンティティ
      */
-    public Star(StarEntity starEntity) {
+    public CopyOfStar(StarEntity starEntity) {
         this.starEntity = starEntity;
         this.locaated = false;
     }
@@ -206,10 +206,10 @@ public class Star {
         if (obj == null) {
             return false;
         }
-        if (!(obj instanceof Star)) {
+        if (!(obj instanceof CopyOfStar)) {
             return false;
         }
-        Star other = (Star) obj;
+        CopyOfStar other = (CopyOfStar) obj;
         if (Float.floatToIntBits(getRightAscension()) != Float.floatToIntBits(other.getRightAscension())) {
             return false;
         }
