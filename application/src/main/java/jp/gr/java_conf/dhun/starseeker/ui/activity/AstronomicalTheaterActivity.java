@@ -14,9 +14,12 @@ import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseObservationSiteTimeDialog
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.listener.OnChooseDataListener;
 import jp.gr.java_conf.dhun.starseeker.ui.view.AstronomicalTheaterView;
 import jp.gr.java_conf.dhun.starseeker.util.DateTimeUtils;
+import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.Surface;
@@ -52,6 +55,7 @@ public class AstronomicalTheaterActivity extends Activity //
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LogUtils.v(getClass(), "onCreate");
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.content_astronomical_theater);
 
@@ -91,7 +95,14 @@ public class AstronomicalTheaterActivity extends Activity //
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        LogUtils.v(getClass(), "onConfigurationChanged. newOrientation=" + newConfig.orientation);
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
     protected void onResume() {
+        LogUtils.v(getClass(), "onResume");
         super.onResume();
 
         masterTheaterView.resume();
@@ -100,6 +111,7 @@ public class AstronomicalTheaterActivity extends Activity //
 
     @Override
     protected void onPause() {
+        LogUtils.v(getClass(), "onPause");
         super.onPause();
 
         masterTheaterView.pause();
@@ -135,9 +147,11 @@ public class AstronomicalTheaterActivity extends Activity //
         case R.id.switchStarLocateIndicatorButton:
             name = "switchStarLocateIndicatorButton";
             break;
+
         case R.id.switchLockDisplayRotateButton:
-            name = "switchLockDisplayRotateButton";
-            break;
+            changeScreenOrientation();
+            return;
+
         case R.id.photographButton:
             name = "photographButton";
             break;
@@ -210,12 +224,6 @@ public class AstronomicalTheaterActivity extends Activity //
         return super.onCreateDialog(id, bundle);
     }
 
-    private int getDisplayRotation() {
-        WindowManager windowManager = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-        Display display = windowManager.getDefaultDisplay();
-        return display.getRotation();
-    }
-
     private void refreshBaseCalendar(Date baseDate) {
         this.baseDate = baseDate;
 
@@ -232,6 +240,43 @@ public class AstronomicalTheaterActivity extends Activity //
 
     private void refreshSecondTheaterView() {
         secondTheaterView.configureObservationSiteLocation(secondObservationSiteLocation.getLongitude(), secondObservationSiteLocation.getLatitude(), secondCurrentCalendar);
+    }
+
+    private void changeScreenOrientation() {
+        if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
+            lockScreenOrientation();
+            Toast.makeText(getApplicationContext(), "画面回転をロックしました", Toast.LENGTH_SHORT).show(); // XXX strings.xml
+        } else {
+            unlockScreenOrientation();
+            Toast.makeText(getApplicationContext(), "画面回転のロックを解除しました", Toast.LENGTH_SHORT).show(); // XXX strings.xml
+        }
+    }
+
+    private void unlockScreenOrientation() {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+    }
+
+    private void lockScreenOrientation() {
+        switch (getDisplayRotation()) {
+        case Surface.ROTATION_0:
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            break;
+        case Surface.ROTATION_180:
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+            break;
+        case Surface.ROTATION_90:
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            break;
+        case Surface.ROTATION_270:
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+            break;
+        }
+    }
+
+    private int getDisplayRotation() {
+        WindowManager windowManager = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        return display.getRotation();
     }
 
     private void setSecondTheaterViewVisible(boolean visible) {

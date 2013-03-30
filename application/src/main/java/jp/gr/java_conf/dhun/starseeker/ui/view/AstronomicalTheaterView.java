@@ -76,6 +76,7 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
     private int getDisplayRotation() {
         WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
+        LogUtils.d(getClass(), "displayRotation=" + display.getRotation());
         return display.getRotation();
     }
 

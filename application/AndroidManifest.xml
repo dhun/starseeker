@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="jp.gr.java_conf.dhun.starseeker"
     android:versionCode="1"
-    android:versionName="1.0-SNAPSHOT" >
+    android:versionName="1.0-SNAPSHOT"
+    android:installLocation="preferExternal" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -15,22 +16,39 @@
     <application
         android:name=".StarSeekerApplication"
         android:icon="@drawable/icon"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:allowBackup="false" >
         <activity
             android:name=".ui.activity.DevelopmentMenuActivity"
-            android:label="@string/title_activity_development_menu" >
+            android:label="@string/title_activity_development_menu"
+            android:configChanges="orientation|keyboardHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.ResolveTerminalStateActivity" />
-        <activity android:name=".ui.activity.ResolveObservationSiteByGpsActivity" />
-        <activity android:name=".ui.activity.ResolveObservationSiteByChooseActivity" />
-        <activity android:name=".ui.activity.SurfaceViewActivity" />
-        <activity android:name=".ui.activity.AstronomicalTheaterActivity" />
-        <activity android:name=".ui.activity.ChooseLocationActivity" />
+        <activity
+            android:name=".ui.activity.AstronomicalTheaterActivity"
+            android:exported="false" >
+
+            <!-- 「android:configChanges="orientation|keyboardHidden"」を指定すると、onDestroy...onCreateが発生しなくなり画面の向きに応じたレイアウトファイルを適用できなくなるため指定しない -->
+        </activity>
+        <activity
+            android:exported="false"
+            android:name=".ui.activity.ResolveTerminalStateActivity" />
+        <activity
+            android:exported="false"
+            android:name=".ui.activity.ResolveObservationSiteByGpsActivity" />
+        <activity
+            android:exported="false"
+            android:name=".ui.activity.ResolveObservationSiteByChooseActivity" />
+        <activity
+            android:exported="false"
+            android:name=".ui.activity.SurfaceViewActivity" />
+        <activity
+            android:exported="false"
+            android:name=".ui.activity.ChooseLocationActivity" />
     </application>
 
 </manifest>
