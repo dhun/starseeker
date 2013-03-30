@@ -41,6 +41,7 @@ public class AstronomicalTheaterActivity extends Activity //
     private AstronomicalTheaterView masterTheaterView;
     private AstronomicalTheaterView secondTheaterView;
     private ImageButton switchShowSecondTheaterButton;
+    private ImageButton chooseSecondObservationSiteLocationButton;
 
     private ObservationSiteLocation masterObservationSiteLocation;
     private ObservationSiteLocation secondObservationSiteLocation;
@@ -57,31 +58,34 @@ public class AstronomicalTheaterActivity extends Activity //
         masterTheaterView = (AstronomicalTheaterView) findViewById(R.id.masterTheaterView);
         secondTheaterView = (AstronomicalTheaterView) findViewById(R.id.secondTheaterView);
         switchShowSecondTheaterButton = (ImageButton) findViewById(R.id.switchShowSecondTheaterButton);
+        chooseSecondObservationSiteLocationButton = (ImageButton) findViewById(R.id.chooseSecondObservationSiteLocationButton);
 
         // 天体シアターの設定
         masterObservationSiteLocation = ChooseObservationSiteLocationResolver.getObservationSiteLocations().get(0);
         secondObservationSiteLocation = ChooseObservationSiteLocationResolver.getObservationSiteLocations().get(8);
 
-        masterCurrentCalendar = Calendar.getInstance();
-        secondCurrentCalendar = Calendar.getInstance();
+        refreshBaseCalendar(new Date());    // 基準日時はシステム日時
 
-        masterTheaterView.setup();
-        secondTheaterView.setup();
+        masterTheaterView.initialize();
+        secondTheaterView.initialize();
 
-        setSecondaryTheaterVisible(false); // 最初はセカンドパネルは非表示
+        setSecondTheaterViewVisible(false); // 最初はセカンドパネルは非表示
+
+        refreshMasterTheaterView();
+        refreshSecondTheaterView();
 
         // クリックイベントの設定
         findViewById(R.id.zoomControls).setOnClickListener(this);
         findViewById(R.id.chooseMagnitudeButton).setOnClickListener(this);
         findViewById(R.id.chooseObservationSiteTimeButton).setOnClickListener(this);
         findViewById(R.id.chooseMasterObservationSiteLocationButton).setOnClickListener(this);
-        findViewById(R.id.chooseSecondObservationSiteLocationButton).setOnClickListener(this);
         findViewById(R.id.settingsButton).setOnClickListener(this);
         findViewById(R.id.switchStarLocateIndicatorButton).setOnClickListener(this);
         findViewById(R.id.switchLockDisplayRotateButton).setOnClickListener(this);
         findViewById(R.id.photographButton).setOnClickListener(this);
         findViewById(R.id.imageButton2).setOnClickListener(this);
         switchShowSecondTheaterButton.setOnClickListener(this);
+        chooseSecondObservationSiteLocationButton.setOnClickListener(this);
     }
 
     @Override
@@ -137,7 +141,7 @@ public class AstronomicalTheaterActivity extends Activity //
             break;
 
         case R.id.switchShowSecondTheaterButton:
-            setSecondaryTheaterVisible(secondTheaterView.getVisibility() != View.VISIBLE);
+            setSecondTheaterViewVisible(secondTheaterView.getVisibility() != View.VISIBLE);
             return;
 
         case R.id.imageButton2:
@@ -159,14 +163,10 @@ public class AstronomicalTheaterActivity extends Activity //
             builder.setOnChooseDataListener(new OnChooseDataListener<Date>() {
                 @Override
                 public void onChooseData(Date data) {
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(data);
+                    refreshBaseCalendar(data);
 
-                    masterCurrentCalendar = DateTimeUtils.toSameDateTime(cal, masterObservationSiteLocation.getTimeZone());
-                    secondCurrentCalendar = DateTimeUtils.toSameDateTime(cal, secondObservationSiteLocation.getTimeZone());
-
-                    masterTheaterView.configureObservationSiteLocation(masterObservationSiteLocation.getLongitude(), masterObservationSiteLocation.getLatitude(), masterCurrentCalendar);
-                    secondTheaterView.configureObservationSiteLocation(secondObservationSiteLocation.getLongitude(), secondObservationSiteLocation.getLatitude(), secondCurrentCalendar);
+                    refreshMasterTheaterView();
+                    refreshSecondTheaterView();
                 }
             });
             return builder.create();
@@ -195,10 +195,10 @@ public class AstronomicalTheaterActivity extends Activity //
                 public void onChooseData(ObservationSiteLocation data) {
                     if (isMaster) {
                         masterObservationSiteLocation = data;
-                        masterTheaterView.configureObservationSiteLocation(masterObservationSiteLocation.getLongitude(), masterObservationSiteLocation.getLatitude(), masterCurrentCalendar);
+                        refreshMasterTheaterView();
                     } else {
                         secondObservationSiteLocation = data;
-                        secondTheaterView.configureObservationSiteLocation(secondObservationSiteLocation.getLongitude(), secondObservationSiteLocation.getLatitude(), secondCurrentCalendar);
+                        refreshSecondTheaterView();
                     }
                 }
             });
@@ -213,13 +213,31 @@ public class AstronomicalTheaterActivity extends Activity //
         return display.getRotation();
     }
 
-    private void setSecondaryTheaterVisible(boolean visible) {
+    private void refreshBaseCalendar(Date baseDate) {
+        Calendar baseCalendar = Calendar.getInstance();
+        baseCalendar.setTime(baseDate);
+
+        masterCurrentCalendar = DateTimeUtils.toSameDateTime(baseCalendar, masterObservationSiteLocation.getTimeZone());
+        secondCurrentCalendar = DateTimeUtils.toSameDateTime(baseCalendar, secondObservationSiteLocation.getTimeZone());
+    }
+
+    private void refreshMasterTheaterView() {
+        masterTheaterView.configureObservationSiteLocation(masterObservationSiteLocation.getLongitude(), masterObservationSiteLocation.getLatitude(), masterCurrentCalendar);
+    }
+
+    private void refreshSecondTheaterView() {
+        secondTheaterView.configureObservationSiteLocation(secondObservationSiteLocation.getLongitude(), secondObservationSiteLocation.getLatitude(), secondCurrentCalendar);
+    }
+
+    private void setSecondTheaterViewVisible(boolean visible) {
         if (visible) {
             secondTheaterView.setVisibility(View.VISIBLE);
             switchShowSecondTheaterButton.setImageLevel(1);
+            chooseSecondObservationSiteLocationButton.setEnabled(true);
         } else {
             secondTheaterView.setVisibility(View.GONE);
             switchShowSecondTheaterButton.setImageLevel(0);
+            chooseSecondObservationSiteLocationButton.setEnabled(false);
         }
     }
 }

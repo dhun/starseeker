@@ -49,7 +49,7 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
         super(context, attrs);
     }
 
-    public void setup() {
+    public void initialize() {
         // SurfaceViewを設定
         getHolder().addCallback(this);
 

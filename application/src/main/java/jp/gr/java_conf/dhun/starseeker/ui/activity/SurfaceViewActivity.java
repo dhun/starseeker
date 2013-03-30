@@ -24,7 +24,7 @@ public class SurfaceViewActivity extends Activity {
         this.setContentView(rootLayout);
 
         theaterView = new AstronomicalTheaterView(this);
-        theaterView.setup();
+        theaterView.initialize();
 
         rootLayout.addView(theaterView);
     }
