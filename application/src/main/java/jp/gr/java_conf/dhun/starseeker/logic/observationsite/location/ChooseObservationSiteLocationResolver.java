@@ -57,7 +57,7 @@ public class ChooseObservationSiteLocationResolver implements IObservationSiteLo
         locations.add(newObservationSiteLocation("+059°33'", "+18°07'", "0°0'", "Europe/Stockholm", "スウェーデン－ストックホルム"));
     }
 
-    private static ObservationSiteLocation newObservationSiteLocation(String latitude, String longitude, String altitude, String timezoneName, String name) {
+    private static ObservationSiteLocation newObservationSiteLocation(String longitude, String latitude, String altitude, String timezoneName, String name) {
         ObservationSiteLocation result = new ObservationSiteLocation(  //
                 StarLocationUtil.convertAngleStringToFloat(latitude),  // 緯度
                 StarLocationUtil.convertAngleStringToFloat(longitude), // 経度
