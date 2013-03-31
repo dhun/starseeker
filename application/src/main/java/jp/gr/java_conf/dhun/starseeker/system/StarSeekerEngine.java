@@ -12,6 +12,7 @@ import jp.gr.java_conf.dhun.starseeker.model.Orientations;
 import jp.gr.java_conf.dhun.starseeker.model.Star;
 import jp.gr.java_conf.dhun.starseeker.system.listener.IStarSeekerListener;
 import jp.gr.java_conf.dhun.starseeker.system.logic.StarManager;
+import jp.gr.java_conf.dhun.starseeker.system.model.FpsCounter;
 import jp.gr.java_conf.dhun.starseeker.system.model.panel.AstronomicalTheater;
 import jp.gr.java_conf.dhun.starseeker.util.DateTimeUtils;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
@@ -47,9 +48,7 @@ public class StarSeekerEngine implements //
 
     private final Orientations orientations;
 
-    private float lastFps;
-    private long lastTime;
-    private final NumberFormat fpsFormat = new DecimalFormat("'FPS='0.0");
+    private final FpsCounter fpsCounter;
 
     private String locationTitle;
 
@@ -61,6 +60,8 @@ public class StarSeekerEngine implements //
         starManager.configure(0);
 
         orientations = new Orientations();
+
+        fpsCounter = new FpsCounter();
     }
 
     /**
@@ -106,9 +107,7 @@ public class StarSeekerEngine implements //
      * 演算処理を行います.<br/>
      */
     public void calculate() {
-        long now = System.currentTimeMillis();
-        lastFps = 1000 / (now - lastTime);
-        lastTime = now;
+        fpsCounter.start();
 
         try {
             astronomicalTheater.calculateCoordinatesRect(orientations.azimuth, orientations.pitch);
@@ -133,7 +132,8 @@ public class StarSeekerEngine implements //
                 astronomicalTheater.draw(canvas, star);
             }
 
-            canvas.drawText(fpsFormat.format(lastFps), 100, 100, paint);
+            fpsCounter.finish();
+            canvas.drawText(fpsCounter.getDisplayText(), 100, 100, paint);
             canvas.drawText("azimuth=" + decFormat.format(orientations.azimuth), 100, 120, paint);
             canvas.drawText("pitch=" + decFormat.format(orientations.pitch), 100, 130, paint);
             canvas.drawText("roll=" + decFormat.format(orientations.roll), 100, 140, paint);
