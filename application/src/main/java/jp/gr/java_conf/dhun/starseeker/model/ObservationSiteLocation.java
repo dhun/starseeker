@@ -14,6 +14,10 @@ import java.util.TimeZone;
  */
 public class ObservationSiteLocation {
 
+    public static final int GPS_OBSERVATION_SITE_LOCATION = -1;
+
+    private int id;             // ID
+
     private double latitude;    // 緯度
     private double longitude;   // 経度
     private double altitude;    // 高度
@@ -90,6 +94,21 @@ public class ObservationSiteLocation {
         this.latitude = latitude;
         this.longitude = longitude;
         this.altitude = altitude;
+    }
+
+    /**
+     * IDを取得します.<br>
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * IDを取得します.<br>
+     */
+    public void setId(int id) {
+        this.id = id;
+        ;
     }
 
     /**

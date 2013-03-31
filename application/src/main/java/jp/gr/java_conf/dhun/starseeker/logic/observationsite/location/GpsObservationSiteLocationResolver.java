@@ -96,8 +96,9 @@ public class GpsObservationSiteLocationResolver implements IObservationSiteLocat
             ObservationSiteLocation result = new ObservationSiteLocation( //
                     location.getLatitude(),     // 緯度
                     location.getLongitude(),    // 経度
-                    location.getAltitude(),     // 高度
-                    "現在地"); // XXX strings.xml
+                    location.getAltitude());    // 高度
+            result.setId(ObservationSiteLocation.GPS_OBSERVATION_SITE_LOCATION);
+            result.setName("現在地"); // XXX strings.xml
             onResolveObservationSiteLocationListener.onResolveObservationSiteLocation(result);
         }
     }

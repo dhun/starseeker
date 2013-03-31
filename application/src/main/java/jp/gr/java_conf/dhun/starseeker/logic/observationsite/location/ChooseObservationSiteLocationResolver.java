@@ -36,6 +36,7 @@ public class ChooseObservationSiteLocationResolver implements IObservationSiteLo
 
     /** 観測地点の選択肢 */
     private static final List<ObservationSiteLocation> locations;
+    private static int nextId = 0;
 
     /**
      * @see http://www.gsi.go.jp/KOKUJYOHO/center.htm
@@ -61,6 +62,7 @@ public class ChooseObservationSiteLocationResolver implements IObservationSiteLo
                 StarLocationUtil.convertAngleStringToFloat(latitude),  // 緯度
                 StarLocationUtil.convertAngleStringToFloat(longitude), // 経度
                 StarLocationUtil.convertAngleStringToFloat(altitude)); // 高度
+        result.setId(nextId++);
         result.setName(name);
         result.setTimeZone(TimeZone.getTimeZone(timezoneName));
         return result;

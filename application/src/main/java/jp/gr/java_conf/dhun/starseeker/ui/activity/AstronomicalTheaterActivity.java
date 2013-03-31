@@ -7,8 +7,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import jp.gr.java_conf.dhun.starseeker.R;
-import jp.gr.java_conf.dhun.starseeker.logic.observationsite.location.ChooseObservationSiteLocationResolver;
 import jp.gr.java_conf.dhun.starseeker.model.ObservationSiteLocation;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.StarSeekerConfigDao;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarSeekerConfig;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseObservationSiteLocationDialogBuilder;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseObservationSiteTimeDialogBuilder;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.listener.OnChooseDataListener;
@@ -41,14 +42,16 @@ public class AstronomicalTheaterActivity extends Activity //
     private static final int DIALOG_CHOOSE_OBSERVATION_SITE_TIME = 1;       // 観測地点の時刻選択ダイアログ
     private static final int DIALOG_CHOOSE_OBSERVATION_SITE_LOCATION = 2;   // 観測地点の位置選択ダイアログ
 
+    // ビュー
     private AstronomicalTheaterView masterTheaterView;
     private AstronomicalTheaterView secondTheaterView;
     private ImageButton switchShowSecondTheaterButton;
     private ImageButton chooseSecondObservationSiteLocationButton;
     private ImageButton switchLockDisplayRotateButton;
 
-    private ObservationSiteLocation masterObservationSiteLocation;
-    private ObservationSiteLocation secondObservationSiteLocation;
+    // 設定
+    private StarSeekerConfigDao configDao;
+    private StarSeekerConfig config;
 
     private Date baseDate;
     private Calendar masterCurrentCalendar;
@@ -67,18 +70,26 @@ public class AstronomicalTheaterActivity extends Activity //
         chooseSecondObservationSiteLocationButton = (ImageButton) findViewById(R.id.chooseSecondObservationSiteLocationButton);
         switchLockDisplayRotateButton = (ImageButton) findViewById(R.id.switchLockDisplayRotateButton);
 
-        // 天体シアターの設定
-        masterObservationSiteLocation = ChooseObservationSiteLocationResolver.getObservationSiteLocations().get(0);
-        secondObservationSiteLocation = ChooseObservationSiteLocationResolver.getObservationSiteLocations().get(8);
+        // 設定の復元
+        configDao = new StarSeekerConfigDao(getApplicationContext());
+        config = configDao.findOrDefault();
+        config.setCoordinatesCalculateBaseDate(new Date()); // 画面起動時はシステム日時
 
+        Object nonConfigObject = getLastNonConfigurationInstance();
+        if (null != nonConfigObject) {
+            NonConfigurationInstance nonConfig = (NonConfigurationInstance) nonConfigObject;
+            config.setCoordinatesCalculateBaseDate(nonConfig.baseDate); // 画面回転時は直近値を復元
+        }
+
+        // 天体シアターの設定
         baseDate = new Date();
-        refreshBaseCalendar(baseDate);    // 基準日時はシステム日時
+        refreshBaseCalendar(config.getCoordinatesCalculateBaseDate());    // 基準日時はシステム日時
 
         masterTheaterView.initialize();
         secondTheaterView.initialize();
 
-        setSecondTheaterViewVisible(false); // 最初はセカンドパネルは非表示
-        changeScreenOrientation(true);      // 最初は回転ロック
+        setSecondTheaterViewVisible(config.isSecondAstronomicalTheaterVisible()); // セカンドパネルの表示／非表示
+        changeLockScreenRotate(config.isLockScreenRotate());                      // 画面の回転ロック
 
         refreshMasterTheaterView();
         refreshSecondTheaterView();
@@ -95,6 +106,13 @@ public class AstronomicalTheaterActivity extends Activity //
         switchShowSecondTheaterButton.setOnClickListener(this);
         chooseSecondObservationSiteLocationButton.setOnClickListener(this);
         switchLockDisplayRotateButton.setOnClickListener(this);
+    }
+
+    @Override
+    public Object onRetainNonConfigurationInstance() {
+        NonConfigurationInstance result = new NonConfigurationInstance();
+        result.baseDate = this.baseDate;
+        return result;
     }
 
     @Override
@@ -119,6 +137,9 @@ public class AstronomicalTheaterActivity extends Activity //
 
         masterTheaterView.pause();
         secondTheaterView.pause();
+
+        // 設定の退避
+        configDao.store(config);
     }
 
     @Override
@@ -152,7 +173,7 @@ public class AstronomicalTheaterActivity extends Activity //
             break;
 
         case R.id.switchLockDisplayRotateButton:
-            changeScreenOrientationWithToast(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            changeLockScreenRotateWithToast(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             return;
 
         case R.id.photographButton:
@@ -214,10 +235,10 @@ public class AstronomicalTheaterActivity extends Activity //
                 @Override
                 public void onChooseData(ObservationSiteLocation data) {
                     if (isMaster) {
-                        masterObservationSiteLocation = data;
+                        config.setMasterObservationSiteLocation(data);
                         refreshMasterTheaterView();
                     } else {
-                        secondObservationSiteLocation = data;
+                        config.setSecondObservationSiteLocation(data);
                         refreshSecondTheaterView();
                     }
                 }
@@ -229,24 +250,25 @@ public class AstronomicalTheaterActivity extends Activity //
 
     private void refreshBaseCalendar(Date baseDate) {
         this.baseDate = baseDate;
+        this.config.setCoordinatesCalculateBaseDate(baseDate);
 
         Calendar baseCalendar = Calendar.getInstance();
         baseCalendar.setTime(baseDate);
 
-        masterCurrentCalendar = DateTimeUtils.toSameDateTime(baseCalendar, masterObservationSiteLocation.getTimeZone());
-        secondCurrentCalendar = DateTimeUtils.toSameDateTime(baseCalendar, secondObservationSiteLocation.getTimeZone());
+        masterCurrentCalendar = DateTimeUtils.toSameDateTime(baseCalendar, config.getMasterObservationSiteLocation().getTimeZone());
+        secondCurrentCalendar = DateTimeUtils.toSameDateTime(baseCalendar, config.getSecondObservationSiteLocation().getTimeZone());
     }
 
     private void refreshMasterTheaterView() {
-        masterTheaterView.configureObservationSiteLocation(masterObservationSiteLocation.getLongitude(), masterObservationSiteLocation.getLatitude(), masterCurrentCalendar);
+        masterTheaterView.configureObservationSiteLocation(config.getMasterObservationSiteLocation().getLongitude(), config.getMasterObservationSiteLocation().getLatitude(), masterCurrentCalendar);
     }
 
     private void refreshSecondTheaterView() {
-        secondTheaterView.configureObservationSiteLocation(secondObservationSiteLocation.getLongitude(), secondObservationSiteLocation.getLatitude(), secondCurrentCalendar);
+        secondTheaterView.configureObservationSiteLocation(config.getSecondObservationSiteLocation().getLongitude(), config.getSecondObservationSiteLocation().getLatitude(), secondCurrentCalendar);
     }
 
-    private void changeScreenOrientationWithToast(boolean lock) {
-        changeScreenOrientation(lock);
+    private void changeLockScreenRotateWithToast(boolean lock) {
+        changeLockScreenRotate(lock);
         if (lock) {
             Toast.makeText(getApplicationContext(), "画面を回転ロックしました", Toast.LENGTH_SHORT).show(); // XXX strings.xml
         } else {
@@ -254,7 +276,7 @@ public class AstronomicalTheaterActivity extends Activity //
         }
     }
 
-    private void changeScreenOrientation(boolean lock) {
+    private void changeLockScreenRotate(boolean lock) {
         if (lock) {
             switch (getDisplayRotation()) {
             case Surface.ROTATION_0:
@@ -275,6 +297,7 @@ public class AstronomicalTheaterActivity extends Activity //
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             switchLockDisplayRotateButton.setImageLevel(0);
         }
+        config.setLockScreenRotate(lock);
     }
 
     private int getDisplayRotation() {
@@ -293,5 +316,10 @@ public class AstronomicalTheaterActivity extends Activity //
             switchShowSecondTheaterButton.setImageLevel(0);
             chooseSecondObservationSiteLocationButton.setEnabled(false);
         }
+        config.setSecondAstronomicalTheaterVisible(visible);
+    }
+
+    private class NonConfigurationInstance {
+        public Date baseDate;
     }
 }
