@@ -18,9 +18,10 @@ public class Star {
     private final StarEntity starEntity;    // 星エンティティ
 
     private boolean locaated;   // 配置済であるかどうか
-    private float azimuth;      // 方位(A)の数値表現, -180 <= 0 <= + 180
-    private float altitude;     // 高度(h)の数値表現. -90 <= 0 <= +90
+    private float azimuth;      // 方位(A). -180 <= 0 <= +180. 数値表現ではないためStarLocationUtil.convertAngleFloatToString()をしてはいけない
+    private float altitude;     // 高度(h). - 90 <= 0 <= + 90. 数値表現ではないためStarLocationUtil.convertAngleFloatToString()をしてはいけない
 
+    private String displayText; // ディスプレイに出力するテキスト
     private float displayX;     // ディスプレイのX座標
     private float displayY;     // ディスプレイのY座標
 
@@ -142,6 +143,20 @@ public class Star {
     }
 
     /**
+     * ディスプレイに出力するテキストを取得します.<br/>
+     */
+    public String getDisplayText() {
+        return displayText;
+    }
+
+    /**
+     * ディスプレイに出力するテキストを設定します.<br/>
+     */
+    public void setDisplayText(String displayText) {
+        this.displayText = displayText;
+    }
+
+    /**
      * ディスプレイのX座標を取得します.<br/>
      */
     public float getDisplayX() {
@@ -169,18 +184,11 @@ public class Star {
         this.displayY = displayY;
     }
 
-    public String toLongString() {
+    @Override
+    public String toString() {
         return String.format("赤経(α)=[%s], 赤緯(δ)=[%s], 方位(A)=[%s], 高度(h)=[%s], 名前=[%s]" //
                 , StarLocationUtil.convertAngleFloatToString(getRightAscension())  //
                 , StarLocationUtil.convertAngleFloatToString(getDeclination())     //
-                , StarLocationUtil.convertAngleFloatToString(getAzimuth())         //
-                , StarLocationUtil.convertAngleFloatToString(getAltitude())        //
-                , getName());
-    }
-
-    @Override
-    public String toString() {
-        return String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s]" //
                 , StarLocationUtil.convertAngleFloatToString(getAzimuth())         //
                 , StarLocationUtil.convertAngleFloatToString(getAltitude())        //
                 , getName());
