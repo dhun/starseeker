@@ -56,7 +56,7 @@ public final class StarLocationUtil {
     public static final String convertAngleFloatToString(float angle) {
         int d = (int) (MathUtils.floor(angle));
         int m = (int) (MathUtils.round(Math.abs(angle - d) * 60));
-        return String.format("%d°%d'", d, m);
+        return String.format("%d°%02d'", d, m);
     }
 
     /**
@@ -72,7 +72,7 @@ public final class StarLocationUtil {
         float ms = Math.abs(hour - h) * 60;
         int m = (int) MathUtils.floor(ms);
         int s = (int) MathUtils.round((ms - m) * 10); // 小数第一位までの概数
-        return String.format("%dh %d.%dm", h, m, s);
+        return String.format("%dh %02d.%dm", h, m, s);
     }
 
     /**

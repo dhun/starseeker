@@ -32,6 +32,26 @@ public class StarLocationUtilTest {
     }
 
     @Test
+    public void test_convertAngleStringToFloat_35dot01() {
+        String angle = "35°01'";
+        float actual = StarLocationUtil.convertAngleStringToFloat(angle);
+        float expect = +35.017f;
+        TestUtils.asserAllowingError(actual, expect, TestUtils.DELTA_ANGLE);
+
+        assertThat(StarLocationUtil.convertAngleFloatToString(actual), is(angle));
+    }
+
+    @Test
+    public void test_convertAngleStringToFloat_135dot44() {
+        String angle = "135°44'";
+        float actual = StarLocationUtil.convertAngleStringToFloat(angle);
+        float expect = +135.7333333f;
+        TestUtils.asserAllowingError(actual, expect, TestUtils.DELTA_ANGLE);
+
+        assertThat(StarLocationUtil.convertAngleFloatToString(actual), is(angle));
+    }
+
+    @Test
     public void test_convertAngleStringToFloat_16dot43() {
         String angle = "-16°43'";
         float actual = StarLocationUtil.convertAngleStringToFloat(angle);
