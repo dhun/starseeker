@@ -231,6 +231,11 @@ public class AstronomicalTheaterActivity extends Activity //
             ChooseObservationSiteLocationDialogBuilder builder = new ChooseObservationSiteLocationDialogBuilder(this);
             builder.setDialogId(id);
             builder.setDialogTitle(title + "のシアターの場所"); // XXX strings.xml
+            if (isMaster) {
+                builder.setInitialLocation(config.getMasterObservationSiteLocation());
+            } else {
+                builder.setInitialLocation(config.getSecondObservationSiteLocation());
+            }
             builder.setOnChooseDataListener(new OnChooseDataListener<ObservationSiteLocation>() {
                 @Override
                 public void onChooseData(ObservationSiteLocation data) {

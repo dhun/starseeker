@@ -20,22 +20,16 @@ import android.content.DialogInterface;
 public class ChooseObservationSiteLocationDialogBuilder extends AbstractChooseDataDialogBuilder<ObservationSiteLocation> {
 
     private final List<ObservationSiteLocation> locations;
-    private final List<String> locationNames;
+    private ObservationSiteLocation initialLocation;
 
     /**
      * コンストラクタ
      */
     public ChooseObservationSiteLocationDialogBuilder(Activity activity) {
         super(activity);
-        dialogTitle = "左側のシアターの場所"; // XXX strings.xml
 
         locations = new ArrayList<ObservationSiteLocation>();
         setupLocations();
-
-        locationNames = new ArrayList<String>();
-        for (ObservationSiteLocation location : locations) {
-            locationNames.add(location.getName());
-        }
     }
 
     private void setupLocations() {
@@ -48,11 +42,29 @@ public class ChooseObservationSiteLocationDialogBuilder extends AbstractChooseDa
     protected void setupBuilder() {
         super.setupBuilder();
 
-        builder.setItems(locationNames.toArray(new String[0]), new DialogInterface.OnClickListener() {
+        int checkedItem = -1;
+        List<String> locationNames = new ArrayList<String>();
+        for (int i = 0; i < locations.size(); i++) {
+            ObservationSiteLocation location = locations.get(i);
+            locationNames.add(location.getName());
+            if (null != initialLocation && initialLocation.getId() == location.getId()) {
+                checkedItem = i;
+            }
+        }
+
+        builder.setSingleChoiceItems(locationNames.toArray(new String[0]), checkedItem, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 onChooseDataListener.onChooseData(locations.get(which));
+                dialog.dismiss();
             }
         });
+    }
+
+    /**
+     * 初期表示する観測地点の位置を設定します
+     */
+    public void setInitialLocation(ObservationSiteLocation initialLocation) {
+        this.initialLocation = initialLocation;
     }
 }
