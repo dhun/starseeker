@@ -61,7 +61,7 @@ public class AstronomicalTheaterActivity extends Activity //
     protected void onCreate(Bundle savedInstanceState) {
         LogUtils.v(getClass(), "onCreate");
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.content_astronomical_theater);
+        this.setContentView(R.layout.activity_astronomical_theater);
 
         // ビューの取得
         masterTheaterView = (AstronomicalTheaterView) findViewById(R.id.masterTheaterView);
