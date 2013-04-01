@@ -10,6 +10,7 @@ import jp.gr.java_conf.dhun.starseeker.R;
 import jp.gr.java_conf.dhun.starseeker.model.ObservationSiteLocation;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.StarSeekerConfigDao;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarSeekerConfig;
+import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseExtractStarMagnitudeDialogBuilder;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseObservationSiteLocationDialogBuilder;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseObservationSiteTimeDialogBuilder;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.listener.OnChooseDataListener;
@@ -39,8 +40,9 @@ public class AstronomicalTheaterActivity extends Activity //
         implements View.OnClickListener {
 
     // ダイアログID
-    private static final int DIALOG_CHOOSE_OBSERVATION_SITE_TIME = 1;       // 観測地点の時刻選択ダイアログ
-    private static final int DIALOG_CHOOSE_OBSERVATION_SITE_LOCATION = 2;   // 観測地点の位置選択ダイアログ
+    private static final int DIALOG_CHOOSE_OBSERVATION_SITE_TIME = 1;           // 観測地点の時刻選択ダイアログ
+    private static final int DIALOG_CHOOSE_OBSERVATION_SITE_LOCATION = 2;       // 観測地点の位置選択ダイアログ
+    private static final int DIALOG_CHOOSE_EXTRACT_LOWER_STAR_MAGNITUDE = 3;    // 抽出する等級の選択ダイアログ
 
     // ビュー
     private AstronomicalTheaterView masterTheaterView;
@@ -144,15 +146,15 @@ public class AstronomicalTheaterActivity extends Activity //
 
     @Override
     public void onClick(View view) {
-        // Intent intent;
         String name;
         switch (view.getId()) {
         case R.id.zoomControls:
             name = "zoomControls";
             break;
+
         case R.id.chooseMagnitudeButton:
-            name = "chooseMagnitudeButton";
-            break;
+            showDialog(DIALOG_CHOOSE_EXTRACT_LOWER_STAR_MAGNITUDE);
+            return;
 
         case R.id.chooseObservationSiteTimeButton:
             showDialog(DIALOG_CHOOSE_OBSERVATION_SITE_TIME);
@@ -168,6 +170,7 @@ public class AstronomicalTheaterActivity extends Activity //
         case R.id.settingsButton:
             name = "settingsButton";
             break;
+
         case R.id.switchStarLocateIndicatorButton:
             name = "switchStarLocateIndicatorButton";
             break;
@@ -246,6 +249,19 @@ public class AstronomicalTheaterActivity extends Activity //
                         config.setSecondObservationSiteLocation(data);
                         refreshSecondTheaterView();
                     }
+                }
+            });
+            return builder.create();
+        }
+
+        if (id == DIALOG_CHOOSE_EXTRACT_LOWER_STAR_MAGNITUDE) {
+            ChooseExtractStarMagnitudeDialogBuilder builder = new ChooseExtractStarMagnitudeDialogBuilder(this);
+            builder.setDialogId(id);
+            builder.setInitialLowerValue(config.getExtractLowerStarMagnitude());
+            builder.setOnChooseDataListener(new OnChooseDataListener<Float>() {
+                @Override
+                public void onChooseData(Float data) {
+                    config.setExtractLowerStarMagnitude(data);
                 }
             });
             return builder.create();

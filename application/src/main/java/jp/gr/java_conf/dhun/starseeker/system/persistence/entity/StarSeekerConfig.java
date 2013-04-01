@@ -20,7 +20,7 @@ public class StarSeekerConfig {
     private boolean secondAstronomicalTheaterVisible;   // ２つめの天体シアターを表示するかどうか
     private boolean lockScreenRotate;                   // 画面を回転ロックするかどうか
 
-    private float displayLowerMagnitude;                // 天体シアターに表示するか等星の下限値
+    private float extractLowerStarMagnitude;            // 天体シアターに抽出するか等星の下限値
 
     private ObservationSiteLocation masterObservationSiteLocation;  // １つ目の天体シアターに対する観測地点のID
     private ObservationSiteLocation secondObservationSiteLocation;  // ２つ目の天体シアターに対する観測地点のID
@@ -68,17 +68,17 @@ public class StarSeekerConfig {
     }
 
     /**
-     * 天体シアターに表示するか等星の下限値を取得します.<br/>
+     * 天体シアターに抽出するか等星の下限値を取得します.<br/>
      */
-    public float getDisplayLowerMagnitude() {
-        return displayLowerMagnitude;
+    public float getExtractLowerStarMagnitude() {
+        return extractLowerStarMagnitude;
     }
 
     /**
-     * 天体シアターに表示するか等星の下限値を設定します.<br/>
+     * 天体シアターに抽出するか等星の下限値を設定します.<br/>
      */
-    public void setDisplayLowerMagnitude(float displayLowerMagnitude) {
-        this.displayLowerMagnitude = displayLowerMagnitude;
+    public void setExtractLowerStarMagnitude(float extractLowerStarMagnitude) {
+        this.extractLowerStarMagnitude = extractLowerStarMagnitude;
     }
 
     /**

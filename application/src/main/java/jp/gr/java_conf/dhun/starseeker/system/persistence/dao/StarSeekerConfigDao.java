@@ -26,7 +26,7 @@ public class StarSeekerConfigDao {
     private static final String KEY_COORDINATES_CALCULATE_BASE_DATE = "coordinatesCalculateBaseDate";         // 星の座標計算の基準日時
     private static final String KEY_SECOND_ASTRONOMICAL_THEATER_VISIBLE = "secondAstronomicalTheaterVisible"; // ２つめの天体シアターを表示するかどうか
     private static final String KEY_LOCK_SCREEN_ROTATE = "lockScreenRotate";                                  // 画面を回転ロックするかどうか
-    private static final String KEY_DISPLAY_LOWER_MAGNITUDE = "displayLowerMagnitude";                        // 天体シアターに表示するか等星の下限値
+    private static final String KEY_EXTRACT_LOWER_STAR_MAGNITUDE = "extractLowerStarMagnitude";               // シアターに抽出するか等星の下限値
     private static final String KEY_MASTER_OBSERVATION_SITE_LOCATION_ID = "masterObservationSiteLocationId";  // １つ目の天体シアターに対する観測地点のID
     private static final String KEY_SECOND_OBSERVATION_SITE_LOCATION_ID = "secondObservationSiteLocationId";  // ２つ目の天体シアターに対する観測地点のID
 
@@ -61,7 +61,7 @@ public class StarSeekerConfigDao {
         config.setCoordinatesCalculateBaseDate(new Date(preferences.getLong(KEY_COORDINATES_CALCULATE_BASE_DATE, new Date().getTime())));
         config.setSecondAstronomicalTheaterVisible(preferences.getBoolean(KEY_SECOND_ASTRONOMICAL_THEATER_VISIBLE, false));
         config.setLockScreenRotate(preferences.getBoolean(KEY_LOCK_SCREEN_ROTATE, true));
-        config.setDisplayLowerMagnitude(preferences.getFloat(KEY_DISPLAY_LOWER_MAGNITUDE, 5.0f));
+        config.setExtractLowerStarMagnitude(preferences.getFloat(KEY_EXTRACT_LOWER_STAR_MAGNITUDE, 2.0f));
         config.setMasterObservationSiteLocation(findObservationSiteLocation(preferences.getInt(KEY_MASTER_OBSERVATION_SITE_LOCATION_ID, 0)));
         config.setSecondObservationSiteLocation(findObservationSiteLocation(preferences.getInt(KEY_SECOND_OBSERVATION_SITE_LOCATION_ID, 0)));
 
@@ -104,7 +104,7 @@ public class StarSeekerConfigDao {
         editor.putLong(KEY_COORDINATES_CALCULATE_BASE_DATE, config.getCoordinatesCalculateBaseDate().getTime());
         editor.putBoolean(KEY_SECOND_ASTRONOMICAL_THEATER_VISIBLE, config.isSecondAstronomicalTheaterVisible());
         editor.putBoolean(KEY_LOCK_SCREEN_ROTATE, config.isLockScreenRotate());
-        editor.putFloat(KEY_DISPLAY_LOWER_MAGNITUDE, config.getDisplayLowerMagnitude());
+        editor.putFloat(KEY_EXTRACT_LOWER_STAR_MAGNITUDE, config.getExtractLowerStarMagnitude());
         editor.putInt(KEY_MASTER_OBSERVATION_SITE_LOCATION_ID, config.getMasterObservationSiteLocation().getId());
         editor.putInt(KEY_SECOND_OBSERVATION_SITE_LOCATION_ID, config.getSecondObservationSiteLocation().getId());
 
