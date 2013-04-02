@@ -84,9 +84,12 @@ public final class StarLocationUtil {
      * @return 時間
      */
     public static final float convertHourStringToFloat(String hour) {
+        // Pattern pattern = Pattern.compile("^([+-])?(\\d+)h *(\\d+)\\.(\\d(\\.\\d+))m$");
+        // Pattern pattern = Pattern.compile("^([+-])?(\\d+)h( +(\\d+)(\\.(\\d+))?m)?( +(\\d+)(\\.(\\d+))?s)?$");
         Pattern pattern = Pattern.compile("^([+-])?(\\d+)h *(\\d+)\\.(\\d)m$");
         Matcher matcher = pattern.matcher(hour);
         if (!matcher.find() || matcher.groupCount() != 4) {
+            // if (!matcher.find() || matcher.groupCount() != 10) {
             throw new IllegalArgumentException(String.format("時間の文字列表現が不正. value=[%s]", hour));
         }
 

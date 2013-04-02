@@ -56,5 +56,13 @@
     </dependency>
     <!-- ＜＜＜ -->
 
+    <!-- ＞＞＞初期DB作成のために追加した設定. public static void mainで使っている -->
+    <dependency>
+      <groupId>org.xerial</groupId>
+      <artifactId>sqlite-jdbc</artifactId>
+      <version>3.6.4</version>
+    </dependency>
+    <!-- ＜＜＜ -->
+
   </dependencies>
 </project>
