@@ -1,106 +1,106 @@
--- çPêØñºÉfÅ[É^
--- 89çsñ⁄Ç™èdï°ÇµÇƒÇ¢ÇÈ
+-- ÊÅíÊòüÂêç„Éá„Éº„Çø
+-- 89Ë°åÁõÆ„ÅåÈáçË§á„Åó„Å¶„ÅÑ„Çã
 drop   table constellation_name ;
 create table constellation_name (
-    horoscope_id        INTEGER not null    -- êØç¿ID
-  , horoscope_code      TEXT    not null    -- ó™ïÑ
-  , horoscope_name      TEXT    not null    -- äwñº
-  , abbreviated_name    TEXT    not null    -- êØç¿ñº(ì˙ñ{åÍ)
+    horoscope_id        INTEGER not null    -- ÊòüÂ∫ßID
+  , horoscope_code      TEXT    not null    -- Áï•Á¨¶
+  , horoscope_name      TEXT    not null    -- Â≠¶Âêç
+  , abbreviated_name    TEXT    not null    -- ÊòüÂ∫ßÂêç(Êó•Êú¨Ë™û)
   , constraint PK_constellation_name primary key ( horoscope_id )
   , constraint UK_constellation_name unique ( horoscope_code )
 );
 
 delete from constellation_name ;
 
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('1', 'And', 'Andromeda', 'ÉAÉìÉhÉçÉÅÉ_');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('2', 'Ant', 'Antlia', 'É|ÉìÉv');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('3', 'Aps', 'Apus', 'Ç”Ç§ÇøÇÂÇ§');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('4', 'Aql', 'Aquila', 'ÇÌÇµ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('5', 'Aqr', 'Aquarius', 'Ç›Ç∏Ç™Çﬂ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('6', 'Ara', 'Ara', 'Ç≥Ç¢ÇæÇÒ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('7', 'Ari', 'Aries', 'Ç®Ç–Ç¬Ç∂');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('8', 'Aur', 'Auriga', 'Ç¨ÇÂÇµÇ·');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('9', 'Boo', 'Bootes', 'Ç§ÇµÇ©Ç¢');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('10', 'Cae', 'Caelum', 'ÇøÇÂÇ§Ç±Ç≠ÇÆ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('11', 'Cam', 'Camelopardalis', 'Ç´ÇËÇÒ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('12', 'Cap', 'Capricornus', 'Ç‚Ç¨');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('13', 'Car', 'Carina', 'ÇËÇ„Ç§Ç±Ç¬');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('14', 'Cas', 'Cassiopeia', 'ÉJÉVÉIÉyÉÑ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('15', 'Cen', 'Centaurus', 'ÉPÉìÉ^ÉEÉãÉX');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('16', 'Cep', 'Cepheus', 'ÉPÉtÉFÉEÉX');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('17', 'Cet', 'Cetus', 'Ç≠Ç∂ÇÁ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('18', 'Cha', 'Chamaeleon', 'ÉJÉÅÉåÉIÉì');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('19', 'Cir', 'Circinus', 'ÉRÉìÉpÉX');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('20', 'CMa', 'Canis Major', 'Ç®Ç®Ç¢Ç ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('21', 'CMi', 'Canis Minor', 'Ç±Ç¢Ç ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('22', 'Cnc', 'Cancer', 'Ç©Ç…');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('23', 'Col', 'Columba', 'ÇÕÇ∆');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('24', 'Com', 'Coma Berenices', 'Ç©Ç›ÇÃÇØ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('25', 'CrA', 'Corona Australis', 'Ç›Ç»Ç›ÇÃÇ©ÇÒÇﬁÇË');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('26', 'CrB', 'Corona Borealis', 'Ç©ÇÒÇﬁÇË');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('27', 'Crt', 'Crater', 'ÉRÉbÉv');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('28', 'Cru', 'Crux', 'Ç›Ç»Ç›Ç∂Ç„Ç§Ç∂');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('29', 'Crv', 'Corvus', 'Ç©ÇÁÇ∑');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('30', 'CVn', 'Canes Venatici', 'ÇËÇÂÇ§ÇØÇÒ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('31', 'Cyg', 'Cygnus', 'ÇÕÇ≠ÇøÇÂÇ§');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('32', 'Del', 'Delphinus', 'Ç¢ÇÈÇ©');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('33', 'Dor', 'Dorado', 'Ç©Ç∂Ç´');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('34', 'Dra', 'Draco', 'ÇËÇ„Ç§');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('35', 'Equ', 'Equuleus', 'Ç±Ç§Ç‹');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('36', 'Eri', 'Erhoroscope_idanus', 'ÉGÉäÉ_ÉkÉX');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('37', 'For', 'Fornax', 'ÇÎ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('38', 'Gem', 'Gemini', 'Ç”ÇΩÇ≤');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('39', 'Gru', 'Grus', 'Ç¬ÇÈ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('40', 'Her', 'Hercules', 'ÉwÉãÉNÉåÉX');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('41', 'Hor', 'Horologium', 'Ç∆ÇØÇ¢');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('42', 'Hya', 'Hydra', 'Ç§Ç›Ç÷Ç—');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('43', 'Hyi', 'Hydrus', 'Ç›Ç∏Ç÷Ç—');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('44', 'Ind', 'Indus', 'ÉCÉìÉfÉBÉAÉì');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('45', 'Lac', 'Lacerta', 'Ç∆Ç©Ç∞');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('46', 'Leo', 'Leo', 'ÇµÇµ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('47', 'Lep', 'Lepus', 'Ç§Ç≥Ç¨');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('48', 'Lib', 'Libra', 'ÇƒÇÒÇ—ÇÒ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('49', 'LMi', 'Leo Minor', 'Ç±Ç∂Çµ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('50', 'Lup', 'Lupus', 'Ç®Ç®Ç©Ç›');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('51', 'Lyn', 'Lynx', 'Ç‚Ç‹ÇÀÇ±');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('52', 'Lyr', 'Lyra', 'Ç±Ç∆');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('53', 'Men', 'Mensa', 'ÉeÅ[ÉuÉãÇ≥ÇÒ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('54', 'Mic', 'Microscopium', 'ÇØÇÒÇ—Ç´ÇÂÇ§');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('55', 'Mon', 'Monoceros', 'Ç¢Ç¡Ç©Ç≠Ç∂Ç„Ç§');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('56', 'Mus', 'Musca', 'ÇÕÇ¶');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('57', 'Nor', 'Norma', 'Ç∂ÇÂÇ§Ç¨');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('58', 'Oct', 'Octans', 'ÇÕÇøÇ‘ÇÒÇ¨');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('59', 'Oph', 'Ophiuchus', 'Ç÷Ç—Ç¬Ç©Ç¢');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('60', 'Ori', 'Orion', 'ÉIÉäÉIÉì');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('61', 'Pav', 'Pavo', 'Ç≠Ç∂Ç·Ç≠');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('62', 'Peg', 'Pegasus', 'ÉyÉKÉXÉX');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('63', 'Per', 'Perseus', 'ÉyÉãÉZÉEÉX');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('64', 'Phe', 'Phoenix', 'ÇŸÇ§Ç®Ç§');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('65', 'Pic', 'Pictor', 'Ç™Ç©');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('66', 'PsA', 'Piscis Austrinus', 'Ç›Ç»Ç›ÇÃÇ§Ç®');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('67', 'Psc', 'Pisces', 'Ç§Ç®');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('68', 'Pup', 'Puppis', 'Ç∆Ç‡');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('69', 'Pyx', 'Pyxis', 'ÇÁÇµÇÒÇŒÇÒ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('70', 'Ret', 'Reticulum', 'ÉåÉ`ÉNÉã');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('71', 'Scl', 'Sculptor', 'ÇøÇÂÇ§Ç±Ç≠ÇµÇ¬');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('72', 'Sco', 'Scorpius', 'Ç≥ÇªÇË');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('73', 'Sct', 'Scutum', 'ÇΩÇƒ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('74', 'Ser', 'Serpens(Caput)', 'Ç÷Ç—(ì™)');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('75', 'Ser', 'Serpens(Cauda)', 'Ç÷Ç—(îˆ)');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('76', 'Sex', 'Sextans', 'ÇÎÇ≠Ç‘ÇÒÇ¨');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('77', 'Sge', 'Sagitta', 'Ç‚');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('78', 'Sgr', 'Sagittarius', 'Ç¢Çƒ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('79', 'Tau', 'Taurus', 'Ç®Ç§Çµ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('80', 'Tel', 'Telescopium', 'Ç⁄Ç§Ç¶ÇÒÇ´ÇÂÇ§');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('81', 'TrA', 'Triangulum Australe', 'Ç›Ç»Ç›ÇÃÇ≥ÇÒÇ©Ç≠');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('82', 'Tri', 'Triangulum', 'Ç≥ÇÒÇ©Ç≠');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('83', 'Tuc', 'Tucana', 'Ç´ÇÂÇµÇøÇÂÇ§');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('84', 'UMa', 'Ursa Major', 'Ç®Ç®ÇÆÇ‹');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('85', 'UMi', 'Ursa Minor', 'Ç±ÇÆÇ‹');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('86', 'Vel', 'Vela', 'ÇŸ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('87', 'Vir', 'Virgo', 'Ç®Ç∆Çﬂ');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('88', 'Vol', 'Volans', 'Ç∆Ç—Ç§Ç®');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('89', 'Vul', 'Vulpecula', 'Ç±Ç¨Ç¬ÇÀ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('1', 'And', 'Andromeda', '„Ç¢„É≥„Éâ„É≠„É°„ÉÄ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('2', 'Ant', 'Antlia', '„Éù„É≥„Éó');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('3', 'Aps', 'Apus', '„Åµ„ÅÜ„Å°„Çá„ÅÜ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('4', 'Aql', 'Aquila', '„Çè„Åó');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('5', 'Aqr', 'Aquarius', '„Åø„Åö„Åå„ÇÅ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('6', 'Ara', 'Ara', '„Åï„ÅÑ„Å†„Çì');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('7', 'Ari', 'Aries', '„Åä„Å≤„Å§„Åò');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('8', 'Aur', 'Auriga', '„Åé„Çá„Åó„ÇÉ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('9', 'Boo', 'Bootes', '„ÅÜ„Åó„Åã„ÅÑ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('10', 'Cae', 'Caelum', '„Å°„Çá„ÅÜ„Åì„Åè„Åê');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('11', 'Cam', 'Camelopardalis', '„Åç„Çä„Çì');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('12', 'Cap', 'Capricornus', '„ÇÑ„Åé');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('13', 'Car', 'Carina', '„Çä„ÇÖ„ÅÜ„Åì„Å§');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('14', 'Cas', 'Cassiopeia', '„Ç´„Ç∑„Ç™„Éö„É§');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('15', 'Cen', 'Centaurus', '„Ç±„É≥„Çø„Ç¶„É´„Çπ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('16', 'Cep', 'Cepheus', '„Ç±„Éï„Çß„Ç¶„Çπ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('17', 'Cet', 'Cetus', '„Åè„Åò„Çâ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('18', 'Cha', 'Chamaeleon', '„Ç´„É°„É¨„Ç™„É≥');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('19', 'Cir', 'Circinus', '„Ç≥„É≥„Éë„Çπ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('20', 'CMa', 'Canis Major', '„Åä„Åä„ÅÑ„Å¨');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('21', 'CMi', 'Canis Minor', '„Åì„ÅÑ„Å¨');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('22', 'Cnc', 'Cancer', '„Åã„Å´');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('23', 'Col', 'Columba', '„ÅØ„Å®');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('24', 'Com', 'Coma Berenices', '„Åã„Åø„ÅÆ„Åë');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('25', 'CrA', 'Corona Australis', '„Åø„Å™„Åø„ÅÆ„Åã„Çì„ÇÄ„Çä');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('26', 'CrB', 'Corona Borealis', '„Åã„Çì„ÇÄ„Çä');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('27', 'Crt', 'Crater', '„Ç≥„ÉÉ„Éó');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('28', 'Cru', 'Crux', '„Åø„Å™„Åø„Åò„ÇÖ„ÅÜ„Åò');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('29', 'Crv', 'Corvus', '„Åã„Çâ„Åô');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('30', 'CVn', 'Canes Venatici', '„Çä„Çá„ÅÜ„Åë„Çì');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('31', 'Cyg', 'Cygnus', '„ÅØ„Åè„Å°„Çá„ÅÜ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('32', 'Del', 'Delphinus', '„ÅÑ„Çã„Åã');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('33', 'Dor', 'Dorado', '„Åã„Åò„Åç');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('34', 'Dra', 'Draco', '„Çä„ÇÖ„ÅÜ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('35', 'Equ', 'Equuleus', '„Åì„ÅÜ„Åæ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('36', 'Eri', 'Erhoroscope_idanus', '„Ç®„É™„ÉÄ„Éå„Çπ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('37', 'For', 'Fornax', '„Çç');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('38', 'Gem', 'Gemini', '„Åµ„Åü„Åî');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('39', 'Gru', 'Grus', '„Å§„Çã');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('40', 'Her', 'Hercules', '„Éò„É´„ÇØ„É¨„Çπ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('41', 'Hor', 'Horologium', '„Å®„Åë„ÅÑ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('42', 'Hya', 'Hydra', '„ÅÜ„Åø„Å∏„Å≥');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('43', 'Hyi', 'Hydrus', '„Åø„Åö„Å∏„Å≥');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('44', 'Ind', 'Indus', '„Ç§„É≥„Éá„Ç£„Ç¢„É≥');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('45', 'Lac', 'Lacerta', '„Å®„Åã„Åí');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('46', 'Leo', 'Leo', '„Åó„Åó');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('47', 'Lep', 'Lepus', '„ÅÜ„Åï„Åé');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('48', 'Lib', 'Libra', '„Å¶„Çì„Å≥„Çì');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('49', 'LMi', 'Leo Minor', '„Åì„Åò„Åó');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('50', 'Lup', 'Lupus', '„Åä„Åä„Åã„Åø');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('51', 'Lyn', 'Lynx', '„ÇÑ„Åæ„Å≠„Åì');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('52', 'Lyr', 'Lyra', '„Åì„Å®');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('53', 'Men', 'Mensa', '„ÉÜ„Éº„Éñ„É´„Åï„Çì');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('54', 'Mic', 'Microscopium', '„Åë„Çì„Å≥„Åç„Çá„ÅÜ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('55', 'Mon', 'Monoceros', '„ÅÑ„Å£„Åã„Åè„Åò„ÇÖ„ÅÜ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('56', 'Mus', 'Musca', '„ÅØ„Åà');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('57', 'Nor', 'Norma', '„Åò„Çá„ÅÜ„Åé');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('58', 'Oct', 'Octans', '„ÅØ„Å°„Å∂„Çì„Åé');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('59', 'Oph', 'Ophiuchus', '„Å∏„Å≥„Å§„Åã„ÅÑ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('60', 'Ori', 'Orion', '„Ç™„É™„Ç™„É≥');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('61', 'Pav', 'Pavo', '„Åè„Åò„ÇÉ„Åè');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('62', 'Peg', 'Pegasus', '„Éö„Ç¨„Çπ„Çπ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('63', 'Per', 'Perseus', '„Éö„É´„Çª„Ç¶„Çπ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('64', 'Phe', 'Phoenix', '„Åª„ÅÜ„Åä„ÅÜ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('65', 'Pic', 'Pictor', '„Åå„Åã');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('66', 'PsA', 'Piscis Austrinus', '„Åø„Å™„Åø„ÅÆ„ÅÜ„Åä');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('67', 'Psc', 'Pisces', '„ÅÜ„Åä');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('68', 'Pup', 'Puppis', '„Å®„ÇÇ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('69', 'Pyx', 'Pyxis', '„Çâ„Åó„Çì„Å∞„Çì');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('70', 'Ret', 'Reticulum', '„É¨„ÉÅ„ÇØ„É´');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('71', 'Scl', 'Sculptor', '„Å°„Çá„ÅÜ„Åì„Åè„Åó„Å§');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('72', 'Sco', 'Scorpius', '„Åï„Åù„Çä');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('73', 'Sct', 'Scutum', '„Åü„Å¶');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('74', 'Ser', 'Serpens(Caput)', '„Å∏„Å≥(È†≠)');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('75', 'Ser', 'Serpens(Cauda)', '„Å∏„Å≥(Â∞æ)');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('76', 'Sex', 'Sextans', '„Çç„Åè„Å∂„Çì„Åé');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('77', 'Sge', 'Sagitta', '„ÇÑ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('78', 'Sgr', 'Sagittarius', '„ÅÑ„Å¶');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('79', 'Tau', 'Taurus', '„Åä„ÅÜ„Åó');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('80', 'Tel', 'Telescopium', '„Åº„ÅÜ„Åà„Çì„Åç„Çá„ÅÜ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('81', 'TrA', 'Triangulum Australe', '„Åø„Å™„Åø„ÅÆ„Åï„Çì„Åã„Åè');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('82', 'Tri', 'Triangulum', '„Åï„Çì„Åã„Åè');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('83', 'Tuc', 'Tucana', '„Åç„Çá„Åó„Å°„Çá„ÅÜ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('84', 'UMa', 'Ursa Major', '„Åä„Åä„Åê„Åæ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('85', 'UMi', 'Ursa Minor', '„Åì„Åê„Åæ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('86', 'Vel', 'Vela', '„Åª');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('87', 'Vir', 'Virgo', '„Åä„Å®„ÇÅ');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('88', 'Vol', 'Volans', '„Å®„Å≥„ÅÜ„Åä');
+insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('89', 'Vul', 'Vulpecula', '„Åì„Åé„Å§„Å≠');
 
 
 select count(*) from constellation_name ;

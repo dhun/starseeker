@@ -32,6 +32,46 @@ public class StarLocationUtilTest {
     }
 
     @Test
+    public void test_convertAngleStringToFloat_70dot00() {
+        String angle = "70°0'";
+        String expect = "70°00'";
+        float actual = StarLocationUtil.convertAngleStringToFloat(angle);
+        assertThat(StarLocationUtil.convertAngleFloatToString(actual), is(expect));
+    }
+
+    @Test
+    public void test_convertAngleStringToFloat_70dot00_with_space() {
+        String angle = "70°   0'";
+        String expect = "70°00'";
+        float actual = StarLocationUtil.convertAngleStringToFloat(angle);
+        assertThat(StarLocationUtil.convertAngleFloatToString(actual), is(expect));
+    }
+
+    @Test
+    public void test_convertAngleStringToFloat_70dot5() {
+        String angle = "70°5'";
+        String expect = "70°05'";
+        float actual = StarLocationUtil.convertAngleStringToFloat(angle);
+        assertThat(StarLocationUtil.convertAngleFloatToString(actual), is(expect));
+    }
+
+    @Test
+    public void test_convertAngleStringToFloat_70dot35() {
+        String angle = "70°35'";
+        String expect = "70°35'";
+        float actual = StarLocationUtil.convertAngleStringToFloat(angle);
+        assertThat(StarLocationUtil.convertAngleFloatToString(actual), is(expect));
+    }
+
+    @Test
+    public void test_convertAngleStringToFloat_70dot35dot123() {
+        String angle = "70°35.123'";
+        String expect = "70°35'";
+        float actual = StarLocationUtil.convertAngleStringToFloat(angle);
+        assertThat(StarLocationUtil.convertAngleFloatToString(actual), is(expect));
+    }
+
+    @Test
     public void test_convertAngleStringToFloat_35dot01() {
         String angle = "35°01'";
         float actual = StarLocationUtil.convertAngleStringToFloat(angle);
@@ -75,6 +115,54 @@ public class StarLocationUtilTest {
         String actual = StarLocationUtil.convertHourFloatToString(hour);
         String expect = "18h 41.8m";
         assertThat(actual, is(expect));
+    }
+
+    @Test
+    public void test_convertHourStringToFloat_18dot00() {
+        String hour = "18h00m";
+        String expect = "18h 00.0m";
+        float actual = StarLocationUtil.convertHourStringToFloat(hour);
+        assertThat(StarLocationUtil.convertHourFloatToString(actual), is(expect));
+    }
+
+    @Test
+    public void test_convertHourStringToFloat_18dot00_with_space() {
+        String hour = "18h   00m";
+        String expect = "18h 00.0m";
+        float actual = StarLocationUtil.convertHourStringToFloat(hour);
+        assertThat(StarLocationUtil.convertHourFloatToString(actual), is(expect));
+    }
+
+    @Test
+    public void test_convertHourStringToFloat_18dot12() {
+        String hour = "18h12m";
+        String expect = "18h 12.0m";
+        float actual = StarLocationUtil.convertHourStringToFloat(hour);
+        assertThat(StarLocationUtil.convertHourFloatToString(actual), is(expect));
+    }
+
+    @Test
+    public void test_convertHourStringToFloat_18dot12dot34() {
+        String hour = "18h12.34m";
+        String expect = "18h 12.3m";
+        float actual = StarLocationUtil.convertHourStringToFloat(hour);
+        assertThat(StarLocationUtil.convertHourFloatToString(actual), is(expect));
+    }
+
+    @Test
+    public void test_convertHourStringToFloat_18dot12dot34_56() {
+        String hour = "18h12.34m56s";
+        String expect = "18h 13.3m";
+        float actual = StarLocationUtil.convertHourStringToFloat(hour);
+        assertThat(StarLocationUtil.convertHourFloatToString(actual), is(expect));
+    }
+
+    @Test
+    public void test_convertHourStringToFloat_18dot12dot34_56dot23() {
+        String hour = "18h12.34m56.23s";
+        String expect = "18h 13.3m";
+        float actual = StarLocationUtil.convertHourStringToFloat(hour);
+        assertThat(StarLocationUtil.convertHourFloatToString(actual), is(expect));
     }
 
     @Test

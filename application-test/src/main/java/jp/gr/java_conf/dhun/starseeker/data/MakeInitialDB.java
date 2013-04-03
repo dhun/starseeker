@@ -29,23 +29,18 @@ public class MakeInitialDB {
         try {
             // create a database connection
             connection = DriverManager.getConnection("jdbc:sqlite:tmp\\starseeker.db");
+            connection.setAutoCommit(false);
+
             convertStarData(connection);
 
-            // Statement statement = connection.createStatement();
-            // statement.setQueryTimeout(30); // set timeout to 30 sec.
-            //
-            // statement.executeUpdate("drop table if exists person");
-            // statement.executeUpdate("create table person (id integer, name string)");
-            // statement.executeUpdate("insert into person values(1, 'leo')");
-            // statement.executeUpdate("insert into person values(2, 'yui')");
-            // ResultSet rs = statement.executeQuery("select * from person");
-            // while (rs.next()) {
-            // // read the result set
-            // System.out.println("name = " + rs.getString("name"));
-            // System.out.println("id = " + rs.getInt("id"));
-            // }
+            connection.commit();
 
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException eRollback) {
+                System.out.println(eRollback);
+            }
             throw new RuntimeException(e);
 
         } finally {
@@ -65,12 +60,14 @@ public class MakeInitialDB {
         ResultSet rs = select.executeQuery("select * from star_data");
         while (rs.next()) {
             float right_ascension = StarLocationUtil.convertHourStringToFloat(rs.getString("right_ascension"));
-            float declination = StarLocationUtil.convertHourStringToFloat(rs.getString("declination"));
+            float declination = StarLocationUtil.convertAngleStringToFloat(rs.getString("declination"));
 
-            update.setFloat(0, right_ascension);
-            update.setFloat(1, declination);
-            update.setInt(2, rs.getInt("hip_num"));
+            update.setFloat(1, right_ascension);
+            update.setFloat(2, declination);
+            update.setInt(3, rs.getInt("hip_num"));
             update.execute();
+
+            System.out.println(rs.getString("hip_num"));
         }
     }
 }

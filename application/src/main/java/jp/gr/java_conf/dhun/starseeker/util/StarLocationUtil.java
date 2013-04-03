@@ -28,19 +28,20 @@ public final class StarLocationUtil {
      * @return 角度
      */
     public static final float convertAngleStringToFloat(String angle) {
-        Pattern pattern = Pattern.compile("^([+-])?(\\d+)°(\\d+)'$");
+        Pattern pattern = Pattern.compile("^([+-])?(\\d+)° *(\\d+)(\\.\\d+)?'$");
         Matcher matcher = pattern.matcher(angle);
-        if (!matcher.find() || matcher.groupCount() != 3) {
+        if (!matcher.find()) {
             throw new IllegalArgumentException(String.format("角度の文字列表現が不正. value=[%s]", angle));
         }
 
         String sign = matcher.group(1);
         String d = matcher.group(2);
-        String m = matcher.group(3);
+        String mInt = matcher.group(3);
+        String mDec = (null != matcher.group(4)) ? matcher.group(4) : ".0";
 
         float result = 0;
         result += Float.valueOf(d);
-        result += Float.valueOf(m) / 60;
+        result += Float.valueOf(mInt + mDec) / 60;
         result *= (null != sign && sign.equals("-")) ? -1 : +1;
         return result;
     }
@@ -84,24 +85,23 @@ public final class StarLocationUtil {
      * @return 時間
      */
     public static final float convertHourStringToFloat(String hour) {
-        // Pattern pattern = Pattern.compile("^([+-])?(\\d+)h *(\\d+)\\.(\\d(\\.\\d+))m$");
-        // Pattern pattern = Pattern.compile("^([+-])?(\\d+)h( +(\\d+)(\\.(\\d+))?m)?( +(\\d+)(\\.(\\d+))?s)?$");
-        Pattern pattern = Pattern.compile("^([+-])?(\\d+)h *(\\d+)\\.(\\d)m$");
+        Pattern pattern = Pattern.compile("^([+-])?(\\d+)h( *(\\d+)(\\.\\d+)?m)( *(\\d+)(\\.\\d+)?s)?$");
         Matcher matcher = pattern.matcher(hour);
-        if (!matcher.find() || matcher.groupCount() != 4) {
-            // if (!matcher.find() || matcher.groupCount() != 10) {
+        if (!matcher.find()) {
             throw new IllegalArgumentException(String.format("時間の文字列表現が不正. value=[%s]", hour));
         }
 
         String sign = matcher.group(1);
         String h = matcher.group(2);
-        String m = matcher.group(3);
-        String s = matcher.group(4);
+        String mInt = matcher.group(4);
+        String mDec = (null != matcher.group(5)) ? matcher.group(5) : ".0";
+        String sInt = (null != matcher.group(7)) ? matcher.group(7) : "0";
+        String sDec = (null != matcher.group(8)) ? matcher.group(8) : ".0";
 
         float result = 0;
         result += Float.valueOf(h);
-        result += Float.valueOf(m) / 60;
-        result += Float.valueOf(s) / 60 / 10;
+        result += Float.valueOf(mInt + mDec) / 60;
+        result += Float.valueOf(sInt + sDec) / 60 / 60;
         result *= (null != sign && sign.equals("-")) ? -1 : +1;
         return result;
     }
