@@ -1,10 +1,10 @@
 -- 星データ
-drop   table fk_data ;
+drop table if exists fk_data ;
 create table fk_data (
-    hip_num         INTEGER not null    -- HIP番号
-  , right_ascension REAL    not null    -- 赤径
-  , declination     REAL    not null    -- 赤緯
-  , magnitude       REAL    not null    -- 等級
+    hip_num                     INTEGER not null    -- HIP番号
+  , right_ascension             REAL    not null    -- 赤径
+  , declination                 REAL    not null    -- 赤緯
+  , magnitude                   REAL    not null    -- 等級
   , constraint PK_fk_data primary key ( hip_num )
 );
 

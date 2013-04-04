@@ -1,17 +1,14 @@
--- 星座構成星データ
---drop   table star_data ;
---create table star_data (
---    hip_num         INTEGER not null    -- HIP番号
---  , right_ascension REAL    not null    -- 赤径
---  , declination     REAL    not null    -- 赤緯
---  , magnitude       REAL    not null    -- 等級
---  , name            TEXT                -- 通称
---  , memo            TEXT                -- 備考
---  , constraint PK_fk_data primary key ( hip_num )
---);
+-- 譏溷ｺｧ讒区�先弌繝�繝ｼ繧ｿ
+drop table if exists horoscope_path ;
+create table horoscope_path (
+    horoscope_code              TEXT    not null
+  , hip_num_fm                  INTEGER not null    -- HIP逡ｪ蜿ｷ縺ｮ蟋狗せ
+  , hip_num_to                  INTEGER not null    -- HIP逡ｪ蜿ｷ縺ｮ邨らせ
+  , constraint PK_horoscope_path primary key ( horoscope_code, hip_num_fm, hip_num_to )
+);
 --
---insert into star_data
-select count(*) from (
+--insert into horoscope_path
+--select count(*) from (
     select a.horoscope_code
          , a.hip_num
          , b.horoscope_name
@@ -27,5 +24,5 @@ select count(*) from (
       left join star_data c
         on c.hip_num = a.hip_num
     order by 1, 2
-)
+--)
     ;

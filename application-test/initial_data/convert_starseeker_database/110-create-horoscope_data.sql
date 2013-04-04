@@ -1,12 +1,12 @@
--- ¯Àƒf[ƒ^
-drop   table horoscope_data ;
+-- æ˜Ÿåº§ãƒ‡ãƒ¼ã‚¿
+drop table if exists horoscope_data ;
 create table horoscope_data (
-    horoscope_id        INTEGER not null    -- ¯ÀID
-  , horoscope_code      TEXT    not null    -- —ª•„
-  , horoscope_name      TEXT    not null    -- Šw–¼
-  , abbreviated_name    TEXT    not null    -- ¯À–¼(“ú–{Œê)
-  , right_ascension     REAL    not null    -- ÔŒo
-  , declination         REAL    not null    -- ÔˆÜ
+    horoscope_id                INTEGER not null    -- æ˜Ÿåº§ID
+  , horoscope_code              TEXT    not null    -- ç•¥ç¬¦
+  , horoscope_name              TEXT    not null    -- å­¦å
+  , abbreviated_name            TEXT    not null    -- æ˜Ÿåº§å(æ—¥æœ¬èª)
+  , right_ascension             REAL    not null    -- èµ¤çµŒ
+  , declination                 REAL    not null    -- èµ¤ç·¯
   , constraint PK_constellation_name primary key ( horoscope_id )
   , constraint UK_constellation_name unique ( horoscope_code )
 );

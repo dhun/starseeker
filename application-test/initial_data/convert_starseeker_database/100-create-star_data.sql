@@ -1,12 +1,12 @@
--- ¯ƒf[ƒ^
-drop   table star_data ;
+-- æ˜Ÿãƒ‡ãƒ¼ã‚¿
+drop table if exists star_data ;
 create table star_data (
-    hip_num         INTEGER not null    -- HIP”Ô†
-  , right_ascension REAL    not null    -- ÔŒa
-  , declination     REAL    not null    -- ÔˆÜ
-  , magnitude       REAL    not null    -- “™‹‰
-  , name            TEXT                -- ’ÊÌ
-  , memo            TEXT                -- ”õl
+    hip_num                     INTEGER not null    -- HIPç•ªå·
+  , right_ascension             REAL    not null    -- èµ¤å¾„
+  , declination                 REAL    not null    -- èµ¤ç·¯
+  , magnitude                   REAL    not null    -- ç­‰ç´š
+  , name                        TEXT                -- é€šç§°
+  , memo                        TEXT                -- å‚™è€ƒ
   , constraint PK_fk_data primary key ( hip_num )
 );
 

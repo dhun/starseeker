@@ -3,15 +3,11 @@
  */
 package jp.gr.java_conf.dhun.starseeker.intial_data;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -29,8 +25,9 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
 public class MakeInitialDB {
 
     private static final String SQLITE_PATH = "D:/dev/_opt/sqlite3/sqlite3.exe";
+    private static final String SQL_ROOT_DIR = "initial_data";
 
-    private File starseekerDatabase;
+    private final File databaseFile = new File("initial_data", "starseeker.db");
 
     public static void main(String[] args) {
         MakeInitialDB instance = new MakeInitialDB();
@@ -39,14 +36,26 @@ public class MakeInitialDB {
 
     public void make() {
         try {
-            Class.forName("org.sqlite.JDBC");
-            starseekerDatabase = new File("tmp" + File.separator + "starseeker.db");
+            System.out.println("begin,");
 
-            executeSqlFiles("initial_data" + File.separator + "original_data");
+            Class.forName("org.sqlite.JDBC");
+
+            if (databaseFile.exists()) {
+                databaseFile.delete();
+            }
+
+            executeSqlFiles(SQL_ROOT_DIR + File.separator + "original_data");
+            executeSqlFiles(SQL_ROOT_DIR + File.separator + "convert_starseeker_database");
+
             executeConvertSqlStatements();
 
-            // convertStarData(connection);
+            System.out.println("normal end,");
+
         } catch (Throwable t) {
+            if (databaseFile.exists()) {
+                databaseFile.delete();
+            }
+            System.out.println("abnormal end,");
             throw new RuntimeException(t);
         }
     }
@@ -71,36 +80,30 @@ public class MakeInitialDB {
         }
     }
 
-    private int executeSqlFile(File sqlFile) throws IOException, InterruptedException {
-        BufferedInputStream sqlInputStream = null;
+    private int executeSqlFile(File sqlFile) throws IOException, InterruptedException, SQLException {
+        System.out.println("---- executeSqlFile: " + sqlFile.getPath() + " ----");
+
+        ProcessBuilder builder;
+        builder = new ProcessBuilder("cmd", "/c", SQLITE_PATH, "-batch", "-bail", "-echo", databaseFile.getAbsolutePath(), "<", sqlFile.getPath());
+        builder.redirectErrorStream(true);
+        Process process = builder.start();
+
+        BufferedReader standardIn = null;
         try {
-            sqlInputStream = new BufferedInputStream(new FileInputStream(sqlFile));
-
-            ProcessBuilder builder = new ProcessBuilder(SQLITE_PATH, starseekerDatabase.getAbsolutePath());
-            Process process = builder.start();
-            OutputStream defaultOs = process.getOutputStream();
-            InputStream defaultIs = process.getInputStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(defaultIs));
-
-            // byte[] buf = new byte[1024];
-            // int len;
-            // while (-1 != (len = sqlInputStream.read(buf))) {
-            // defaultOs.write(buf, 0, len);
-            // // for (;;) {
-            // // String line = br.readLine();
-            // // if (line == null) {
-            // // break;
-            // // }
-            // // System.out.println(line);
-            // // }
-            // }
-
+            standardIn = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
+            String line;
+            while (null != (line = standardIn.readLine())) {
+                System.out.println(line);
+            }
             int result = process.waitFor();
+            if (result != 0) {
+                throw new SQLException("SQLファイルの実行中に例外が発生した");
+            }
             return result;
 
         } finally {
-            if (sqlInputStream != null) {
-                sqlInputStream.close();
+            if (standardIn != null) {
+                standardIn.close();
             }
         }
     }
@@ -109,11 +112,11 @@ public class MakeInitialDB {
         Connection connection = null;
         try {
             // create a database connection
-            connection = DriverManager.getConnection("jdbc:sqlite:tmp\\starseeker.db");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + starseekerDatabase.getPath());
+            connection = DriverManager.getConnection("jdbc:sqlite:" + databaseFile.getPath());
             connection.setAutoCommit(false);
 
             convertStarData(connection);
+            convertHoroscopeData(connection);
 
             connection.commit();
 
@@ -129,6 +132,8 @@ public class MakeInitialDB {
     }
 
     private void convertStarData(Connection connection) throws SQLException {
+        System.out.println("---- convert : star_data ----");
+
         Statement select = connection.createStatement();
         PreparedStatement update = connection.prepareStatement("update star_data set right_ascension=?, declination=? where hip_num=?");
         ResultSet rs = select.executeQuery("select * from star_data");
@@ -140,8 +145,23 @@ public class MakeInitialDB {
             update.setFloat(2, declination);
             update.setInt(3, rs.getInt("hip_num"));
             update.execute();
+        }
+    }
 
-            System.out.println(rs.getString("hip_num"));
+    private void convertHoroscopeData(Connection connection) throws SQLException {
+        System.out.println("---- convert : horoscope_data ----");
+
+        Statement select = connection.createStatement();
+        PreparedStatement update = connection.prepareStatement("update horoscope_data set right_ascension=?, declination=? where horoscope_id=?");
+        ResultSet rs = select.executeQuery("select * from horoscope_data");
+        while (rs.next()) {
+            float right_ascension = StarLocationUtil.convertHourStringToFloat(rs.getString("right_ascension"));
+            float declination = StarLocationUtil.convertAngleStringToFloat(rs.getString("declination"));
+
+            update.setFloat(1, right_ascension);
+            update.setFloat(2, declination);
+            update.setInt(3, rs.getInt("horoscope_id"));
+            update.execute();
         }
     }
 }

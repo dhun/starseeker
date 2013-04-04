@@ -1,9 +1,9 @@
 -- 恒星名データ
-drop   table fk_name ;
+drop table if exists fk_name ;
 create table fk_name (
-    hip_num         INTEGER not null    -- HIP番号
-  , horoscope_code  TEXT    not null    -- 星座：略符
-  , bayer_code      TEXT    not null    -- バイエル符号／フラムスティード番号
+    hip_num                     INTEGER not null    -- HIP番号
+  , horoscope_code              TEXT    not null    -- 星座：略符
+  , bayer_code                  TEXT    not null    -- バイエル符号／フラムスティード番号
   , constraint PK_star_data primary key ( hip_num, horoscope_code )
 );
 

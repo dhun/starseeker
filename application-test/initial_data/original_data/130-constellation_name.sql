@@ -1,11 +1,11 @@
 -- 恒星名データ
 -- 89行目が重複している
-drop   table constellation_name ;
+drop table if exists constellation_name ;
 create table constellation_name (
-    horoscope_id        INTEGER not null    -- 星座ID
-  , horoscope_code      TEXT    not null    -- 略符
-  , horoscope_name      TEXT    not null    -- 学名
-  , abbreviated_name    TEXT    not null    -- 星座名(日本語)
+    horoscope_id                INTEGER not null    -- 星座ID
+  , horoscope_code              TEXT    not null    -- 略符
+  , horoscope_name              TEXT    not null    -- 学名
+  , abbreviated_name            TEXT    not null    -- 星座名(日本語)
   , constraint PK_constellation_name primary key ( horoscope_id )
   , constraint UK_constellation_name unique ( horoscope_code )
 );
@@ -86,7 +86,7 @@ insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, a
 insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('72', 'Sco', 'Scorpius', 'さそり');
 insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('73', 'Sct', 'Scutum', 'たて');
 insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('74', 'Ser', 'Serpens(Caput)', 'へび(頭)');
-insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('75', 'Ser', 'Serpens(Cauda)', 'へび(尾)');
+--insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('75', 'Ser', 'Serpens(Cauda)', 'へび(尾)');
 insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('76', 'Sex', 'Sextans', 'ろくぶんぎ');
 insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('77', 'Sge', 'Sagitta', 'や');
 insert into constellation_name ( horoscope_id, horoscope_code, horoscope_name, abbreviated_name) values ('78', 'Sgr', 'Sagittarius', 'いて');

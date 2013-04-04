@@ -1,9 +1,9 @@
 -- 星座の基礎データ
-drop   table constellation ;
+drop table if exists constellation ;
 create table constellation (
-    horoscope_id    INTEGER             -- 星座ID
-  , right_ascension REAL    not null    -- 赤経
-  , declination     REAL    not null    -- 赤緯
+    horoscope_id                INTEGER             -- 星座ID
+  , right_ascension             REAL    not null    -- 赤経
+  , declination                 REAL    not null    -- 赤緯
   , constraint PK_constellation primary key ( horoscope_id )
 );
 
