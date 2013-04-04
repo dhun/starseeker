@@ -12,3 +12,4 @@ application-test/.classpath
 application-test/target/
 application/tmp
 application-test/tmp/
+application-test/initial_data/starseeker.db
