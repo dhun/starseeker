@@ -91,13 +91,12 @@ public class AstronomicalTheater {
     public void setTheaterSizeToDefault() {
         // 端末の回転状態から、天体シアターのサイズを算出
         float theaterWidth, theaterHeight;
-        if (displayWidth < displayHeight) {
+        if (displayWidth > displayHeight) {
             theaterWidth = DEFAULT_PORTRAIT_THEATER_WIDTH;
-            theaterHeight = DEFAULT_PORTRAIT_THEATER_HEIGHT;
         } else {
             theaterWidth = DEFAULT_LANDSCAPE_THEATER_WIDTH;
-            theaterHeight = DEFAULT_LANDSCAPE_THEATER_HEIGHT;
         }
+        theaterHeight = (int) ((double) displayHeight / displayWidth * theaterWidth);
         setTheaterSize(theaterWidth, theaterHeight);
     }
 
