@@ -82,6 +82,8 @@ public class NumericAltitudeIndicator extends AbstractAltitudeIndicator implemen
                 // incrDegree = +1;
             } else if (currDegree == +90) {
                 incrDegree = -1;
+            } else if (currDegree == -90) {
+                incrDegree = +1;
             }
             y += degreeOnePixcel;
         }
