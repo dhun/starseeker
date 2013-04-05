@@ -251,11 +251,6 @@ public class AstronomicalTheater {
         /* final */AstronomicalTheaterPanel panelFaceL, panelFaceR, panelBackL, panelBackR;
         if (horizontalCoordinatesRect.xL < horizontalCoordinatesRect.xR) {
             // X軸の ±180°をまたいでいない場合
-            panelFaceL = westFacePanel;
-            panelFaceR = eastFacePanel;
-            panelBackL = westBackPanel;
-            panelBackR = eastBackPanel;
-
             if (0 < horizontalCoordinatesRect.xL) {
                 // 東側を向いているとき
                 panelFaceL = westFacePanel;
@@ -283,6 +278,17 @@ public class AstronomicalTheater {
             panelFaceR = westFacePanel;
             panelBackL = eastBackPanel;
             panelBackR = westBackPanel;
+        }
+
+        if (horizontalCoordinatesRect.yB < -90) {
+            // Y軸の -90°もまたいでいない場合
+            AstronomicalTheaterPanel temp = panelFaceL;
+            panelFaceL = panelBackL;
+            panelBackL = temp;
+
+            temp = panelFaceR;
+            panelFaceR = panelBackR;
+            panelBackR = temp;
         }
 
         float consumeW = 0;
