@@ -155,21 +155,29 @@ public class AstronomicalTheater {
             westFacePanel.horizontalCoordinatesRect.xL = Math.min(horizontalCoordinatesRect.xL, 0);
             westFacePanel.horizontalCoordinatesRect.xR = Math.min(horizontalCoordinatesRect.xR, 0);
 
-            if (horizontalCoordinatesRect.xR < 0 || 0 < horizontalCoordinatesRect.xL) {
-                // X軸の 0 をまたいでいない場合
-                eastBackPanel.horizontalCoordinatesRect.xL = -eastFacePanel.horizontalCoordinatesRect.xL;
-                eastBackPanel.horizontalCoordinatesRect.xR = -eastFacePanel.horizontalCoordinatesRect.xR;
+            if (0 < horizontalCoordinatesRect.xL) {
+                // 東側を向いているとき
+                eastBackPanel.horizontalCoordinatesRect.xL = 0;
+                eastBackPanel.horizontalCoordinatesRect.xR = 0;
 
-                westBackPanel.horizontalCoordinatesRect.xL = -westFacePanel.horizontalCoordinatesRect.xL;
-                westBackPanel.horizontalCoordinatesRect.xR = -westFacePanel.horizontalCoordinatesRect.xR;
+                westBackPanel.horizontalCoordinatesRect.xL = -180 + eastFacePanel.horizontalCoordinatesRect.xR;
+                westBackPanel.horizontalCoordinatesRect.xR = -180 + eastFacePanel.horizontalCoordinatesRect.xL;
+
+            } else if (horizontalCoordinatesRect.xR < 0) {
+                // 西側を向いているとき
+                eastBackPanel.horizontalCoordinatesRect.xL = +180 + westFacePanel.horizontalCoordinatesRect.xR;
+                eastBackPanel.horizontalCoordinatesRect.xR = +180 + westFacePanel.horizontalCoordinatesRect.xL;
+
+                westBackPanel.horizontalCoordinatesRect.xL = 0;
+                westBackPanel.horizontalCoordinatesRect.xR = 0;
 
             } else {
-                // X軸の 0 をまたいでいる場合
-                eastBackPanel.horizontalCoordinatesRect.xL = 0;
-                eastBackPanel.horizontalCoordinatesRect.xR = +180 - eastFacePanel.horizontalCoordinatesRect.xR;
+                // X軸の 0° をまたいでいる場合
+                eastBackPanel.horizontalCoordinatesRect.xL = +180;
+                eastBackPanel.horizontalCoordinatesRect.xR = +180 + westFacePanel.horizontalCoordinatesRect.xL;
 
-                westBackPanel.horizontalCoordinatesRect.xL = -180 - westFacePanel.horizontalCoordinatesRect.xL;
-                westBackPanel.horizontalCoordinatesRect.xR = 0;
+                westBackPanel.horizontalCoordinatesRect.xL = -180 + eastFacePanel.horizontalCoordinatesRect.xR;
+                westBackPanel.horizontalCoordinatesRect.xR = -180;
             }
 
         } else {
@@ -180,11 +188,11 @@ public class AstronomicalTheater {
             westFacePanel.horizontalCoordinatesRect.xL = -180;
             westFacePanel.horizontalCoordinatesRect.xR = horizontalCoordinatesRect.xR;
 
-            eastBackPanel.horizontalCoordinatesRect.xL = +180 - eastFacePanel.horizontalCoordinatesRect.xL;
-            eastBackPanel.horizontalCoordinatesRect.xR = +180;
+            eastBackPanel.horizontalCoordinatesRect.xL = +180 + westFacePanel.horizontalCoordinatesRect.xR;
+            eastBackPanel.horizontalCoordinatesRect.xR = 0;
 
-            westBackPanel.horizontalCoordinatesRect.xL = -180;
-            westBackPanel.horizontalCoordinatesRect.xR = -180 - westFacePanel.horizontalCoordinatesRect.xR;
+            westBackPanel.horizontalCoordinatesRect.xL = 0;
+            westBackPanel.horizontalCoordinatesRect.xR = -180 + eastFacePanel.horizontalCoordinatesRect.xL;
         }
 
         // 背面のX軸
@@ -192,7 +200,7 @@ public class AstronomicalTheater {
             // X軸の ±180 をまたいでいない場合
 
         } else if (horizontalCoordinatesRect.xR < 0 || 0 <= horizontalCoordinatesRect.xL) {
-            // X軸の ±180 も 0 も をまたいでいない場合
+            // X軸の ±180 も 0° も をまたいでいない場合
 
         } else {
             // X軸の境界線をまたいでいる場合
@@ -203,9 +211,9 @@ public class AstronomicalTheater {
             westBackPanel.horizontalCoordinatesRect.xR = -westFacePanel.horizontalCoordinatesRect.xR;
         }
 
-        // 正面の背面のY軸
-        if (horizontalCoordinatesRect.yT <= +90) {
-            // Y軸の +90°をまたいでいない場合
+        // 正面と背面のY軸
+        if (horizontalCoordinatesRect.yT <= +90 && horizontalCoordinatesRect.yB >= -90) {
+            // Y軸の +90°も -90°もまたいでいない場合
             if (eastFacePanel.horizontalCoordinatesRect.hasWidth()) {
                 eastFacePanel.horizontalCoordinatesRect.yT = horizontalCoordinatesRect.yT;
                 eastFacePanel.horizontalCoordinatesRect.yB = horizontalCoordinatesRect.yB;
@@ -217,33 +225,58 @@ public class AstronomicalTheater {
             eastBackPanel.horizontalCoordinatesRect.setupZero();
             westBackPanel.horizontalCoordinatesRect.setupZero();
 
-        } else {
+        } else if (horizontalCoordinatesRect.yT >= +90) {
             // Y軸の +90°をまたいでいる場合
-            eastFacePanel.horizontalCoordinatesRect.yT = +90;
-            eastFacePanel.horizontalCoordinatesRect.yB = +horizontalCoordinatesRect.yB;
+            eastFacePanel.horizontalCoordinatesRect.yT = westFacePanel.horizontalCoordinatesRect.yT = +90;
+            eastFacePanel.horizontalCoordinatesRect.yB = westFacePanel.horizontalCoordinatesRect.yB = +horizontalCoordinatesRect.yB;
 
-            westFacePanel.horizontalCoordinatesRect.yT = +90;
-            westFacePanel.horizontalCoordinatesRect.yB = +horizontalCoordinatesRect.yB;
+            eastBackPanel.horizontalCoordinatesRect.yT = westBackPanel.horizontalCoordinatesRect.yT = +90 - (horizontalCoordinatesRect.yT - 90);
+            eastBackPanel.horizontalCoordinatesRect.yB = westBackPanel.horizontalCoordinatesRect.yB = +90;
 
-            eastBackPanel.horizontalCoordinatesRect.yT = +90 - (horizontalCoordinatesRect.yT - 90);
-            eastBackPanel.horizontalCoordinatesRect.yB = +90;
+        } else {
+            // Y軸の -90°をまたいでいる場合
+            eastFacePanel.horizontalCoordinatesRect.yT = westFacePanel.horizontalCoordinatesRect.yT = +horizontalCoordinatesRect.yT;
+            eastFacePanel.horizontalCoordinatesRect.yB = westFacePanel.horizontalCoordinatesRect.yB = -90;
 
-            westBackPanel.horizontalCoordinatesRect.yT = +90 - (horizontalCoordinatesRect.yT - 90);
-            westBackPanel.horizontalCoordinatesRect.yB = +90;
+            eastBackPanel.horizontalCoordinatesRect.yT = westBackPanel.horizontalCoordinatesRect.yT = -90;
+            eastBackPanel.horizontalCoordinatesRect.yB = westBackPanel.horizontalCoordinatesRect.yB = -90 - (horizontalCoordinatesRect.yB + 90);
         }
+
     }
 
     /**
      * ディスプレイの座標をパネルに割り当てます
      */
     /* package */void assignPanelDisplayRect() {
-        final AstronomicalTheaterPanel panelFaceL, panelFaceR, panelBackL, panelBackR;
+        /* final */AstronomicalTheaterPanel panelFaceL, panelFaceR, panelBackL, panelBackR;
         if (horizontalCoordinatesRect.xL < horizontalCoordinatesRect.xR) {
             // X軸の ±180°をまたいでいない場合
             panelFaceL = westFacePanel;
             panelFaceR = eastFacePanel;
             panelBackL = westBackPanel;
             panelBackR = eastBackPanel;
+
+            if (0 < horizontalCoordinatesRect.xL) {
+                // 東側を向いているとき
+                panelFaceL = westFacePanel;
+                panelFaceR = eastFacePanel;
+                panelBackL = eastBackPanel;
+                panelBackR = westBackPanel;
+
+            } else if (horizontalCoordinatesRect.xR < 0) {
+                // 西側を向いているとき
+                panelFaceL = westFacePanel;
+                panelFaceR = eastFacePanel;
+                panelBackL = eastBackPanel;
+                panelBackR = westBackPanel;
+
+            } else {
+                // X軸の 0° をまたいでいる場合
+                panelFaceL = westFacePanel;
+                panelFaceR = eastFacePanel;
+                panelBackL = westBackPanel;
+                panelBackR = eastBackPanel;
+            }
         } else {
             // X軸の ±180°をまたいでいる場合
             panelFaceL = eastFacePanel;
@@ -257,12 +290,19 @@ public class AstronomicalTheater {
             consumeW = displayWidth * (panelFaceL.horizontalCoordinatesRect.width() / theaterWidth);
             panelFaceL.displayCoordinatesRect.xL = 0;
             panelFaceL.displayCoordinatesRect.xR = consumeW;
-            panelBackL.displayCoordinatesRect.xL = 0;
-            panelBackL.displayCoordinatesRect.xR = consumeW;
         }
         if (panelFaceR.horizontalCoordinatesRect.hasRegion()) {
             panelFaceR.displayCoordinatesRect.xL = consumeW;
             panelFaceR.displayCoordinatesRect.xR = displayWidth;
+        }
+
+        consumeW = 0;
+        if (panelBackL.horizontalCoordinatesRect.hasRegion()) {
+            consumeW = displayWidth * (panelBackL.horizontalCoordinatesRect.width() / theaterWidth);
+            panelBackL.displayCoordinatesRect.xL = 0;
+            panelBackL.displayCoordinatesRect.xR = consumeW;
+        }
+        if (panelBackR.horizontalCoordinatesRect.hasRegion()) {
             panelBackR.displayCoordinatesRect.xL = consumeW;
             panelBackR.displayCoordinatesRect.xR = displayWidth;
         }
