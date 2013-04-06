@@ -251,24 +251,16 @@ public class AstronomicalTheater {
         /* final */AstronomicalTheaterPanel panelFaceL, panelFaceR, panelBackL, panelBackR;
         if (horizontalCoordinatesRect.xL < horizontalCoordinatesRect.xR) {
             // X軸の ±180°をまたいでいない場合
-            if (0 < horizontalCoordinatesRect.xL) {
-                // 東側を向いているとき
-                panelFaceL = westFacePanel;
-                panelFaceR = eastFacePanel;
-                panelBackL = eastBackPanel;
-                panelBackR = westBackPanel;
+            panelFaceL = westFacePanel;
+            panelFaceR = eastFacePanel;
 
-            } else if (horizontalCoordinatesRect.xR < 0) {
-                // 西側を向いているとき
-                panelFaceL = westFacePanel;
-                panelFaceR = eastFacePanel;
+            if (horizontalCoordinatesRect.xR < 0 || 0 < horizontalCoordinatesRect.xL) {
+                // 東側か西側を向いているとき
                 panelBackL = eastBackPanel;
                 panelBackR = westBackPanel;
 
             } else {
                 // X軸の 0° をまたいでいる場合
-                panelFaceL = westFacePanel;
-                panelFaceR = eastFacePanel;
                 panelBackL = westBackPanel;
                 panelBackR = eastBackPanel;
             }
@@ -338,10 +330,8 @@ public class AstronomicalTheater {
         hasRangeL = panelFaceL.horizontalCoordinatesRect.hasRegion();
         hasRangeR = panelFaceR.horizontalCoordinatesRect.hasRegion();
         if (hasRangeL && hasRangeR) {
-            panelFaceL.displayCoordinatesRect.yT = consumeH;
-            panelFaceL.displayCoordinatesRect.yB = displayHeight;
-            panelFaceR.displayCoordinatesRect.yT = consumeH;
-            panelFaceR.displayCoordinatesRect.yB = displayHeight;
+            panelFaceL.displayCoordinatesRect.yT = panelFaceR.displayCoordinatesRect.yT = consumeH;
+            panelFaceL.displayCoordinatesRect.yB = panelFaceR.displayCoordinatesRect.yB = displayHeight;
         } else if (hasRangeL) {
             panelFaceL.displayCoordinatesRect.yT = consumeH;
             panelFaceL.displayCoordinatesRect.yB = displayHeight;

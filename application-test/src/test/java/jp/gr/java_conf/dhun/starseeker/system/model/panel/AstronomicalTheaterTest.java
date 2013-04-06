@@ -47,7 +47,7 @@ public class AstronomicalTheaterTest {
     }
 
     @Test
-    public void test_calculateCoordinatesRect_x80_y50_東側だけ() {
+    public void test_calculateCoordinatesRect_x80_y50_xは東側だけ_yは90もMINUS90もまたがない() {
         float terminalAzimuth = +80;
         float terminalPitch = -50;
         target.calculateCoordinatesRect(terminalAzimuth, terminalPitch);
@@ -113,7 +113,139 @@ public class AstronomicalTheaterTest {
     }
 
     @Test
-    public void test_calculateCoordinatesRect_xMINUS80_y50_西側だけ() {
+    public void test_calculateCoordinatesRect_x80_y80_xは東側だけ_yは90をまたぐ() {
+        float terminalAzimuth = +80;
+        float terminalPitch = -80;
+        target.calculateCoordinatesRect(terminalAzimuth, terminalPitch);
+
+        CoordinatesRect actualTheaterRect = extractTheaterRect(target);
+        assertThat(actualTheaterRect, notNullValue());
+        assertInDelta(actualTheaterRect.xL, +45f);
+        assertInDelta(actualTheaterRect.xR, +115f);
+        assertInDelta(actualTheaterRect.yT, +95f);
+        assertInDelta(actualTheaterRect.yB, +65f);
+
+        AstronomicalTheaterPanel actualPanel;
+
+        // 天体シアターの座標
+        actualPanel = extractTheaterPanel_eastFace(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, +45f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, +115f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +90f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +65f);
+
+        actualPanel = extractTheaterPanel_westFace(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +90f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +65f);
+
+        actualPanel = extractTheaterPanel_eastBack(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +85f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +90f);
+
+        actualPanel = extractTheaterPanel_westBack(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, -65f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, -135f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +85f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +90f);
+
+        // ディスプレイの座標
+        actualPanel = extractTheaterPanel_eastFace(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 170.666672f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f);
+
+        actualPanel = extractTheaterPanel_westFace(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 0f);
+
+        actualPanel = extractTheaterPanel_eastBack(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 0f);
+
+        actualPanel = extractTheaterPanel_westBack(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 170.666672f);
+    }
+
+    @Test
+    public void test_calculateCoordinatesRect_x80_yMINUS80_xは東側だけ_yはMINUS90をまたぐ() {
+        float terminalAzimuth = +80;
+        float terminalPitch = +80;
+        target.calculateCoordinatesRect(terminalAzimuth, terminalPitch);
+
+        CoordinatesRect actualTheaterRect = extractTheaterRect(target);
+        assertThat(actualTheaterRect, notNullValue());
+        assertInDelta(actualTheaterRect.xL, +45f);
+        assertInDelta(actualTheaterRect.xR, +115f);
+        assertInDelta(actualTheaterRect.yT, -65f);
+        assertInDelta(actualTheaterRect.yB, -95f);
+
+        AstronomicalTheaterPanel actualPanel;
+
+        // 天体シアターの座標
+        actualPanel = extractTheaterPanel_eastFace(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, +45f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, +115f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, -65f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, -90f);
+
+        actualPanel = extractTheaterPanel_westFace(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, -65f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, -90f);
+
+        actualPanel = extractTheaterPanel_eastBack(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, -90f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, -85f);
+
+        actualPanel = extractTheaterPanel_westBack(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, -65f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, -135f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, -90f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, -85f);
+
+        // ディスプレイの座標
+        actualPanel = extractTheaterPanel_eastFace(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f - 170.666672f);
+
+        actualPanel = extractTheaterPanel_westFace(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 0f);
+
+        actualPanel = extractTheaterPanel_eastBack(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 0f);
+
+        actualPanel = extractTheaterPanel_westBack(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 1024f - 170.666672f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f);
+    }
+
+    @Test
+    public void test_calculateCoordinatesRect_xMINUS80_y50_xは西側だけ_yは90もMINUS90もまたがない() {
         float terminalAzimuth = -80;
         float terminalPitch = -50;
         target.calculateCoordinatesRect(terminalAzimuth, terminalPitch);
@@ -179,7 +311,139 @@ public class AstronomicalTheaterTest {
     }
 
     @Test
-    public void test_calculateCoordinatesRect_x170_y50_180度線をまたぐ() {
+    public void test_calculateCoordinatesRect_xMINUS80_y80_xは西側だけ_yは90をまたぐ() {
+        float terminalAzimuth = -80;
+        float terminalPitch = -80;
+        target.calculateCoordinatesRect(terminalAzimuth, terminalPitch);
+
+        CoordinatesRect actualTheaterRect = extractTheaterRect(target);
+        assertThat(actualTheaterRect, notNullValue());
+        assertInDelta(actualTheaterRect.xL, -115f);
+        assertInDelta(actualTheaterRect.xR, -45f);
+        assertInDelta(actualTheaterRect.yT, +95f);
+        assertInDelta(actualTheaterRect.yB, +65f);
+
+        AstronomicalTheaterPanel actualPanel;
+
+        // 天体シアターの座標
+        actualPanel = extractTheaterPanel_eastFace(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +90f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +65f);
+
+        actualPanel = extractTheaterPanel_westFace(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, -115f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, -45f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +90f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +65f);
+
+        actualPanel = extractTheaterPanel_eastBack(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, +135f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, +65f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +85f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +90f);
+
+        actualPanel = extractTheaterPanel_westBack(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +85f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +90f);
+
+        // ディスプレイの座標
+        actualPanel = extractTheaterPanel_eastFace(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 0f);
+
+        actualPanel = extractTheaterPanel_westFace(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 170.666672f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f);
+
+        actualPanel = extractTheaterPanel_eastBack(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 170.666672f);
+
+        actualPanel = extractTheaterPanel_westBack(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 0f);
+    }
+
+    @Test
+    public void test_calculateCoordinatesRect_xMINUS80_yMINUS80_xは西側だけ_yはMINUS90をまたぐ() {
+        float terminalAzimuth = -80;
+        float terminalPitch = +80;
+        target.calculateCoordinatesRect(terminalAzimuth, terminalPitch);
+
+        CoordinatesRect actualTheaterRect = extractTheaterRect(target);
+        assertThat(actualTheaterRect, notNullValue());
+        assertInDelta(actualTheaterRect.xL, -115f);
+        assertInDelta(actualTheaterRect.xR, -45f);
+        assertInDelta(actualTheaterRect.yT, -65f);
+        assertInDelta(actualTheaterRect.yB, -95f);
+
+        AstronomicalTheaterPanel actualPanel;
+
+        // 天体シアターの座標
+        actualPanel = extractTheaterPanel_eastFace(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, -65f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, -90f);
+
+        actualPanel = extractTheaterPanel_westFace(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, -115f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, -45f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, -65f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, -90f);
+
+        actualPanel = extractTheaterPanel_eastBack(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, +135f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, +65f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, -90f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, -85f);
+
+        actualPanel = extractTheaterPanel_westBack(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, -90f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, -85f);
+
+        // ディスプレイの座標
+        actualPanel = extractTheaterPanel_eastFace(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 0f);
+
+        actualPanel = extractTheaterPanel_westFace(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f - 170.666672f);
+
+        actualPanel = extractTheaterPanel_eastBack(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 1024f - 170.666672f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f);
+
+        actualPanel = extractTheaterPanel_westBack(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 0f);
+    }
+
+    @Test
+    public void test_calculateCoordinatesRect_x170_y50_xは180度線をまたぐ_yは90もMINUS90もまたがない() {
         float terminalAzimuth = +170;
         float terminalPitch = -50;
         target.calculateCoordinatesRect(terminalAzimuth, terminalPitch);
@@ -245,73 +509,139 @@ public class AstronomicalTheaterTest {
     }
 
     @Test
-    public void test_calculateCoordinatesRect_xMINUS170_y50_180度線をまたぐ() {
-        float terminalAzimuth = -170;
-        float terminalPitch = -50;
+    public void test_calculateCoordinatesRect_x170_y80_xは180度線をまたぐ_yは90をまたぐ() {
+        float terminalAzimuth = +170;
+        float terminalPitch = -80;
         target.calculateCoordinatesRect(terminalAzimuth, terminalPitch);
 
         CoordinatesRect actualTheaterRect = extractTheaterRect(target);
         assertThat(actualTheaterRect, notNullValue());
-        assertInDelta(actualTheaterRect.xL, +155f);
-        assertInDelta(actualTheaterRect.xR, -135f);
-        assertInDelta(actualTheaterRect.yT, +65f);
-        assertInDelta(actualTheaterRect.yB, +35f);
+        assertInDelta(actualTheaterRect.xL, +135f);
+        assertInDelta(actualTheaterRect.xR, -155f);
+        assertInDelta(actualTheaterRect.yT, +95f);
+        assertInDelta(actualTheaterRect.yB, +65f);
 
         AstronomicalTheaterPanel actualPanel;
 
         // 天体シアターの座標
         actualPanel = extractTheaterPanel_eastFace(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, +155f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, +135f);
         assertInDelta(actualPanel.horizontalCoordinatesRect.xR, +180f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +65f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +35f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +90f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +65f);
 
         actualPanel = extractTheaterPanel_westFace(target);
         assertInDelta(actualPanel.horizontalCoordinatesRect.xL, -180f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, -135f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +65f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +35f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, -155f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +90f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +65f);
 
         actualPanel = extractTheaterPanel_eastBack(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, +25f);
         assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +85f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +90f);
 
         actualPanel = extractTheaterPanel_westBack(target);
         assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, -45f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +85f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +90f);
 
         // ディスプレイの座標
         actualPanel = extractTheaterPanel_eastFace(target);
         assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 214.28572f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 385.7142857f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 170.666672f);
         assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f);
 
         actualPanel = extractTheaterPanel_westFace(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 214.28572f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 385.7142857f);
         assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 170.666672f);
         assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f);
 
         actualPanel = extractTheaterPanel_eastBack(target);
         assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 214.285721f); // 600 - 385.7142857f);
         assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 170.666672f);
 
         actualPanel = extractTheaterPanel_westBack(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 214.285721f); // 600 - 385.7142857f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
         assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 170.666672f);
     }
 
     @Test
-    public void test_calculateCoordinatesRect_x10_y50_ゼロ度線をまたぐ() {
+    public void test_calculateCoordinatesRect_x170_yMINUS80_xは180度線をまたぐ_yはMINUS90をまたぐ() {
+        float terminalAzimuth = +170;
+        float terminalPitch = +80;
+        target.calculateCoordinatesRect(terminalAzimuth, terminalPitch);
+
+        CoordinatesRect actualTheaterRect = extractTheaterRect(target);
+        assertThat(actualTheaterRect, notNullValue());
+        assertInDelta(actualTheaterRect.xL, +135f);
+        assertInDelta(actualTheaterRect.xR, -155f);
+        assertInDelta(actualTheaterRect.yT, -65f);
+        assertInDelta(actualTheaterRect.yB, -95f);
+
+        AstronomicalTheaterPanel actualPanel;
+
+        // 天体シアターの座標
+        actualPanel = extractTheaterPanel_eastFace(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, +135f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, +180f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, -65f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, -90f);
+
+        actualPanel = extractTheaterPanel_westFace(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, -180f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, -155f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, -65f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, -90f);
+
+        actualPanel = extractTheaterPanel_eastBack(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, +25f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, -90f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, -85f);
+
+        actualPanel = extractTheaterPanel_westBack(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, -45f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, -90f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, -85f);
+
+        // ディスプレイの座標
+        actualPanel = extractTheaterPanel_eastFace(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 385.7142857f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f - 170.666672f);
+
+        actualPanel = extractTheaterPanel_westFace(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 385.7142857f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f - 170.666672f);
+
+        actualPanel = extractTheaterPanel_eastBack(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 214.285721f); // 600 - 385.7142857f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 1024f - 170.666672f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f);
+
+        actualPanel = extractTheaterPanel_westBack(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 214.285721f); // 600 - 385.7142857f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 1024f - 170.666672f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f);
+    }
+
+    @Test
+    public void test_calculateCoordinatesRect_x10_y50_xはゼロ度線をまたぐ_yは90もMINUS90もまたがない() {
         float terminalAzimuth = +10;
         float terminalPitch = -50;
         target.calculateCoordinatesRect(terminalAzimuth, terminalPitch);
@@ -377,81 +707,15 @@ public class AstronomicalTheaterTest {
     }
 
     @Test
-    public void test_calculateCoordinatesRect_xMINUS10_y50_ゼロ度線をまたぐ() {
-        float terminalAzimuth = -10;
-        float terminalPitch = -50;
-        target.calculateCoordinatesRect(terminalAzimuth, terminalPitch);
-
-        CoordinatesRect actualTheaterRect = extractTheaterRect(target);
-        assertThat(actualTheaterRect, notNullValue());
-        assertInDelta(actualTheaterRect.xL, -45f);
-        assertInDelta(actualTheaterRect.xR, +25f);
-        assertInDelta(actualTheaterRect.yT, +65f);
-        assertInDelta(actualTheaterRect.yB, +35f);
-
-        AstronomicalTheaterPanel actualPanel;
-
-        // 天体シアターの座標
-        actualPanel = extractTheaterPanel_eastFace(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, +25f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +65f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +35f);
-
-        actualPanel = extractTheaterPanel_westFace(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, -45f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +65f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +35f);
-
-        actualPanel = extractTheaterPanel_eastBack(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, 0f);
-
-        actualPanel = extractTheaterPanel_westBack(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, 0f);
-
-        // ディスプレイの座標
-        actualPanel = extractTheaterPanel_eastFace(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 385.7142857f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f);
-
-        actualPanel = extractTheaterPanel_westFace(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 385.7142857f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f);
-
-        actualPanel = extractTheaterPanel_eastBack(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 0f);
-
-        actualPanel = extractTheaterPanel_westBack(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 0f);
-    }
-
-    @Test
-    public void test_calculateCoordinatesRect_xMINUS10_y50_ゼロ度線をまたいで北極点もまたぐ() {
-        float terminalAzimuth = -10;
+    public void test_calculateCoordinatesRect_x10_y80_xはゼロ度線をまたぐ_yは90をまたぐ() {
+        float terminalAzimuth = +10;
         float terminalPitch = -80;
         target.calculateCoordinatesRect(terminalAzimuth, terminalPitch);
 
         CoordinatesRect actualTheaterRect = extractTheaterRect(target);
         assertThat(actualTheaterRect, notNullValue());
-        assertInDelta(actualTheaterRect.xL, -45f);
-        assertInDelta(actualTheaterRect.xR, +25f);
+        assertInDelta(actualTheaterRect.xL, -25f);
+        assertInDelta(actualTheaterRect.xR, +45f);
         assertInDelta(actualTheaterRect.yT, +95f);
         assertInDelta(actualTheaterRect.yB, +65f);
 
@@ -460,250 +724,118 @@ public class AstronomicalTheaterTest {
         // 天体シアターの座標
         actualPanel = extractTheaterPanel_eastFace(target);
         assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, +25f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, +45f);
         assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +90f);
         assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +65f);
 
         actualPanel = extractTheaterPanel_westFace(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, -45f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, -25f);
         assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
         assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +90f);
         assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +65f);
 
         actualPanel = extractTheaterPanel_eastBack(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, +180f);
         assertInDelta(actualPanel.horizontalCoordinatesRect.xR, +155f);
         assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +85f);
         assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +90f);
 
         actualPanel = extractTheaterPanel_westBack(target);
         assertInDelta(actualPanel.horizontalCoordinatesRect.xL, -135f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, -180f);
         assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +85f);
         assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +90f);
 
         // ディスプレイの座標
         actualPanel = extractTheaterPanel_eastFace(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 385.7142857f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 170.6666667f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f);
-
-        actualPanel = extractTheaterPanel_westFace(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 385.7142857f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 170.6666667f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f);
-
-        actualPanel = extractTheaterPanel_eastBack(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 385.7142857f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 170.6666667f);
-
-        actualPanel = extractTheaterPanel_westBack(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 385.7142857f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 170.6666667f);
-    }
-
-    @Test
-    public void test_calculateCoordinatesRect_xMINUS10_y50_180度線をまたいで北極点もまたぐ() {
-        float terminalAzimuth = -170;
-        float terminalPitch = -80;
-        target.calculateCoordinatesRect(terminalAzimuth, terminalPitch);
-
-        CoordinatesRect actualTheaterRect = extractTheaterRect(target);
-        assertThat(actualTheaterRect, notNullValue());
-        assertInDelta(actualTheaterRect.xL, +155f);
-        assertInDelta(actualTheaterRect.xR, -135f);
-        assertInDelta(actualTheaterRect.yT, +95f);
-        assertInDelta(actualTheaterRect.yB, +65f);
-
-        AstronomicalTheaterPanel actualPanel;
-
-        // 天体シアターの座標
-        actualPanel = extractTheaterPanel_eastFace(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, +155f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, +180f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +90f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +65f);
-
-        actualPanel = extractTheaterPanel_westFace(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, -180f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, -135f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +90f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +65f);
-
-        actualPanel = extractTheaterPanel_eastBack(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, +25f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, +180f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +85f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +90f);
-
-        actualPanel = extractTheaterPanel_westBack(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, -180f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, -45f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +85f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +90f);
-
-        // ディスプレイの座標
-        actualPanel = extractTheaterPanel_eastFace(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 214.2857143f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 170.6666667f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024);
-
-        actualPanel = extractTheaterPanel_westFace(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 214.2857143f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 170.6666667f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f);
-
-        actualPanel = extractTheaterPanel_eastBack(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 214.2857143f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 170.6666667f);
-
-        actualPanel = extractTheaterPanel_westBack(target);
         assertInDelta(actualPanel.displayCoordinatesRect.xL, 214.2857143f);
         assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 170.666672f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f);
+
+        actualPanel = extractTheaterPanel_westFace(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 214.2857143f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 170.666672f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f);
+
+        actualPanel = extractTheaterPanel_eastBack(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 600 - 214.285721f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
         assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 170.6666667f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 170.666672f);
+
+        actualPanel = extractTheaterPanel_westBack(target);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600 - 214.285721f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 170.666672f);
     }
 
     @Test
-    public void test_calculateCoordinatesRect_x80_yMINUS80_北極点もまたぐ() {
-        float terminalAzimuth = +80;
-        float terminalPitch = -80;
+    public void test_calculateCoordinatesRect_x10_yMINUS80_xはゼロ度線をまたぐ_yはMINUS90をまたぐ() {
+        float terminalAzimuth = +10;
+        float terminalPitch = +80;
         target.calculateCoordinatesRect(terminalAzimuth, terminalPitch);
 
         CoordinatesRect actualTheaterRect = extractTheaterRect(target);
         assertThat(actualTheaterRect, notNullValue());
-        assertInDelta(actualTheaterRect.xL, +45f);
-        assertInDelta(actualTheaterRect.xR, +115f);
-        assertInDelta(actualTheaterRect.yT, +95f);
-        assertInDelta(actualTheaterRect.yB, +65f);
-
-        AstronomicalTheaterPanel actualPanel;
-
-        // 天体シアターの座標
-        actualPanel = extractTheaterPanel_eastFace(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, +45f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, +115f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +90f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +65f);
-
-        actualPanel = extractTheaterPanel_westFace(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +90f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +65f);
-
-        actualPanel = extractTheaterPanel_eastBack(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, -45f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, -115f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +85f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +90f);
-
-        actualPanel = extractTheaterPanel_westBack(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +85f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +90f);
-
-        // ディスプレイの座標
-        actualPanel = extractTheaterPanel_eastFace(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 170.6666667f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024);
-
-        actualPanel = extractTheaterPanel_westFace(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 0f);
-
-        actualPanel = extractTheaterPanel_eastBack(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 170.6666667f);
-
-        actualPanel = extractTheaterPanel_westBack(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 0f);
-    }
-
-    @Test
-    public void test_calculateCoordinatesRect_xMINUS80_yMINUS80_北極点もまたぐ() {
-        float terminalAzimuth = -80;
-        float terminalPitch = -80;
-        target.calculateCoordinatesRect(terminalAzimuth, terminalPitch);
-
-        CoordinatesRect actualTheaterRect = extractTheaterRect(target);
-        assertThat(actualTheaterRect, notNullValue());
-        assertInDelta(actualTheaterRect.xL, -115f);
-        assertInDelta(actualTheaterRect.xR, -45f);
-        assertInDelta(actualTheaterRect.yT, +95f);
-        assertInDelta(actualTheaterRect.yB, +65f);
+        assertInDelta(actualTheaterRect.xL, -25f);
+        assertInDelta(actualTheaterRect.xR, +45f);
+        assertInDelta(actualTheaterRect.yT, -65f);
+        assertInDelta(actualTheaterRect.yB, -95f);
 
         AstronomicalTheaterPanel actualPanel;
 
         // 天体シアターの座標
         actualPanel = extractTheaterPanel_eastFace(target);
         assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +90f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +65f);
-
-        actualPanel = extractTheaterPanel_westFace(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, -115f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, -45f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +90f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +65f);
-
-        actualPanel = extractTheaterPanel_eastBack(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +85f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +90f);
-
-        actualPanel = extractTheaterPanel_westBack(target);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, +115f);
         assertInDelta(actualPanel.horizontalCoordinatesRect.xR, +45f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, +85f);
-        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, +90f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, -65f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, -90f);
+
+        actualPanel = extractTheaterPanel_westFace(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, -25f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, -65f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, -90f);
+
+        actualPanel = extractTheaterPanel_eastBack(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, +180f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, +155f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, -90f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, -85f);
+
+        actualPanel = extractTheaterPanel_westBack(target);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xL, -135f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.xR, -180f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yT, -90f);
+        assertInDelta(actualPanel.horizontalCoordinatesRect.yB, -85f);
 
         // ディスプレイの座標
         actualPanel = extractTheaterPanel_eastFace(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 214.2857143f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
         assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f - 170.666672f);
 
         actualPanel = extractTheaterPanel_westFace(target);
         assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 170.6666667f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 214.2857143f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f - 170.666672f);
 
         actualPanel = extractTheaterPanel_eastBack(target);
-        assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 0f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xL, 600 - 214.285721f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 1024f - 170.666672f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f);
 
         actualPanel = extractTheaterPanel_westBack(target);
         assertInDelta(actualPanel.displayCoordinatesRect.xL, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yT, 0f);
-        assertInDelta(actualPanel.displayCoordinatesRect.yB, 170.6666667f);
+        assertInDelta(actualPanel.displayCoordinatesRect.xR, 600 - 214.285721f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yT, 1024f - 170.666672f);
+        assertInDelta(actualPanel.displayCoordinatesRect.yB, 1024f);
     }
 
     private void assertInDelta(float actual, float expect) {
