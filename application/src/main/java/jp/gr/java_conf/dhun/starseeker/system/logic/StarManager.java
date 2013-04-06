@@ -75,7 +75,7 @@ public class StarManager {
     // }
 
     public void relocate(double longitude, double latitude, Calendar baseCalendar) {
-        starLocator = new StarLocator(longitude, latitude, baseCalendar.getTime()); // FIXME UTC? localtime?
+        starLocator = new StarLocator(longitude, latitude, baseCalendar.getTime()); // UTC
         for (Star star : stars) {
             starLocator.locate(star);
             star.setDisplayText(String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s]" //
