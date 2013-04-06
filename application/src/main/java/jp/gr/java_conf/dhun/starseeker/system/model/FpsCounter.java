@@ -27,7 +27,7 @@ public class FpsCounter {
     public void finish() {
         finishTime = System.currentTimeMillis();
 
-        curFps = 1000 / (finishTime - startTime);
+        curFps = 1000f / (finishTime - startTime);
         minFps = Math.min(curFps, minFps);
         maxFps = Math.max(curFps, maxFps);
     }
