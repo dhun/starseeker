@@ -43,7 +43,36 @@ public class StarManager {
             Star star = new Star(starEntity);
             stars.add(star);
         }
+        // stars.add(newMock(+10, +80)); // FIXME モック
+        // stars.add(newMock(-10, +75));
+        // stars.add(newMock(+10, -80));
+        // stars.add(newMock(-10, -75));
     }
+
+    // private Star newMock(final float azimuthFix, final float altitudeFix) { // FIXME モック
+    // return new Star(azimuthFix, altitudeFix) {
+    //
+    // @Override
+    // public float getAzimuth() {
+    // return azimuthFix;
+    // }
+    //
+    // @Override
+    // public float getAltitude() {
+    // return altitudeFix;
+    // }
+    //
+    // @Override
+    // public float getMagnitude() {
+    // return -1;
+    // }
+    //
+    // @Override
+    // public String getName() {
+    // return "モック";
+    // }
+    // };
+    // }
 
     public void relocate(double longitude, double latitude, Calendar baseCalendar) {
         starLocator = new StarLocator(longitude, latitude, baseCalendar.getTime()); // FIXME UTC? localtime?
