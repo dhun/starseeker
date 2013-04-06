@@ -130,6 +130,10 @@ public class AstronomicalTheater {
 
         assignPanelTheaterRect();
         assignPanelDisplayRect();
+
+        for (AstronomicalTheaterPanel panel : panels) {
+            panel.prepareContains();
+        }
     }
 
     private float adjustAzimuth(float azimuth) {

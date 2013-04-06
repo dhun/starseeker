@@ -27,6 +27,9 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
     protected final CoordinatesRect horizontalCoordinatesRect = new CoordinatesRect(); // パネルの地平座標
     protected final CoordinatesRect displayCoordinatesRect = new CoordinatesRect();    // パネルのディスプレイ座標(pixel)
 
+    private boolean xlSmallerThanXR;
+    private boolean ybSmallerThanYT;
+
     // 描画系
     private final Paint gridPaint;
 
@@ -65,6 +68,11 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
         }
     }
 
+    public void prepareContains() {
+        xlSmallerThanXR = (horizontalCoordinatesRect.xL < horizontalCoordinatesRect.xR);
+        ybSmallerThanYT = (horizontalCoordinatesRect.yB < horizontalCoordinatesRect.yT);
+    }
+
     /**
      * 指定された星の地平座標がパネルに含まれるかを判定します.<br/>
      * 
@@ -75,7 +83,7 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
     public boolean contains(Star star) {
         float starAzimuth = star.getAzimuth();
         float starAltitude = star.getAltitude();
-        if (horizontalCoordinatesRect.xL < horizontalCoordinatesRect.xR) {
+        if (xlSmallerThanXR) {
             if (starAzimuth < horizontalCoordinatesRect.xL || horizontalCoordinatesRect.xR < starAzimuth) {
                 return false;
             }
@@ -84,7 +92,7 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
                 return false;
             }
         }
-        if (horizontalCoordinatesRect.yB < horizontalCoordinatesRect.yT) {
+        if (ybSmallerThanYT) {
             if (starAltitude < horizontalCoordinatesRect.yB || horizontalCoordinatesRect.yT < starAltitude) {
                 return false;
             }
