@@ -262,6 +262,8 @@ public class AstronomicalTheaterActivity extends Activity //
                 @Override
                 public void onChooseData(Float data) {
                     config.setExtractLowerStarMagnitude(data);
+                    masterTheaterView.configureExtractLowerstarMagnitude(data);
+                    secondTheaterView.configureExtractLowerstarMagnitude(data);
                 }
             });
             return builder.create();

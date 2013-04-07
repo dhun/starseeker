@@ -88,6 +88,15 @@ public class StarSeekerEngine implements //
         starManager.relocate(longitude, latitude, baseCalendar);
     }
 
+    /**
+     * 抽出する星の等級の下限値を設定します.<br/>
+     * 
+     * @param magnitude 等級
+     */
+    public void configureExtractLowerstarMagnitude(float magnitude) {
+        starManager.extract(magnitude);
+    }
+
     // ＞＞＞ 開発中のコード
     private final Paint paint = new Paint() {
         {

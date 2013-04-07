@@ -60,7 +60,7 @@ public class StarManager {
             addStar(newMock(-10, -75));
         }
 
-        extractStarIterator = new ExtractStarIterator(extractStarMagnitude);
+        extract(extractStarMagnitude);
     }
 
     private void addStar(Star star) {
@@ -73,9 +73,13 @@ public class StarManager {
         starSet.add(star);
     }
 
+    public void extract(float extractStarMagnitude) {
+        extractStarIterator = new ExtractStarIterator(extractStarMagnitude);
+    }
+
     public void relocate(double longitude, double latitude, Calendar baseCalendar) {
         // 星イテレータはスレッドセーフじゃないので、再配置用のインスタンスを生成
-        ExtractStarIterator extractStarIterator = new ExtractStarIterator(this.extractStarIterator.getExtractStarMagnitude());
+        ExtractStarIterator extractStarIterator = new ExtractStarIterator(1000); // TODO 今はすべての星を再配置. this.extractStarIterator.getExtractStarMagnitude());
 
         // 星ロケータは、観測地点と観測日時に対してインスタンスが必要になる
         StarLocator starLocator = new StarLocator(longitude, latitude, baseCalendar.getTime()); // UTC
