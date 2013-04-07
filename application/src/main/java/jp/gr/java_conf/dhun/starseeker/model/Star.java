@@ -49,7 +49,7 @@ public class Star {
         this(new StarEntity());
         this.starEntity.setRightAscension(rightAscension);
         this.starEntity.setDeclination(declination);
-        this.starEntity.setMagnitude(null);
+        this.starEntity.setMagnitude(StarEntity.MAGGNITUDE_UNKNOWN_VALUE);
         this.starEntity.setName(null);
     }
 

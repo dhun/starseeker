@@ -28,6 +28,7 @@ public class MakeInitialDB {
     private static final String SQL_ROOT_DIR = "initial_data";
 
     private final File databaseFile = new File("initial_data", "starseeker.db");
+    private final File databaseDump = new File("initial_data", "starseeker.dump");
 
     public static void main(String[] args) {
         MakeInitialDB instance = new MakeInitialDB();
@@ -49,6 +50,10 @@ public class MakeInitialDB {
 
             executeConvertSqlStatements();
 
+            dropTables();
+
+            dumpDatabase();
+
             System.out.println("normal end,");
 
         } catch (Throwable t) {
@@ -58,6 +63,10 @@ public class MakeInitialDB {
             System.out.println("abnormal end,");
             throw new RuntimeException(t);
         }
+    }
+
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection("jdbc:sqlite:" + databaseFile.getPath());
     }
 
     private void executeSqlFiles(String dirPath) throws ClassNotFoundException, SQLException, IOException, InterruptedException {
@@ -112,7 +121,7 @@ public class MakeInitialDB {
         Connection connection = null;
         try {
             // create a database connection
-            connection = DriverManager.getConnection("jdbc:sqlite:" + databaseFile.getPath());
+            connection = getConnection();
             connection.setAutoCommit(false);
 
             convertStarData(connection);
@@ -162,6 +171,67 @@ public class MakeInitialDB {
             update.setFloat(2, declination);
             update.setInt(3, rs.getInt("horoscope_id"));
             update.execute();
+        }
+    }
+
+    private void dropTables() throws ClassNotFoundException, SQLException {
+        Connection connection = null;
+        try {
+            // create a database connection
+            connection = getConnection();
+            // connection.setAutoCommit(false);
+
+            dropTable(connection, "constellation");
+            dropTable(connection, "constellation_name");
+            dropTable(connection, "custom_name");
+            dropTable(connection, "fk_data");
+            dropTable(connection, "fk_name");
+
+            // connection.commit();
+
+        } catch (SQLException e) {
+            // connection.rollback();
+            throw e;
+
+        } finally {
+            if (connection != null) {
+                connection.close();
+            }
+        }
+    }
+
+    private void dropTable(Connection connection, String tableName) throws SQLException {
+        System.out.println("---- drop table : " + tableName + " ----");
+
+        PreparedStatement statement = connection.prepareStatement("drop table " + tableName);
+        statement.execute();
+    }
+
+    private void dumpDatabase() throws IOException, InterruptedException, SQLException {
+        System.out.println("---- dump database ----");
+
+        ProcessBuilder builder;
+        builder = new ProcessBuilder("cmd", "/c", SQLITE_PATH, "-batch", "-bail", databaseFile.getAbsolutePath(), ".dump", ">", databaseDump.getAbsolutePath());
+        builder.redirectErrorStream(true);
+        Process process = builder.start();
+
+        BufferedReader standardIn = null;
+        try {
+            standardIn = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
+            String line;
+            while (null != (line = standardIn.readLine())) {
+                System.out.println(line);
+            }
+            int result = process.waitFor();
+            if (result != 0) {
+                throw new SQLException("データベースファイルのダンプ中に例外が発生した");
+            }
+            return;
+
+        } finally {
+            if (standardIn != null) {
+                standardIn.close();
+            }
         }
     }
 }

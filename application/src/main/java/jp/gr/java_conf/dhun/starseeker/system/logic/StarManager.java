@@ -11,8 +11,10 @@ import java.util.Set;
 
 import jp.gr.java_conf.dhun.starseeker.logic.StarLocator;
 import jp.gr.java_conf.dhun.starseeker.model.Star;
-import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.StarDao;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.DatabaseHelper;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.StarDataDao;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarEntity;
+import android.content.Context;
 
 /**
  * @author jun
@@ -20,15 +22,18 @@ import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarEntity;
  */
 public class StarManager {
 
-    private final StarDao starDao;
+    private final DatabaseHelper databaseHelper;
+    private final StarDataDao starDataDao;
+
     private final Set<Star> stars;
 
     private StarLocator starLocator;
 
     DecimalFormat angleFormat;
 
-    public StarManager() {
-        this.starDao = new StarDao();
+    public StarManager(Context context) {
+        this.databaseHelper = new DatabaseHelper(context);
+        this.starDataDao = new StarDataDao(this.databaseHelper.getReadableDatabase());
         this.stars = new HashSet<Star>();
 
         angleFormat = new DecimalFormat("0.00");
@@ -39,7 +44,7 @@ public class StarManager {
 
     public void configure(float magnitude) {
         stars.clear();
-        for (StarEntity starEntity : starDao.findAll()) {
+        for (StarEntity starEntity : starDataDao.findAll()) {
             Star star = new Star(starEntity);
             stars.add(star);
         }

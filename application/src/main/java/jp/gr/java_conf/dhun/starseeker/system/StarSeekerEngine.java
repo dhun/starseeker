@@ -16,6 +16,7 @@ import jp.gr.java_conf.dhun.starseeker.system.model.FpsCounter;
 import jp.gr.java_conf.dhun.starseeker.system.model.panel.AstronomicalTheater;
 import jp.gr.java_conf.dhun.starseeker.util.DateTimeUtils;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -55,8 +56,8 @@ public class StarSeekerEngine implements //
     /**
      * コンストラクタ
      */
-    public StarSeekerEngine() {
-        starManager = new StarManager();
+    public StarSeekerEngine(Context context) {
+        starManager = new StarManager(context);
         starManager.configure(0);
 
         orientations = new Orientations();

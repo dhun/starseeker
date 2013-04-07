@@ -3,7 +3,6 @@
  */
 package jp.gr.java_conf.dhun.starseeker.system.persistence.entity;
 
-import jp.gr.java_conf.dhun.starseeker.model.Star;
 import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
 import android.annotation.SuppressLint;
 
@@ -16,10 +15,12 @@ import android.annotation.SuppressLint;
  */
 public class StarEntity {
 
-    private Long id;                // ID
+    public static final float MAGGNITUDE_UNKNOWN_VALUE = 7.0f;
+
+    private Integer hipNumber;      // HIP番号
     private float rightAscension;   // 赤経(α)の数値表現
     private float declination;      // 赤緯(δ)の数値表現
-    private Float magnitude;        // 等級(省略可)
+    private float magnitude;        // 等級
     private String name;            // 名前(省略可)
     private String memo;            // 備考(省略可)
 
@@ -32,15 +33,15 @@ public class StarEntity {
     /**
      * IDを取得します.<br/>
      */
-    public Long getId() {
-        return id;
+    public Integer getHipNumber() {
+        return hipNumber;
     }
 
     /**
      * IDを設定します.<br/>
      */
-    public void setId(Long id) {
-        this.id = id;
+    public void setHipNumber(Integer hipNumber) {
+        this.hipNumber = hipNumber;
     }
 
     /**
@@ -74,14 +75,14 @@ public class StarEntity {
     /**
      * 等級を取得します.<br/>
      */
-    public Float getMagnitude() {
+    public float getMagnitude() {
         return magnitude;
     }
 
     /**
      * 等級を設定します.<br/>
      */
-    public void setMagnitude(Float magnitude) {
+    public void setMagnitude(float magnitude) {
         this.magnitude = magnitude;
     }
 
@@ -142,10 +143,10 @@ public class StarEntity {
         if (obj == null) {
             return false;
         }
-        if (!(obj instanceof Star)) {
+        if (!(obj instanceof StarEntity)) {
             return false;
         }
-        Star other = (Star) obj;
+        StarEntity other = (StarEntity) obj;
         if (Float.floatToIntBits(rightAscension) != Float.floatToIntBits(other.getRightAscension())) {
             return false;
         }
@@ -153,5 +154,18 @@ public class StarEntity {
             return false;
         }
         return true;
+    }
+
+    public static final String TABLE_NAME = "star_data";
+
+    public static class FieldNames {
+        public static final String HIP_NUMBER = "hip_num";
+        public static final String RIGHT_ASCENSION = "right_ascension";
+        public static final String DECLINATION = "declination";
+        public static final String MAGNITUDE = "magnitude";
+        public static final String NAME = "name";
+        public static final String MEMO = "memo";
+
+        public static final String[] ALL_COLUMNS = { HIP_NUMBER, RIGHT_ASCENSION, DECLINATION, MAGNITUDE, NAME, MEMO };
     }
 }

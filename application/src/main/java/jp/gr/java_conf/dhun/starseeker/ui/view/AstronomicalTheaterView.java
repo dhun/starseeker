@@ -52,7 +52,7 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
         getHolder().addCallback(this);
 
         // スターシーカーシステムのエンジンを設定
-        starSeekerEngine = new StarSeekerEngine();
+        starSeekerEngine = new StarSeekerEngine(getContext());
 
         // 端末ステートリゾルバを設定
         int displayRotation = getDisplayRotation();

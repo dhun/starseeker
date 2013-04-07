@@ -45,6 +45,20 @@ public final class LogUtils {
         Log.i(APP_NAME + ":" + clazz.getSimpleName(), message);
     }
 
+    public static final void w(Class<?> clazz, String message) {
+        if (!isInitialized()) {
+            return;
+        }
+        Log.w(APP_NAME + ":" + clazz.getSimpleName(), message);
+    }
+
+    public static final void w(Class<?> clazz, String message, Throwable throwable) {
+        if (!isInitialized()) {
+            return;
+        }
+        Log.w(APP_NAME + ":" + clazz.getSimpleName(), message, throwable);
+    }
+
     public static final void e(Class<?> clazz, String message) {
         if (!isInitialized()) {
             return;
