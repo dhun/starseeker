@@ -7,7 +7,7 @@ create table star_data (
   , magnitude                   REAL    not null    -- 等級
   , name                        TEXT                -- 通称
   , memo                        TEXT                -- 備考
-  , constraint PK_fk_data primary key ( hip_num )
+  , constraint PK_star_data primary key ( hip_num )
 );
 
 insert into star_data
@@ -17,7 +17,8 @@ insert into star_data
          , a.magnitude
          , b.name
          , b.memo
-      from fk_data a
+    --from fk_data a
+      from nasa_star_data a
       left join custom_name b
         on b.hip_num = a.hip_num
     ;

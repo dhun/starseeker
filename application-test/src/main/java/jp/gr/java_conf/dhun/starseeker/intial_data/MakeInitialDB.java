@@ -65,17 +65,25 @@ public class MakeInitialDB {
             if (databaseFile.exists()) {
                 databaseFile.delete();
             }
+            if (databaseDump.exists()) {
+                databaseDump.delete();
+            }
 
             executeSqlFiles(SQL_ROOT_DIR + File.separator + "original_data");
             executeSqlFiles(SQL_ROOT_DIR + File.separator + "convert_starseeker_database");
 
             executeConvertSqlStatements();
 
-            dropTables();
+            boolean dropNotUsed = false;
+            if (dropNotUsed) {
+                dropTables();
+            }
 
-            dumpDatabase();
+            dumpTables();
 
-            System.out.println("normal end,");
+            System.out.println("");
+            System.out.println("normal end.");
+            System.out.println("");
 
             StringBuilder message = new StringBuilder();
             message.append("次の問題点が残っています.");
@@ -90,10 +98,13 @@ public class MakeInitialDB {
             System.out.print(message.toString());
 
         } catch (Throwable t) {
-            if (databaseFile.exists()) {
-                databaseFile.delete();
+            // if (databaseFile.exists()) {
+            // databaseFile.delete();
+            // }
+            if (databaseDump.exists()) {
+                databaseDump.delete();
             }
-            System.out.println("abnormal end,");
+            System.out.println("abnormal end.");
             throw new RuntimeException(t);
         }
     }
@@ -153,7 +164,6 @@ public class MakeInitialDB {
     private void executeConvertSqlStatements() throws ClassNotFoundException, SQLException {
         Connection connection = null;
         try {
-            // create a database connection
             connection = getConnection();
             connection.setAutoCommit(false);
 
@@ -240,11 +250,17 @@ public class MakeInitialDB {
         statement.execute();
     }
 
-    private void dumpDatabase() throws IOException, InterruptedException, SQLException {
-        System.out.println("---- dump database ----");
+    private void dumpTables() throws IOException, InterruptedException, SQLException {
+        dumpTable("star_data");
+        dumpTable("horoscope_data");
+        dumpTable("horoscope_path");
+    }
+
+    private void dumpTable(String tableName) throws IOException, InterruptedException, SQLException {
+        System.out.println("---- dump table : " + tableName + " ----");
 
         ProcessBuilder builder;
-        builder = new ProcessBuilder("cmd", "/c", SQLITE_PATH, "-batch", "-bail", databaseFile.getAbsolutePath(), ".dump", ">", databaseDump.getAbsolutePath());
+        builder = new ProcessBuilder("cmd", "/c", SQLITE_PATH, "-batch", "-bail", databaseFile.getAbsolutePath(), ".dump " + tableName, ">>", databaseDump.getAbsolutePath());
         builder.redirectErrorStream(true);
         Process process = builder.start();
 

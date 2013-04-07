@@ -9,6 +9,9 @@ create table custom_name (
 
 delete from custom_name ;
 
-insert into custom_name ( hip_num, name, memo ) values ('122', 'シリウス', null);
+-- insert into custom_name ( hip_num, name, memo ) values ('', '', null);
+insert into custom_name ( hip_num, name, memo ) values ('11767', 'ポラリス', '北極星');
+insert into custom_name ( hip_num, name, memo ) values ('32349', 'シリウス', null);
+insert into custom_name ( hip_num, name, memo ) values ('30438', 'カノープス', null);
 
 select count(*) from custom_name ;

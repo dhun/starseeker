@@ -102,20 +102,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             StringBuilder sqlbuBuilder = new StringBuilder();
             String line;
 
+            database.beginTransaction();
+
             while (null != (line = bufferedReader.readLine())) {
                 line = line.replaceAll("--(.*)$", "/* \1 */");
                 sqlbuBuilder.append(line);
                 if (line.equals("BEGIN TRANSACTION;")) {
-                    // トランザクションの開始をDCLで実行すると、次のエラーが発生した
+                    // トランザクション処理はスキップ
                     // Caused by: android.database.sqlite.SQLiteException: Can't upgrade read-only database from version 0 to 2: /data/data/jp.gr.java_conf.dhun.starseeker/databases/starseeker.db
-                    LogUtils.d(getClass(), line);
-                    database.beginTransaction();
+                    LogUtils.d(getClass(), "skipped : " + line);
                     sqlbuBuilder.setLength(0);
 
                 } else if (line.equals("COMMIT;")) {
-                    // コミットはDCLのままでも例外は発生しなかったが、トランザクション開始をメソッド呼び出しにしたためこちらも併せた.
-                    LogUtils.d(getClass(), line);
-                    database.setTransactionSuccessful();
+                    // トランザクション処理はスキップ
+                    LogUtils.d(getClass(), "skipped : " + line);
                     sqlbuBuilder.setLength(0);
 
                 } else if (line.contains(";")) {
@@ -129,6 +129,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     sqlbuBuilder.setLength(0);
                 }
             }
+            database.setTransactionSuccessful();
 
         } catch (IOException e) {
             LogUtils.e(getClass(), "SQLファイルの実行で例外が発生しました. path=[" + sqlFile.getPath() + "]", e);
