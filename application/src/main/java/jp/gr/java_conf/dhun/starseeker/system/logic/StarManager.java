@@ -29,7 +29,7 @@ public class StarManager {
 
     private StarLocator starLocator;
 
-    DecimalFormat angleFormat;
+    private final DecimalFormat angleFormat;
 
     public StarManager(Context context) {
         this.databaseHelper = new DatabaseHelper(context);
@@ -83,10 +83,15 @@ public class StarManager {
         starLocator = new StarLocator(longitude, latitude, baseCalendar.getTime()); // UTC
         for (Star star : stars) {
             starLocator.locate(star);
-            star.setDisplayText(String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s]" //
-                    , angleFormat.format(star.getAzimuth())  // 方位(A)
-                    , angleFormat.format(star.getAltitude()) // 高度(h)
-                    , star.getName()));
+            if (star.getMagnitude() <= 2) {
+                // ２等星以上なら画面に名前と位置を表示
+                star.setDisplayText(String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s]" //
+                        , angleFormat.format(star.getAzimuth())  // 方位(A)
+                        , angleFormat.format(star.getAltitude()) // 高度(h)
+                        , star.getName()));
+            } else {
+                star.setDisplayText(null);
+            }
 
         }
     }

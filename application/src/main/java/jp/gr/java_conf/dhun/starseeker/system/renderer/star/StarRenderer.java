@@ -41,9 +41,12 @@ public class StarRenderer {
         final float radius = resolveStarRadius(star);
         canvas.drawCircle(star.getDisplayX(), star.getDisplayY(), radius, starPaint);
 
-        final float textMarginX = radius + 3;
-        final float textMarginY = radius + 3;
-        canvas.drawText(star.getDisplayText(), star.getDisplayX() + textMarginX, star.getDisplayY() + textMarginY, namePaint);
+        String displayText = star.getDisplayText();
+        if (null != displayText) {
+            final float textMarginX = radius + 3;
+            final float textMarginY = radius + 3;
+            canvas.drawText(displayText, star.getDisplayX() + textMarginX, star.getDisplayY() + textMarginY, namePaint);
+        }
     }
 
     private float resolveStarRadius(Star star) {
