@@ -1,4 +1,4 @@
--- 恒星名データ
+-- 星座名データ
 -- 89行目が重複している
 drop table if exists constellation_name ;
 create table constellation_name (

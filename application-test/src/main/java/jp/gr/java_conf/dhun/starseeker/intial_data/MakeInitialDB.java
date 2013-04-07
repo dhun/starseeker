@@ -19,6 +19,27 @@ import java.util.Arrays;
 import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
 
 /**
+ * DB初期化用のダンプファイルを生成するプログラム.<br/>
+ * 次の問題点が残っています.<br/>
+ * <ul>
+ * <li>130-constellation_name.sql(星座名データ)
+ * <ul>
+ * <li>horoscope_code="Ser"が重複しており89行目をコメントアウトしているため「'Serpens(Cauda)', 'へび(尾)'」が未定義</li>
+ * </ul>
+ * </li>
+ * <li>110-fk_name.sql(恒星名データ)
+ * <ul>
+ * <li>horoscope_code="Ser"が重複しているため、へび座を構成する星の見分けがつかない</li>
+ * </ul>
+ * </li>
+ * </li>
+ * <li>200-custom_name.sql(星の名前)
+ * <ul>
+ * <li>シリウス以外の星を定義していない</li>
+ * </ul>
+ * </li>
+ * </ul>
+ * 
  * @author jun
  * 
  */
@@ -55,6 +76,18 @@ public class MakeInitialDB {
             dumpDatabase();
 
             System.out.println("normal end,");
+
+            StringBuilder message = new StringBuilder();
+            message.append("次の問題点が残っています.");
+            message.append("\n");
+            message.append("\n・130-constellation_name.sql(星座名データ)");
+            message.append("\n    ・horoscope_code='Ser'が重複しており89行目をコメントアウトしているため「'Serpens(Cauda)', 'へび(尾)'」が未定義");
+            message.append("\n・110-fk_name.sql(恒星名データ) ");
+            message.append("\n    ・horoscope_code='Ser'が重複しているため、へび座を構成する星の見分けがつかない");
+            message.append("\n・200-custom_name.sql(星の名前) ");
+            message.append("\n    ・シリウス以外の星を定義していない");
+            message.append("\n");
+            System.out.print(message.toString());
 
         } catch (Throwable t) {
             if (databaseFile.exists()) {

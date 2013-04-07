@@ -1,4 +1,4 @@
--- 星データ
+-- 星の名前
 drop table if exists custom_name ;
 create table custom_name (
     hip_num                     INTEGER not null    -- HIP番号
