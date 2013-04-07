@@ -25,7 +25,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
     /** DBファイルを再作成するかどうか. trueにすると「starseeker-initial.dump」の内容で初期化します */
-    private static final boolean RECREATE_DB_FILE = true;
+    private static final boolean RECREATE_DB_FILE = false;
 
     private static final String DB_FILE = "starseeker.db";  // DBファイルの名前
     private static final int DB_VERSION = 1;                // DBのバージョン

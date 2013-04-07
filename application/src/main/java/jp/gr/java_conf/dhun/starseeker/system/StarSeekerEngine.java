@@ -58,7 +58,7 @@ public class StarSeekerEngine implements //
      */
     public StarSeekerEngine(Context context) {
         starManager = new StarManager(context);
-        starManager.configure(0);
+        starManager.configure(2); // FIXME 初期値は暫定
 
         orientations = new Orientations();
 
