@@ -105,6 +105,21 @@ public class Star {
     }
 
     /**
+     * 備考を取得します.<br/>
+     */
+    public String getMemo() {
+        return starEntity.getMemo();
+    }
+
+    /**
+     * 備考を設定します.<br/>
+     */
+    @Deprecated
+    public void setMemo(String memo) {
+        starEntity.setName(memo);
+    }
+
+    /**
      * 等級を取得します.<br/>
      */
     public float getMagnitude() {

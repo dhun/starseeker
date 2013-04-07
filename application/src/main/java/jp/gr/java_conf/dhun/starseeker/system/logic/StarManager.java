@@ -20,6 +20,7 @@ import jp.gr.java_conf.dhun.starseeker.model.StarApproxMagnitude;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.DatabaseHelper;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.StarDataDao;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarEntity;
+import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.content.Context;
 
 /**
@@ -28,30 +29,21 @@ import android.content.Context;
  */
 public class StarManager {
 
-    private static final boolean APPEND_MOCK_STAR = false;
+    private static final boolean APPEND_MOCK_STAR = false;              // モックデータを含めるかどうか. 通常はfalse
+    private static final float SET_DISPLAY_TEXT_LOWER_MAGNITUDE = 2;    // テキスト表示する下限となる等級
 
     private final DatabaseHelper databaseHelper;
     private final StarDataDao starDataDao;
 
     private final Map<StarApproxMagnitude, Set<Star>> allStars;   // すべての星データ. おおよその等級別に管理
 
-    private final DecimalFormat angleFormat;
-
     private ExtractStarIterator extractStarIterator;
-    private StarLocator starLocator;
 
     public StarManager(Context context) {
         databaseHelper = new DatabaseHelper(context);
         starDataDao = new StarDataDao(databaseHelper.getReadableDatabase());
 
         allStars = new HashMap<StarApproxMagnitude, Set<Star>>();
-
-        angleFormat = new DecimalFormat("0.00");
-        angleFormat.setPositivePrefix("+");
-        angleFormat.setNegativePrefix("-");
-        angleFormat.setRoundingMode(RoundingMode.HALF_UP);
-
-        // extractStarIterator = new ExtractStarIterator(14f); FIXME これは必要？
     }
 
     public void configure(float extractStarMagnitude) {
@@ -82,47 +74,69 @@ public class StarManager {
     }
 
     public void relocate(double longitude, double latitude, Calendar baseCalendar) {
-        starLocator = new StarLocator(longitude, latitude, baseCalendar.getTime()); // UTC
-        for (Star star : iterate()) {
+        // 星イテレータはスレッドセーフじゃないので、再配置用のインスタンスを生成
+        ExtractStarIterator extractStarIterator = new ExtractStarIterator(this.extractStarIterator.getExtractStarMagnitude());
+
+        // 星ロケータは、観測地点と観測日時に対してインスタンスが必要になる
+        StarLocator starLocator = new StarLocator(longitude, latitude, baseCalendar.getTime()); // UTC
+
+        // フォーマッタ. インスタンスフィールドにしてもかまわないけど、大した負荷じゃないのでメソッドローカルにした
+        DecimalFormat angleFormat = new DecimalFormat("0.00");
+        angleFormat.setPositivePrefix("+");
+        angleFormat.setNegativePrefix("-");
+        angleFormat.setRoundingMode(RoundingMode.HALF_UP);
+
+        int relocateCount = 0;
+        for (Star star : extractStarIterator) {
             starLocator.locate(star);
-            if (star.getMagnitude() <= 2) {
-                // ２等星以上なら画面に名前と位置を表示
-                star.setDisplayText(String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s]" //
-                        , angleFormat.format(star.getAzimuth())  // 方位(A)
-                        , angleFormat.format(star.getAltitude()) // 高度(h)
-                        , star.getName()));
+
+            if (star.getMagnitude() <= SET_DISPLAY_TEXT_LOWER_MAGNITUDE && null != star.getName()) {
+                // ２等星以上なら画面にデータを表示
+                if (null != star.getMemo()) {
+                    star.setDisplayText(String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s], 備考=[%s]" //
+                            , angleFormat.format(star.getAzimuth())  // 方位(A)
+                            , angleFormat.format(star.getAltitude()) // 高度(h)
+                            , star.getName()
+                            , star.getMemo()));
+                } else {
+                    star.setDisplayText(String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s]" //
+                            , angleFormat.format(star.getAzimuth())  // 方位(A)
+                            , angleFormat.format(star.getAltitude()) // 高度(h)
+                            , star.getName()));
+                }
             } else {
                 star.setDisplayText(null);
             }
 
+            relocateCount++;
         }
+
+        LogUtils.d(getClass(), "stars relocated. count=[" + relocateCount + "]");
     }
 
     public Iterable<Star> iterate() {
         extractStarIterator.reset();
-
-        return new Iterable<Star>() {
-            @Override
-            public Iterator<Star> iterator() {
-                return extractStarIterator;
-            }
-        };
+        return extractStarIterator;
     }
 
-    private class ExtractStarIterator implements Iterator<Star> {
-        private final float extractStarMagnitude;       // 抽出する等級
-        private final Set<Set<Star>> extractStars;      // 抽出する等級以下の星の集合. おおよその等級別に管理
+    private class ExtractStarIterator implements Iterator<Star>, Iterable<Star> {
+        private final StarApproxMagnitude extractStarApproxMagnitude;   // 抽出するおおよその等級
+        private final Set<Set<Star>> extractStars;      // 抽出するおおよその等級以下の星の集合. おおよその等級別に管理
 
         private Iterator<Set<Star>> starSetIterator;    // おおよその等級別の星の集合イテレータ
         private Iterator<Star> starIterator;            // 星のイテレータ
         private Star next;
 
         public ExtractStarIterator(float extractStarMagnitude) {
-            this.extractStarMagnitude = extractStarMagnitude;
+            this(new StarApproxMagnitude(extractStarMagnitude));
+        }
+
+        public ExtractStarIterator(StarApproxMagnitude extractStarApproxMagnitude) {
+            this.extractStarApproxMagnitude = extractStarApproxMagnitude;
 
             this.extractStars = new HashSet<Set<Star>>();
             for (Entry<StarApproxMagnitude, Set<Star>> e : allStars.entrySet()) {
-                if (e.getKey().getApproxMagnitude() <= extractStarMagnitude) {
+                if (e.getKey().getApproxMagnitude() <= extractStarApproxMagnitude.getApproxMagnitude()) {
                     extractStars.add(e.getValue());
                 }
             }
@@ -132,6 +146,10 @@ public class StarManager {
             this.next = null;
 
             reset();
+        }
+
+        public float getExtractStarMagnitude() {
+            return extractStarApproxMagnitude.getMagnitude();
         }
 
         public void reset() {
@@ -166,6 +184,11 @@ public class StarManager {
         }
 
         @Override
+        public Iterator<Star> iterator() {
+            return this;
+        }
+
+        @Override
         public boolean hasNext() {
             if (null == next) {
                 prepareNext();
@@ -194,7 +217,6 @@ public class StarManager {
         public void remove() {
             throw new UnsupportedOperationException();
         }
-
     }
 
     private Star newMock(final float azimuthFix, final float altitudeFix) { // FIXME モック
