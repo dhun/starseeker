@@ -13,3 +13,4 @@ application-test/target/
 application/tmp
 application-test/tmp/
 application-test/initial_data/starseeker.db
+application-test/initial_data/starseeker.dump
