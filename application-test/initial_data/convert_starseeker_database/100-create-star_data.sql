@@ -5,7 +5,9 @@ create table star_data (
   , right_ascension             REAL    not null    -- 赤径
   , declination                 REAL    not null    -- 赤緯
   , magnitude                   REAL    not null    -- 等級
-  , name                        TEXT                -- 通称
+  , bayer_code                  TEXT                -- バイエル符号／フラムスティード番号
+  , simbad                      TEXT                -- 英名・SIMBAD
+  , japanese_name               TEXT                -- 日本語名
   , memo                        TEXT                -- 備考
   , constraint PK_star_data primary key ( hip_num )
 );
@@ -15,12 +17,13 @@ insert into star_data
          , a.right_ascension
          , a.declination
          , a.magnitude
-         , b.name
+         , b.bayer_code
+         , b.simbad
+         , b.japanese_name
          , b.memo
-    --from fk_data a
       from nasa_star_data a
-      left join custom_name b
+      left join wikipedia_name b
         on b.hip_num = a.hip_num
     ;
 
-select count(*) from star_data limit 20 ;
+select count(*), count(bayer_code), count(japanese_name) from star_data limit 20 ;
