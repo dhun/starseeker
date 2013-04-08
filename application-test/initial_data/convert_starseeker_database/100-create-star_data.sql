@@ -22,7 +22,7 @@ insert into star_data
          , b.japanese_name
          , b.memo
       from nasa_star_data a
-      left join wikipedia_name b
+      left join wikipedia_star_name b
         on b.hip_num = a.hip_num
     ;
 

@@ -17,7 +17,7 @@ create table horoscope_path (
 --         , b.declination
          , c.right_ascension
          , c.declination
-         , c.name
+         , c.japanese_name
       from fk_name a
       left join horoscope_data b
         on b.horoscope_code = a.horoscope_code
