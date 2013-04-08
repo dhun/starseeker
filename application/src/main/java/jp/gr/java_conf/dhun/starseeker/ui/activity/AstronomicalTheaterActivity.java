@@ -93,6 +93,9 @@ public class AstronomicalTheaterActivity extends Activity //
         setSecondTheaterViewVisible(config.isSecondAstronomicalTheaterVisible()); // セカンドパネルの表示／非表示
         changeLockScreenRotate(config.isLockScreenRotate());                      // 画面の回転ロック
 
+        masterTheaterView.configureExtractLowerstarMagnitude(config.getExtractLowerStarMagnitude());
+        secondTheaterView.configureExtractLowerstarMagnitude(config.getExtractLowerStarMagnitude());
+
         refreshMasterTheaterView();
         refreshSecondTheaterView();
 

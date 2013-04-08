@@ -163,7 +163,7 @@ public class StarEntity {
         public static final String RIGHT_ASCENSION = "right_ascension";
         public static final String DECLINATION = "declination";
         public static final String MAGNITUDE = "magnitude";
-        public static final String NAME = "name";
+        public static final String NAME = "japanese_name";
         public static final String MEMO = "memo";
 
         public static final String[] ALL_COLUMNS = { HIP_NUMBER, RIGHT_ASCENSION, DECLINATION, MAGNITUDE, NAME, MEMO };
