@@ -21,6 +21,7 @@ public final class StarSeekerApplication extends Application {
         LogUtils.v(getClass(), "onCreate");
 
         LogUtils.init();
+        // DatabaseHelper.setupInitialDatabaseFileIfNotNeed(this);
     }
 
     @Override
@@ -40,5 +41,4 @@ public final class StarSeekerApplication extends Application {
         super.onTerminate();
         LogUtils.v(getClass(), "onTerminate");
     }
-
 }

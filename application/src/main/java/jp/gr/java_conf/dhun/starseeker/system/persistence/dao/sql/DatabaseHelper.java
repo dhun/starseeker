@@ -3,13 +3,17 @@
  */
 package jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import jp.gr.java_conf.dhun.starseeker.system.exception.StarSeekerRuntimeException;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.DatabaseMeta;
 import jp.gr.java_conf.dhun.starseeker.util.AssetsUtils;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.content.Context;
@@ -27,11 +31,71 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /** DBファイルを再作成するかどうか. trueにすると「starseeker-initial.dump」の内容で初期化します */
     private static final boolean RECREATE_DB_FILE = false;
 
-    private static final String DB_FILE = "starseeker.db";  // DBファイルの名前
+    private static final String INIT_ASSETS_DB_FILE = "sql/starseeker-initial.db";  // DBファイルの名前
+    private static final String APPLICATION_DB_FILE = "starseeker.db";  // DBファイルの名前
     private static final int DB_VERSION = 1;                // DBのバージョン
 
     private static final String SQL_FILE_ENCODE = "UTF-8";
     private static final File INITIAL_DATA_DUMP = new File("sql/starseeker-initial.dump");
+
+    public static void setupInitialDatabaseFileIfNotNeed(Context context) {
+        if (!needSetupInitialDatabaseFileNeed(context)) {
+            return;
+        }
+
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+        try {
+            bis = new BufferedInputStream(context.getAssets().open("sql/starseeker-initial.db", Context.MODE_PRIVATE));
+            bos = new BufferedOutputStream(new FileOutputStream(context.getDatabasePath(APPLICATION_DB_FILE)));
+
+            byte[] buffer = new byte[1024 * 10];
+            int length = 0;
+            while (0 != (length = bis.read(buffer))) {
+                bos.write(buffer, 0, length);
+            }
+
+        } catch (IOException e) {
+            throw new StarSeekerRuntimeException("ＤＢファイルの初期化に失敗した.", e);
+
+        } finally {
+            if (null != bis) {
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    LogUtils.w(DatabaseHelper.class, "初期ファイルのクローズに失敗した. 処理は継続する", e);
+                }
+            }
+            if (null != bos) {
+                try {
+                    bos.close();
+                } catch (IOException e) {
+                    LogUtils.w(DatabaseHelper.class, "ＤＢファイルのクローズに失敗した. 処理は継続する", e);
+                }
+            }
+        }
+    }
+
+    private static boolean needSetupInitialDatabaseFileNeed(Context context) {
+        // DBファイルが存在しなければ、再作成が必要
+        if (!context.getDatabasePath(APPLICATION_DB_FILE).exists()) {
+            return true;
+        }
+
+        // DBファイルがイニシャルファイルより古ければ、再作成が必要
+        SQLiteDatabase initializedDb = context.openOrCreateDatabase(INIT_ASSETS_DB_FILE, Context.MODE_PRIVATE, null);
+        DatabaseMeta initializedDbMeta = new DatabaseMetaDao(initializedDb).find();
+
+        SQLiteDatabase applicationDb = context.openOrCreateDatabase(APPLICATION_DB_FILE, Context.MODE_PRIVATE, null);
+        DatabaseMeta applicationDbMeta = new DatabaseMetaDao(applicationDb).find();
+
+        if (initializedDbMeta.getRegistTimestamp().after(applicationDbMeta.getRegistTimestamp())) {
+            context.deleteDatabase(APPLICATION_DB_FILE);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /**
      * コンストラクタ.<br/>
@@ -39,11 +103,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param context Androidコンテキスト
      */
     public DatabaseHelper(Context context) {
-        super(context, DB_FILE, (CursorFactory) null, DB_VERSION);
+        super(context, APPLICATION_DB_FILE, (CursorFactory) null, DB_VERSION);
 
         if (RECREATE_DB_FILE) {
-            context.getDatabasePath(DB_FILE).delete();
-            SQLiteDatabase database = context.openOrCreateDatabase(DB_FILE, Context.MODE_PRIVATE, null);
+            context.getDatabasePath(APPLICATION_DB_FILE).delete();
+            SQLiteDatabase database = context.openOrCreateDatabase(APPLICATION_DB_FILE, Context.MODE_PRIVATE, null);
             executeSqlFileIfNewer(context, database, INITIAL_DATA_DUMP);
             database.close();
         }
