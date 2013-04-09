@@ -44,14 +44,15 @@ public class StarApproxMagnitude {
      */
     public StarApproxMagnitude(float magnitude) {
         this.magnitude = magnitude;
+        this.approxMagnitude = (float) (MathUtils.floor(magnitude / MAGNITUDE_UNIT) * MAGNITUDE_UNIT);
 
-        float approxMagnitude = (float) (MathUtils.floor(magnitude / MAGNITUDE_UNIT) * MAGNITUDE_UNIT);
-        float fraction = magnitude - approxMagnitude;
-        if (fraction > 0) {
-            this.approxMagnitude = approxMagnitude + MAGNITUDE_UNIT;
-        } else {
-            this.approxMagnitude = approxMagnitude;
-        }
+        // float approxMagnitude = (float) (MathUtils.floor(magnitude / MAGNITUDE_UNIT) * MAGNITUDE_UNIT);
+        // float fraction = magnitude - approxMagnitude;
+        // if (fraction > 0) {
+        // this.approxMagnitude = approxMagnitude + MAGNITUDE_UNIT;
+        // } else {
+        // this.approxMagnitude = approxMagnitude;
+        // }
     }
 
     /**
@@ -74,7 +75,7 @@ public class StarApproxMagnitude {
      * @return
      */
     public float getLowerMagnitude() {
-        return approxMagnitude - MAGNITUDE_UNIT;
+        return approxMagnitude;
     }
 
     /**
@@ -83,7 +84,7 @@ public class StarApproxMagnitude {
      * @return
      */
     public float getUpperMagnitude() {
-        return approxMagnitude;
+        return approxMagnitude + MAGNITUDE_UNIT;
     }
 
     @Override

@@ -41,7 +41,7 @@ public class StarDataDao {
 
     public List<StarEntity> findByMagnitudeRange(StarApproxMagnitude approxMagnitude) {
         String[] columns = StarEntity.FieldNames.ALL_COLUMNS;
-        String selection = String.format("%s <= ? and %s < ?", StarEntity.FieldNames.MAGNITUDE, StarEntity.FieldNames.MAGNITUDE);
+        String selection = String.format("%s >= ? and %s < ?", StarEntity.FieldNames.MAGNITUDE, StarEntity.FieldNames.MAGNITUDE);
         String[] selectionArgs = { String.valueOf(approxMagnitude.getLowerMagnitude()), String.valueOf(approxMagnitude.getUpperMagnitude()) };
         String groupBy = null;
         String having = null;
