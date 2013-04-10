@@ -61,11 +61,11 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
     }
 
     public void configureObservationSiteLocation(double longitude, double latitude, Calendar baseCalendar) {
-        starSeekerEngine.configureObservationSiteLocation(longitude, latitude, baseCalendar);
+        starSeekerEngine.configureObservationCondition(longitude, latitude, baseCalendar);
     }
 
     public void configureExtractLowerstarMagnitude(float magnitude) {
-        starSeekerEngine.configureExtractLowerstarMagnitude(magnitude);
+        starSeekerEngine.configureExtractUpperStarMagnitude(magnitude);
     }
 
     private int getDisplayRotation() {

@@ -29,7 +29,7 @@ public class StarApproxMagnitude {
      * @param upperMagnitude 等級の上限値
      * @return {@link StarApproxMagnitude#MAGNITUDE_UNIT} 刻みのおおよその等級の配列
      */
-    public static StarApproxMagnitude[] findApproxMagnitudes(float upperMagnitude) {
+    public static StarApproxMagnitude[] listApproxMagnitudes(float upperMagnitude) {
         List<StarApproxMagnitude> results = new ArrayList<StarApproxMagnitude>();
         for (float magnitude = MIN_MAGNITUDE; magnitude <= upperMagnitude; magnitude += MAGNITUDE_UNIT) {
             results.add(new StarApproxMagnitude(magnitude));

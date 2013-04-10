@@ -23,6 +23,12 @@ import android.graphics.Paint;
 
 /**
  * スターシーカーシステムのエンジン.<br/>
+ * 次の要素で構成しています.<br/>
+ * <ul>
+ * <li>{@link AstronomicalTheater}</li>
+ * <li>{@link StarManager}</li>
+ * </ul>
+ * 
  * 
  * @author jun
  * 
@@ -58,7 +64,7 @@ public class StarSeekerEngine implements //
      */
     public StarSeekerEngine(Context context) {
         starManager = new StarManager(context);
-        starManager.configure(2); // FIXME 初期値は暫定
+        starManager.initialize();
 
         orientations = new Orientations();
 
@@ -76,25 +82,28 @@ public class StarSeekerEngine implements //
     }
 
     /**
-     * 観測地点の位置を設定します.<br/>
+     * 観測条件を設定します.<br/>
      * 
      * @param longitude 観測地点の経度
      * @param latitude 観測地点の緯度
      * @param baseCalendar 座標算出の基準日時となるカレンダー
      */
-    public void configureObservationSiteLocation(double longitude, double latitude, Calendar baseCalendar) {
+    public void configureObservationCondition(double longitude, double latitude, Calendar baseCalendar) {
         locationTitle = String.format("経度=[%6.2f], 緯度=[%6.2f], 日時=[%s]", longitude, latitude, DateTimeUtils.toLocalYYYYMMDDHHMMSSWithSegment(baseCalendar));
 
-        starManager.relocate(longitude, latitude, baseCalendar);
+        starManager.setObservationLocation(longitude, latitude);
+        starManager.setObservationDatetime(baseCalendar);
+        starManager.prepare();
     }
 
     /**
-     * 抽出する星の等級の下限値を設定します.<br/>
+     * 抽出する星の等級の上限値を設定します.<br/>
      * 
      * @param magnitude 等級
      */
-    public void configureExtractLowerstarMagnitude(float magnitude) {
-        starManager.extract(magnitude);
+    public void configureExtractUpperStarMagnitude(float magnitude) {
+        starManager.setExtractUpperStarMagnitude(magnitude);
+        starManager.prepare();
     }
 
     // ＞＞＞ 開発中のコード
@@ -138,7 +147,7 @@ public class StarSeekerEngine implements //
     public void draw(Canvas canvas) {
         try {
             astronomicalTheater.draw(canvas);
-            for (Star star : starManager.iterate()) {
+            for (Star star : starManager.iterateExtractStar()) {
                 astronomicalTheater.draw(canvas, star);
             }
 
