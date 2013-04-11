@@ -3,6 +3,7 @@
  */
 package jp.gr.java_conf.dhun.starseeker;
 
+import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.DatabaseHelper;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.app.Application;
 import android.content.res.Configuration;
@@ -21,7 +22,7 @@ public final class StarSeekerApplication extends Application {
         LogUtils.v(getClass(), "onCreate");
 
         LogUtils.init();
-        // DatabaseHelper.setupInitialDatabaseFileIfNotNeed(this);
+        DatabaseHelper.setupInitialDatabaseFileIfNotNeed(this);
     }
 
     @Override
