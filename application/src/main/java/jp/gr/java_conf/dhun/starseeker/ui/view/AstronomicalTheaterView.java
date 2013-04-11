@@ -20,6 +20,7 @@ import android.util.AttributeSet;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -76,13 +77,17 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
     }
 
     public void resume() {
-        // 端末ステートリゾルバを再開
-        terminalStateResolver.prepare();
+        // 再開
+        if (getVisibility() == View.VISIBLE) {
+            starSeekerEngine.resume();          // エンジン
+            terminalStateResolver.prepare();    // 端末ステートリゾルバ
+        }
     }
 
     public void pause() {
-        // 端末ステートリゾルバを中段
-        terminalStateResolver.pause();
+        // 中断
+        starSeekerEngine.pause();           // エンジン
+        terminalStateResolver.pause();      // 端末ステートリゾルバ
     }
 
     // ================================================================================
