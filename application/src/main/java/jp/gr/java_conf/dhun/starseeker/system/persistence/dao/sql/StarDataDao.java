@@ -30,13 +30,23 @@ public class StarDataDao {
         String groupBy = null;
         String having = null;
         String orderBy = null;
-        Cursor cursor = db.query(StarEntity.TABLE_NAME, columns, selection, selectionArgs, groupBy, having, orderBy);
 
-        List<StarEntity> results = new ArrayList<StarEntity>(cursor.getCount());
-        while (cursor.moveToNext()) {
-            results.add(convertToEntity(cursor));
+        Cursor cursor = null;
+        try {
+            cursor = db.query(StarEntity.TABLE_NAME, columns, selection, selectionArgs, groupBy, having, orderBy);
+
+            List<StarEntity> results = new ArrayList<StarEntity>(cursor.getCount());
+            while (cursor.moveToNext()) {
+                results.add(convertToEntity(cursor));
+            }
+            return results;
+
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
-        return results;
+
     }
 
     public List<StarEntity> findByMagnitudeRange(StarApproxMagnitude approxMagnitude) {
@@ -46,13 +56,22 @@ public class StarDataDao {
         String groupBy = null;
         String having = null;
         String orderBy = null;
-        Cursor cursor = db.query(StarEntity.TABLE_NAME, columns, selection, selectionArgs, groupBy, having, orderBy);
 
-        List<StarEntity> results = new ArrayList<StarEntity>(cursor.getCount());
-        while (cursor.moveToNext()) {
-            results.add(convertToEntity(cursor));
+        Cursor cursor = null;
+        try {
+            cursor = db.query(StarEntity.TABLE_NAME, columns, selection, selectionArgs, groupBy, having, orderBy);
+
+            List<StarEntity> results = new ArrayList<StarEntity>(cursor.getCount());
+            while (cursor.moveToNext()) {
+                results.add(convertToEntity(cursor));
+            }
+            return results;
+
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
-        return results;
     }
 
     private StarEntity convertToEntity(Cursor cursor) {
