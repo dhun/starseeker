@@ -20,7 +20,7 @@ import jp.gr.java_conf.dhun.starseeker.model.StarApproxMagnitude;
 import jp.gr.java_conf.dhun.starseeker.system.model.StarSet;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.DatabaseHelper;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.StarDataDao;
-import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarEntity;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarData;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -98,7 +98,7 @@ public class StarManager {
                 starSet.setLocated(false);
                 allStars.put(approxMagnitude, starSet);
 
-                for (StarEntity entity : starDataDao.findByMagnitudeRange(approxMagnitude)) {
+                for (StarData entity : starDataDao.findByMagnitudeRange(approxMagnitude)) {
                     starSet.add(new Star(entity));
                     extractCount++;
                 }
@@ -372,7 +372,7 @@ public class StarManager {
     }
 
     private Star newMock(final float azimuthFix, final float altitudeFix) { // FIXME モック
-        StarEntity entity = new StarEntity();
+        StarData entity = new StarData();
         entity.setRightAscension(azimuthFix);   // 赤径はうそ情報
         entity.setDeclination(altitudeFix);     // 赤緯はうそ情報
         entity.setMagnitude(-1);

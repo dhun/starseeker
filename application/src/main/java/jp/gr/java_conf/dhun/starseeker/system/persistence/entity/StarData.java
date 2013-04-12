@@ -7,13 +7,13 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
 import android.annotation.SuppressLint;
 
 /**
- * 星のエンティティ.<br/>
+ * 星データのエンティティ.<br/>
  * 精度はfloat. 厳密な値より処理速度を優先させた.
  * 
  * @author jun
  * 
  */
-public class StarEntity {
+public class StarData {
 
     public static final float MAGGNITUDE_UNKNOWN_VALUE = 7.0f;
 
@@ -27,7 +27,7 @@ public class StarEntity {
     /**
      * デフォルト・コンストラクタ
      */
-    public StarEntity() {
+    public StarData() {
     }
 
     /**
@@ -143,10 +143,10 @@ public class StarEntity {
         if (obj == null) {
             return false;
         }
-        if (!(obj instanceof StarEntity)) {
+        if (!(obj instanceof StarData)) {
             return false;
         }
-        StarEntity other = (StarEntity) obj;
+        StarData other = (StarData) obj;
         if (Float.floatToIntBits(rightAscension) != Float.floatToIntBits(other.getRightAscension())) {
             return false;
         }

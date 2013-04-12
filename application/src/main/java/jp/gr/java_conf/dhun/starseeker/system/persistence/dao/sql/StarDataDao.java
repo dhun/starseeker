@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.gr.java_conf.dhun.starseeker.model.StarApproxMagnitude;
-import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarEntity;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarData;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -23,8 +23,8 @@ public class StarDataDao {
         this.db = db;
     }
 
-    public List<StarEntity> findAll() {
-        String[] columns = StarEntity.FieldNames.ALL_COLUMNS;
+    public List<StarData> findAll() {
+        String[] columns = StarData.FieldNames.ALL_COLUMNS;
         String selection = null;
         String[] selectionArgs = null;
         String groupBy = null;
@@ -33,9 +33,9 @@ public class StarDataDao {
 
         Cursor cursor = null;
         try {
-            cursor = db.query(StarEntity.TABLE_NAME, columns, selection, selectionArgs, groupBy, having, orderBy);
+            cursor = db.query(StarData.TABLE_NAME, columns, selection, selectionArgs, groupBy, having, orderBy);
 
-            List<StarEntity> results = new ArrayList<StarEntity>(cursor.getCount());
+            List<StarData> results = new ArrayList<StarData>(cursor.getCount());
             while (cursor.moveToNext()) {
                 results.add(convertToEntity(cursor));
             }
@@ -49,9 +49,9 @@ public class StarDataDao {
 
     }
 
-    public List<StarEntity> findByMagnitudeRange(StarApproxMagnitude approxMagnitude) {
-        String[] columns = StarEntity.FieldNames.ALL_COLUMNS;
-        String selection = String.format("%s >= ? and %s < ?", StarEntity.FieldNames.MAGNITUDE, StarEntity.FieldNames.MAGNITUDE);
+    public List<StarData> findByMagnitudeRange(StarApproxMagnitude approxMagnitude) {
+        String[] columns = StarData.FieldNames.ALL_COLUMNS;
+        String selection = String.format("%s >= ? and %s < ?", StarData.FieldNames.MAGNITUDE, StarData.FieldNames.MAGNITUDE);
         String[] selectionArgs = { String.valueOf(approxMagnitude.getLowerMagnitude()), String.valueOf(approxMagnitude.getUpperMagnitude()) };
         String groupBy = null;
         String having = null;
@@ -59,9 +59,9 @@ public class StarDataDao {
 
         Cursor cursor = null;
         try {
-            cursor = db.query(StarEntity.TABLE_NAME, columns, selection, selectionArgs, groupBy, having, orderBy);
+            cursor = db.query(StarData.TABLE_NAME, columns, selection, selectionArgs, groupBy, having, orderBy);
 
-            List<StarEntity> results = new ArrayList<StarEntity>(cursor.getCount());
+            List<StarData> results = new ArrayList<StarData>(cursor.getCount());
             while (cursor.moveToNext()) {
                 results.add(convertToEntity(cursor));
             }
@@ -74,14 +74,14 @@ public class StarDataDao {
         }
     }
 
-    private StarEntity convertToEntity(Cursor cursor) {
-        StarEntity result = new StarEntity();
-        result.setHipNumber(cursor.getInt(cursor.getColumnIndex(StarEntity.FieldNames.HIP_NUMBER)));
-        result.setRightAscension(cursor.getFloat(cursor.getColumnIndex(StarEntity.FieldNames.RIGHT_ASCENSION)));
-        result.setDeclination(cursor.getFloat(cursor.getColumnIndex(StarEntity.FieldNames.DECLINATION)));
-        result.setMagnitude(cursor.getFloat(cursor.getColumnIndex(StarEntity.FieldNames.MAGNITUDE)));
-        result.setName(cursor.getString(cursor.getColumnIndex(StarEntity.FieldNames.NAME)));
-        result.setMemo(cursor.getString(cursor.getColumnIndex(StarEntity.FieldNames.MEMO)));
+    private StarData convertToEntity(Cursor cursor) {
+        StarData result = new StarData();
+        result.setHipNumber(cursor.getInt(cursor.getColumnIndex(StarData.FieldNames.HIP_NUMBER)));
+        result.setRightAscension(cursor.getFloat(cursor.getColumnIndex(StarData.FieldNames.RIGHT_ASCENSION)));
+        result.setDeclination(cursor.getFloat(cursor.getColumnIndex(StarData.FieldNames.DECLINATION)));
+        result.setMagnitude(cursor.getFloat(cursor.getColumnIndex(StarData.FieldNames.MAGNITUDE)));
+        result.setName(cursor.getString(cursor.getColumnIndex(StarData.FieldNames.NAME)));
+        result.setMemo(cursor.getString(cursor.getColumnIndex(StarData.FieldNames.MEMO)));
 
         return result;
     }

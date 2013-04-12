@@ -3,7 +3,7 @@
  */
 package jp.gr.java_conf.dhun.starseeker.model;
 
-import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarEntity;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarData;
 import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
 
 /**
@@ -15,7 +15,7 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
  */
 public class Star {
 
-    private final StarEntity starEntity;    // 星エンティティ
+    private final StarData starData;    // 星エンティティ
 
     private boolean locaated;   // 配置済であるかどうか
     private float azimuth;      // 方位(A). -180 <= 0 <= +180. 数値表現ではないためStarLocationUtil.convertAngleFloatToString()をしてはいけない
@@ -46,20 +46,20 @@ public class Star {
      */
     @Deprecated
     public Star(float rightAscension, float declination) {
-        this(new StarEntity());
-        this.starEntity.setRightAscension(rightAscension);
-        this.starEntity.setDeclination(declination);
-        this.starEntity.setMagnitude(StarEntity.MAGGNITUDE_UNKNOWN_VALUE);
-        this.starEntity.setName(null);
+        this(new StarData());
+        this.starData.setRightAscension(rightAscension);
+        this.starData.setDeclination(declination);
+        this.starData.setMagnitude(StarData.MAGGNITUDE_UNKNOWN_VALUE);
+        this.starData.setName(null);
     }
 
     /**
      * コンストラクタ.<br/>
      * 
-     * @param starEntity 星のエンティティ
+     * @param starData 星のエンティティ
      */
-    public Star(StarEntity starEntity) {
-        this.starEntity = starEntity;
+    public Star(StarData starData) {
+        this.starData = starData;
         this.locaated = false;
     }
 
@@ -79,21 +79,21 @@ public class Star {
      * 赤経(α)の数値表現を取得します.<br/>
      */
     public float getRightAscension() {
-        return starEntity.getRightAscension();
+        return starData.getRightAscension();
     }
 
     /**
      * 赤緯(δ)の数値表現を取得します.<br/>
      */
     public float getDeclination() {
-        return starEntity.getDeclination();
+        return starData.getDeclination();
     }
 
     /**
      * 名前を取得します.<br/>
      */
     public String getName() {
-        return starEntity.getName();
+        return starData.getName();
     }
 
     /**
@@ -101,14 +101,14 @@ public class Star {
      */
     @Deprecated
     public void setName(String name) {
-        starEntity.setName(name);
+        starData.setName(name);
     }
 
     /**
      * 備考を取得します.<br/>
      */
     public String getMemo() {
-        return starEntity.getMemo();
+        return starData.getMemo();
     }
 
     /**
@@ -116,14 +116,14 @@ public class Star {
      */
     @Deprecated
     public void setMemo(String memo) {
-        starEntity.setName(memo);
+        starData.setName(memo);
     }
 
     /**
      * 等級を取得します.<br/>
      */
     public float getMagnitude() {
-        return starEntity.getMagnitude();
+        return starData.getMagnitude();
     }
 
     /**
@@ -131,7 +131,7 @@ public class Star {
      */
     @Deprecated
     public void setMagnitude(float magnitude) {
-        starEntity.setMagnitude(magnitude);
+        starData.setMagnitude(magnitude);
     }
 
     /**
