@@ -15,7 +15,6 @@ import android.annotation.SuppressLint;
  */
 public class ConstellationData {
 
-    private Integer constellationId;    // 星座ID
     private String constellationCode;   // 星座コード(略符)
     private String constellationName;   // 星座名(学名)
     private String japaneseName;        // 星座名(日本語)
@@ -26,20 +25,6 @@ public class ConstellationData {
      * デフォルト・コンストラクタ
      */
     public ConstellationData() {
-    }
-
-    /**
-     * 星座IDを取得します.<br/>
-     */
-    public Integer getConstellationId() {
-        return constellationId;
-    }
-
-    /**
-     * 星座IDを設定します.<br/>
-     */
-    public void setConstellationId(Integer constellationId) {
-        this.constellationId = constellationId;
     }
 
     /**
@@ -125,7 +110,7 @@ public class ConstellationData {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((constellationId == null) ? 0 : constellationId.hashCode());
+        result = prime * result + ((constellationCode == null) ? 0 : constellationCode.hashCode());
         return result;
     }
 
@@ -141,11 +126,11 @@ public class ConstellationData {
             return false;
         }
         ConstellationData other = (ConstellationData) obj;
-        if (constellationId == null) {
-            if (other.constellationId != null) {
+        if (constellationCode == null) {
+            if (other.constellationCode != null) {
                 return false;
             }
-        } else if (!constellationId.equals(other.constellationId)) {
+        } else if (!constellationCode.equals(other.constellationCode)) {
             return false;
         }
         return true;
@@ -154,13 +139,12 @@ public class ConstellationData {
     public static final String TABLE_NAME = "constellation_data";
 
     public static class FieldNames {
-        public static final String CONSTELLATION_ID = "constellation_id";
         public static final String CONSTELLATION_CODE = "constellation_code";
         public static final String CONSTELLATION_NAME = "constellation_name";
         public static final String JAPANESE_NAME = "japanese_name";
         public static final String RIGHT_ASCENSION = "right_ascension";
         public static final String DECLINATION = "declination";
 
-        public static final String[] ALL_COLUMNS = { CONSTELLATION_ID, CONSTELLATION_CODE, CONSTELLATION_NAME, JAPANESE_NAME, RIGHT_ASCENSION, DECLINATION };
+        public static final String[] ALL_COLUMNS = { CONSTELLATION_CODE, CONSTELLATION_NAME, JAPANESE_NAME, RIGHT_ASCENSION, DECLINATION };
     }
 }

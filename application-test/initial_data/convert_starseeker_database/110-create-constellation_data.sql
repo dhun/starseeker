@@ -1,19 +1,17 @@
 -- 星座データ
 drop table if exists constellation_data ;
 create table constellation_data (
-    constellation_id            INTEGER not null    -- 星座ID
-  , constellation_code          TEXT    not null    -- 星座コード(略符)
+    constellation_code          TEXT    not null    -- 星座コード(略符)
   , constellation_name          TEXT    not null    -- 星座名(学名)
   , japanese_name               TEXT    not null    -- 星座名(日本語)
   , right_ascension             REAL    not null    -- 赤経
   , declination                 REAL    not null    -- 赤緯
-  , constraint PK_constellation_name primary key ( constellation_id )
-  , constraint UK_constellation_name unique ( constellation_code )
+  , constraint PK_constellation_name primary key ( constellation_code )
+  , constraint UK_constellation_name unique ( right_ascension, declination )
 );
 
 insert into constellation_data
-    select a.horoscope_id
-         , a.horoscope_code
+    select a.horoscope_code
          , a.horoscope_name
          , a.abbreviated_name
          , b.right_ascension

@@ -1,10 +1,11 @@
 -- 星座構成星データ
 drop table if exists constellation_path ;
 create table constellation_path (
-    constellation_code          TEXT    not null
+    constellation_code          TEXT    not null    -- 星座コード(略符)
   , hip_num_fm                  INTEGER not null    -- HIP番号の始点
   , hip_num_to                  INTEGER not null    -- HIP番号の終点
-  , constraint PK_constellation_path primary key ( hip_num_fm, hip_num_to )
+  , constraint PK_constellation_path primary key ( constellation_code )
+  , constraint PK_constellation_path unique ( hip_num_fm, hip_num_to )
 );
 
 insert into constellation_path
