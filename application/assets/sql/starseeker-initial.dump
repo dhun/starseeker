@@ -11,6 +11,7 @@ CREATE TABLE star_data (
   , memo                        TEXT                -- 備考
   , constraint PK_star_data primary key ( hip_num )
 );
+INSERT INTO "star_data" VALUES(-1,0.945147693157196,60.716667175293,2.47,'γ Cas','Tsih','ツィー',NULL);
 INSERT INTO "star_data" VALUES(122,0.0266252793371677,-77.0500030517578,4.78,NULL,NULL,NULL,NULL);
 INSERT INTO "star_data" VALUES(154,0.0326643362641335,-6.0,4.37,NULL,NULL,NULL,NULL);
 INSERT INTO "star_data" VALUES(301,0.0623256675899029,-17.3333339691162,4.55,NULL,NULL,NULL,NULL);
@@ -1641,111 +1642,122 @@ INSERT INTO "star_data" VALUES(118322,23.9985866546631,-65.5666656494141,4.49,NU
 COMMIT;
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
-CREATE TABLE horoscope_data (
-    horoscope_id                INTEGER not null    -- 星座ID
-  , horoscope_code              TEXT    not null    -- 略符
-  , horoscope_name              TEXT    not null    -- 学名
+CREATE TABLE constellation_data (
+    constellation_id            INTEGER not null    -- 星座ID
+  , constellation_code          TEXT    not null    -- 略符
+  , constellation_name          TEXT    not null    -- 学名
   , abbreviated_name            TEXT    not null    -- 星座名(日本語)
   , right_ascension             REAL    not null    -- 赤経
   , declination                 REAL    not null    -- 赤緯
-  , constraint PK_constellation_name primary key ( horoscope_id )
-  , constraint UK_constellation_name unique ( horoscope_code )
+  , constraint PK_constellation_name primary key ( constellation_id )
+  , constraint UK_constellation_name unique ( constellation_code )
 );
-INSERT INTO "horoscope_data" VALUES(1,'And','Andromeda','アンドロメダ',0.666666686534882,-50.033332824707);
-INSERT INTO "horoscope_data" VALUES(2,'Ant','Antlia','ポンプ',10.0,38.9833335876465);
-INSERT INTO "horoscope_data" VALUES(3,'Aps','Apus','ふうちょう',16.0,79.4333343505859);
-INSERT INTO "horoscope_data" VALUES(4,'Aql','Aquila','わし',19.5,-12.8666667938232);
-INSERT INTO "horoscope_data" VALUES(5,'Aqr','Aquarius','みずがめ',22.3333339691162,29.3333339691162);
-INSERT INTO "horoscope_data" VALUES(6,'Ara','Ara','さいだん',17.1666660308838,58.9500007629395);
-INSERT INTO "horoscope_data" VALUES(7,'Ari','Aries','おひつじ',2.5,-27.3500003814697);
-INSERT INTO "horoscope_data" VALUES(8,'Aur','Auriga','ぎょしゃ',6.0,-52.9500007629395);
-INSERT INTO "horoscope_data" VALUES(9,'Boo','Bootes','うしかい',14.5833330154419,-45.1166687011719);
-INSERT INTO "horoscope_data" VALUES(10,'Cae','Caelum','ちょうこくぐ',4.83333349227905,40.0833320617676);
-INSERT INTO "horoscope_data" VALUES(11,'Cam','Camelopardalis','きりん',5.66666650772095,-82.6166687011719);
-INSERT INTO "horoscope_data" VALUES(12,'Cap','Capricornus','やぎ',20.8333339691162,26.8999996185303);
-INSERT INTO "horoscope_data" VALUES(13,'Car','Carina','りゅうこつ',8.66666698455811,70.2333374023438);
-INSERT INTO "horoscope_data" VALUES(14,'Cas','Cassiopeia','カシオペヤ',1.0,-69.966667175293);
-INSERT INTO "horoscope_data" VALUES(15,'Cen','Centaurus','ケンタウルス',13.3333330154419,64.6666641235352);
-INSERT INTO "horoscope_data" VALUES(16,'Cep','Cepheus','ケフェウス',22.0,-79.8000030517578);
-INSERT INTO "horoscope_data" VALUES(17,'Cet','Cetus','くじら',1.75,32.5166664123535);
-INSERT INTO "horoscope_data" VALUES(18,'Cha','Chamaeleon','カメレオン',10.6666669845581,80.1999969482422);
-INSERT INTO "horoscope_data" VALUES(19,'Cir','Circinus','コンパス',14.8333330154419,64.5500030517578);
-INSERT INTO "horoscope_data" VALUES(20,'CMa','Canis Major','おおいぬ',6.66666650772095,30.3333339691162);
-INSERT INTO "horoscope_data" VALUES(21,'CMi','Canis Minor','こいぬ',7.5,-9.05000019073486);
-INSERT INTO "horoscope_data" VALUES(22,'Cnc','Cancer','かに',8.5,-28.4333343505859);
-INSERT INTO "horoscope_data" VALUES(23,'Col','Columba','はと',5.66666650772095,38.5);
-INSERT INTO "horoscope_data" VALUES(24,'Com','Coma Berenices','かみのけ',12.6666669845581,-29.4333343505859);
-INSERT INTO "horoscope_data" VALUES(25,'CrA','Corona Australis','みなみのかんむり',18.5,43.1333351135254);
-INSERT INTO "horoscope_data" VALUES(26,'CrB','Corona Borealis','かんむり',15.6666669845581,-32.9833335876465);
-INSERT INTO "horoscope_data" VALUES(27,'Crt','Crater','コップ',11.3333330154419,19.7000007629395);
-INSERT INTO "horoscope_data" VALUES(28,'Cru','Crux','みなみじゅうじ',12.3333330154419,61.1333351135254);
-INSERT INTO "horoscope_data" VALUES(29,'Crv','Corvus','からす',12.3333330154419,21.0666656494141);
-INSERT INTO "horoscope_data" VALUES(30,'CVn','Canes Venatici','りょうけん',13.0,-47.75);
-INSERT INTO "horoscope_data" VALUES(31,'Cyg','Cygnus','はくちょう',20.5,-56.4000015258789);
-INSERT INTO "horoscope_data" VALUES(32,'Del','Delphinus','いるか',20.6666660308838,-15.1499996185303);
-INSERT INTO "horoscope_data" VALUES(33,'Dor','Dorado','かじき',5.0,62.9833335876465);
-INSERT INTO "horoscope_data" VALUES(34,'Dra','Draco','りゅう',17.0,-78.0500030517578);
-INSERT INTO "horoscope_data" VALUES(35,'Equ','Equuleus','こうま',21.1666660308838,-7.19999980926514);
-INSERT INTO "horoscope_data" VALUES(36,'Eri','Erhoroscope_idanus','エリダヌス',3.83333325386047,48.966667175293);
-INSERT INTO "horoscope_data" VALUES(37,'For','Fornax','ろ',2.5,39.6333312988281);
-INSERT INTO "horoscope_data" VALUES(38,'Gem','Gemini','ふたご',7.0,-30.5666656494141);
-INSERT INTO "horoscope_data" VALUES(39,'Gru','Grus','つる',22.3333339691162,53.0999984741211);
-INSERT INTO "horoscope_data" VALUES(40,'Her','Hercules','ヘルクレス',17.1666660308838,-47.4166641235352);
-INSERT INTO "horoscope_data" VALUES(41,'Hor','Horologium','とけい',3.33333325386047,56.1500015258789);
-INSERT INTO "horoscope_data" VALUES(42,'Hya','Hydra','うみへび',10.5,41.716667175293);
-INSERT INTO "horoscope_data" VALUES(43,'Hyi','Hydrus','みずへび',2.66666674613953,74.0500030517578);
-INSERT INTO "horoscope_data" VALUES(44,'Ind','Indus','インディアン',21.3333339691162,62.9000015258789);
-INSERT INTO "horoscope_data" VALUES(45,'Lac','Lacerta','とかげ',22.4166660308838,-46.3499984741211);
-INSERT INTO "horoscope_data" VALUES(46,'Leo','Leo','しし',10.5,-30.783332824707);
-INSERT INTO "horoscope_data" VALUES(47,'Lep','Lepus','うさぎ',5.41666650772095,24.8333339691162);
-INSERT INTO "horoscope_data" VALUES(48,'Lib','Libra','てんびん',15.1666669845581,22.966667175293);
-INSERT INTO "horoscope_data" VALUES(49,'LMi','Leo Minor','こじし',10.3333330154419,-36.8666648864746);
-INSERT INTO "horoscope_data" VALUES(50,'Lup','Lupus','おおかみ',15.0,45.5666656494141);
-INSERT INTO "horoscope_data" VALUES(51,'Lyn','Lynx','やまねこ',7.83333349227905,-54.0833320617676);
-INSERT INTO "horoscope_data" VALUES(52,'Lyr','Lyra','こと',18.75,-40.7666664123535);
-INSERT INTO "horoscope_data" VALUES(53,'Men','Mensa','テーブルさん',5.66666650772095,79.5500030517578);
-INSERT INTO "horoscope_data" VALUES(54,'Mic','Microscopium','けんびきょう',20.8333339691162,40.5);
-INSERT INTO "horoscope_data" VALUES(55,'Mon','Monoceros','いっかくじゅう',7.0,11.0333337783813);
-INSERT INTO "horoscope_data" VALUES(56,'Mus','Musca','はえ',12.5,72.3000030517578);
-INSERT INTO "horoscope_data" VALUES(57,'Nor','Norma','じょうぎ',16.0,52.75);
-INSERT INTO "horoscope_data" VALUES(58,'Oct','Octans','はちぶんぎ',21.0,91.8499984741211);
-INSERT INTO "horoscope_data" VALUES(59,'Oph','Ophiuchus','へびつかい',17.1666660308838,20.7999992370605);
-INSERT INTO "horoscope_data" VALUES(60,'Ori','Orion','オリオン',5.33333349227905,-12.8999996185303);
-INSERT INTO "horoscope_data" VALUES(61,'Pav','Pavo','くじゃく',19.1666660308838,71.3000030517578);
-INSERT INTO "horoscope_data" VALUES(62,'Peg','Pegasus','ペガスス',22.5,-35.6833343505859);
-INSERT INTO "horoscope_data" VALUES(63,'Per','Perseus','ペルセウス',3.33333325386047,-52.25);
-INSERT INTO "horoscope_data" VALUES(64,'Phe','Phoenix','ほうおう',1.0,55.8166656494141);
-INSERT INTO "horoscope_data" VALUES(65,'Pic','Pictor','がか',5.5,56.1166687011719);
-INSERT INTO "horoscope_data" VALUES(66,'PsA','Piscis Austrinus','みなみのうお',22.1666660308838,36.0833320617676);
-INSERT INTO "horoscope_data" VALUES(67,'Psc','Pisces','うお',0.333333343267441,-24.8166656494141);
-INSERT INTO "horoscope_data" VALUES(68,'Pup','Puppis','とも',7.66666650772095,43.216667175293);
-INSERT INTO "horoscope_data" VALUES(69,'Pyx','Pyxis','らしんばん',8.83333301544189,31.6833343505859);
-INSERT INTO "horoscope_data" VALUES(70,'Ret','Reticulum','レチクル',3.83333325386047,64.9000015258789);
-INSERT INTO "horoscope_data" VALUES(71,'Scl','Sculptor','ちょうこくしつ',0.5,42.9166679382324);
-INSERT INTO "horoscope_data" VALUES(72,'Sco','Scorpius','さそり',16.5,34.283332824707);
-INSERT INTO "horoscope_data" VALUES(73,'Sct','Scutum','たて',18.5833339691162,11.8166666030884);
-INSERT INTO "horoscope_data" VALUES(74,'Ser','Serpens(Caput)','へび(頭)',15.5833330154419,-17.1333332061768);
-INSERT INTO "horoscope_data" VALUES(76,'Sex','Sextans','ろくぶんぎ',10.1666669845581,6.23333311080933);
-INSERT INTO "horoscope_data" VALUES(77,'Sge','Sagitta','や',19.6666660308838,-19.3333339691162);
-INSERT INTO "horoscope_data" VALUES(78,'Sgr','Sagittarius','いて',19.0,39.4500007629395);
-INSERT INTO "horoscope_data" VALUES(79,'Tau','Taurus','おうし',4.5,-31.283332824707);
-INSERT INTO "horoscope_data" VALUES(80,'Tel','Telescopium','ぼうえんきょう',19.0,56.2000007629395);
-INSERT INTO "horoscope_data" VALUES(81,'TrA','Triangulum Australe','みなみのさんかく',15.6666669845581,66.8333358764648);
-INSERT INTO "horoscope_data" VALUES(82,'Tri','Triangulum','さんかく',2.0,-34.2000007629395);
-INSERT INTO "horoscope_data" VALUES(83,'Tuc','Tucana','きょしちょう',23.75,72.9166641235352);
-INSERT INTO "horoscope_data" VALUES(84,'UMa','Ursa Major','おおぐま',11.0,-79.3333358764648);
-INSERT INTO "horoscope_data" VALUES(85,'UMi','Ursa Minor','こぐま',15.6666669845581,-82.2666702270508);
-INSERT INTO "horoscope_data" VALUES(86,'Vel','Vela','ほ',9.5,53.3333320617676);
-INSERT INTO "horoscope_data" VALUES(87,'Vir','Virgo','おとめ',13.3333330154419,23.5666675567627);
-INSERT INTO "horoscope_data" VALUES(88,'Vol','Volans','とびうお',7.66666650772095,71.3499984741211);
-INSERT INTO "horoscope_data" VALUES(89,'Vul','Vulpecula','こぎつね',20.1666660308838,-29.466667175293);
+INSERT INTO "constellation_data" VALUES(1,'And','Andromeda','アンドロメダ',0.666666686534882,-50.033332824707);
+INSERT INTO "constellation_data" VALUES(2,'Ant','Antlia','ポンプ',10.0,38.9833335876465);
+INSERT INTO "constellation_data" VALUES(3,'Aps','Apus','ふうちょう',16.0,79.4333343505859);
+INSERT INTO "constellation_data" VALUES(4,'Aql','Aquila','わし',19.5,-12.8666667938232);
+INSERT INTO "constellation_data" VALUES(5,'Aqr','Aquarius','みずがめ',22.3333339691162,29.3333339691162);
+INSERT INTO "constellation_data" VALUES(6,'Ara','Ara','さいだん',17.1666660308838,58.9500007629395);
+INSERT INTO "constellation_data" VALUES(7,'Ari','Aries','おひつじ',2.5,-27.3500003814697);
+INSERT INTO "constellation_data" VALUES(8,'Aur','Auriga','ぎょしゃ',6.0,-52.9500007629395);
+INSERT INTO "constellation_data" VALUES(9,'Boo','Bootes','うしかい',14.5833330154419,-45.1166687011719);
+INSERT INTO "constellation_data" VALUES(10,'Cae','Caelum','ちょうこくぐ',4.83333349227905,40.0833320617676);
+INSERT INTO "constellation_data" VALUES(11,'Cam','Camelopardalis','きりん',5.66666650772095,-82.6166687011719);
+INSERT INTO "constellation_data" VALUES(12,'Cap','Capricornus','やぎ',20.8333339691162,26.8999996185303);
+INSERT INTO "constellation_data" VALUES(13,'Car','Carina','りゅうこつ',8.66666698455811,70.2333374023438);
+INSERT INTO "constellation_data" VALUES(14,'Cas','Cassiopeia','カシオペヤ',1.0,-69.966667175293);
+INSERT INTO "constellation_data" VALUES(15,'Cen','Centaurus','ケンタウルス',13.3333330154419,64.6666641235352);
+INSERT INTO "constellation_data" VALUES(16,'Cep','Cepheus','ケフェウス',22.0,-79.8000030517578);
+INSERT INTO "constellation_data" VALUES(17,'Cet','Cetus','くじら',1.75,32.5166664123535);
+INSERT INTO "constellation_data" VALUES(18,'Cha','Chamaeleon','カメレオン',10.6666669845581,80.1999969482422);
+INSERT INTO "constellation_data" VALUES(19,'Cir','Circinus','コンパス',14.8333330154419,64.5500030517578);
+INSERT INTO "constellation_data" VALUES(20,'CMa','Canis Major','おおいぬ',6.66666650772095,30.3333339691162);
+INSERT INTO "constellation_data" VALUES(21,'CMi','Canis Minor','こいぬ',7.5,-9.05000019073486);
+INSERT INTO "constellation_data" VALUES(22,'Cnc','Cancer','かに',8.5,-28.4333343505859);
+INSERT INTO "constellation_data" VALUES(23,'Col','Columba','はと',5.66666650772095,38.5);
+INSERT INTO "constellation_data" VALUES(24,'Com','Coma Berenices','かみのけ',12.6666669845581,-29.4333343505859);
+INSERT INTO "constellation_data" VALUES(25,'CrA','Corona Australis','みなみのかんむり',18.5,43.1333351135254);
+INSERT INTO "constellation_data" VALUES(26,'CrB','Corona Borealis','かんむり',15.6666669845581,-32.9833335876465);
+INSERT INTO "constellation_data" VALUES(27,'Crt','Crater','コップ',11.3333330154419,19.7000007629395);
+INSERT INTO "constellation_data" VALUES(28,'Cru','Crux','みなみじゅうじ',12.3333330154419,61.1333351135254);
+INSERT INTO "constellation_data" VALUES(29,'Crv','Corvus','からす',12.3333330154419,21.0666656494141);
+INSERT INTO "constellation_data" VALUES(30,'CVn','Canes Venatici','りょうけん',13.0,-47.75);
+INSERT INTO "constellation_data" VALUES(31,'Cyg','Cygnus','はくちょう',20.5,-56.4000015258789);
+INSERT INTO "constellation_data" VALUES(32,'Del','Delphinus','いるか',20.6666660308838,-15.1499996185303);
+INSERT INTO "constellation_data" VALUES(33,'Dor','Dorado','かじき',5.0,62.9833335876465);
+INSERT INTO "constellation_data" VALUES(34,'Dra','Draco','りゅう',17.0,-78.0500030517578);
+INSERT INTO "constellation_data" VALUES(35,'Equ','Equuleus','こうま',21.1666660308838,-7.19999980926514);
+INSERT INTO "constellation_data" VALUES(36,'Eri','Erhoroscope_idanus','エリダヌス',3.83333325386047,48.966667175293);
+INSERT INTO "constellation_data" VALUES(37,'For','Fornax','ろ',2.5,39.6333312988281);
+INSERT INTO "constellation_data" VALUES(38,'Gem','Gemini','ふたご',7.0,-30.5666656494141);
+INSERT INTO "constellation_data" VALUES(39,'Gru','Grus','つる',22.3333339691162,53.0999984741211);
+INSERT INTO "constellation_data" VALUES(40,'Her','Hercules','ヘルクレス',17.1666660308838,-47.4166641235352);
+INSERT INTO "constellation_data" VALUES(41,'Hor','Horologium','とけい',3.33333325386047,56.1500015258789);
+INSERT INTO "constellation_data" VALUES(42,'Hya','Hydra','うみへび',10.5,41.716667175293);
+INSERT INTO "constellation_data" VALUES(43,'Hyi','Hydrus','みずへび',2.66666674613953,74.0500030517578);
+INSERT INTO "constellation_data" VALUES(44,'Ind','Indus','インディアン',21.3333339691162,62.9000015258789);
+INSERT INTO "constellation_data" VALUES(45,'Lac','Lacerta','とかげ',22.4166660308838,-46.3499984741211);
+INSERT INTO "constellation_data" VALUES(46,'Leo','Leo','しし',10.5,-30.783332824707);
+INSERT INTO "constellation_data" VALUES(47,'Lep','Lepus','うさぎ',5.41666650772095,24.8333339691162);
+INSERT INTO "constellation_data" VALUES(48,'Lib','Libra','てんびん',15.1666669845581,22.966667175293);
+INSERT INTO "constellation_data" VALUES(49,'LMi','Leo Minor','こじし',10.3333330154419,-36.8666648864746);
+INSERT INTO "constellation_data" VALUES(50,'Lup','Lupus','おおかみ',15.0,45.5666656494141);
+INSERT INTO "constellation_data" VALUES(51,'Lyn','Lynx','やまねこ',7.83333349227905,-54.0833320617676);
+INSERT INTO "constellation_data" VALUES(52,'Lyr','Lyra','こと',18.75,-40.7666664123535);
+INSERT INTO "constellation_data" VALUES(53,'Men','Mensa','テーブルさん',5.66666650772095,79.5500030517578);
+INSERT INTO "constellation_data" VALUES(54,'Mic','Microscopium','けんびきょう',20.8333339691162,40.5);
+INSERT INTO "constellation_data" VALUES(55,'Mon','Monoceros','いっかくじゅう',7.0,11.0333337783813);
+INSERT INTO "constellation_data" VALUES(56,'Mus','Musca','はえ',12.5,72.3000030517578);
+INSERT INTO "constellation_data" VALUES(57,'Nor','Norma','じょうぎ',16.0,52.75);
+INSERT INTO "constellation_data" VALUES(58,'Oct','Octans','はちぶんぎ',21.0,91.8499984741211);
+INSERT INTO "constellation_data" VALUES(59,'Oph','Ophiuchus','へびつかい',17.1666660308838,20.7999992370605);
+INSERT INTO "constellation_data" VALUES(60,'Ori','Orion','オリオン',5.33333349227905,-12.8999996185303);
+INSERT INTO "constellation_data" VALUES(61,'Pav','Pavo','くじゃく',19.1666660308838,71.3000030517578);
+INSERT INTO "constellation_data" VALUES(62,'Peg','Pegasus','ペガスス',22.5,-35.6833343505859);
+INSERT INTO "constellation_data" VALUES(63,'Per','Perseus','ペルセウス',3.33333325386047,-52.25);
+INSERT INTO "constellation_data" VALUES(64,'Phe','Phoenix','ほうおう',1.0,55.8166656494141);
+INSERT INTO "constellation_data" VALUES(65,'Pic','Pictor','がか',5.5,56.1166687011719);
+INSERT INTO "constellation_data" VALUES(66,'PsA','Piscis Austrinus','みなみのうお',22.1666660308838,36.0833320617676);
+INSERT INTO "constellation_data" VALUES(67,'Psc','Pisces','うお',0.333333343267441,-24.8166656494141);
+INSERT INTO "constellation_data" VALUES(68,'Pup','Puppis','とも',7.66666650772095,43.216667175293);
+INSERT INTO "constellation_data" VALUES(69,'Pyx','Pyxis','らしんばん',8.83333301544189,31.6833343505859);
+INSERT INTO "constellation_data" VALUES(70,'Ret','Reticulum','レチクル',3.83333325386047,64.9000015258789);
+INSERT INTO "constellation_data" VALUES(71,'Scl','Sculptor','ちょうこくしつ',0.5,42.9166679382324);
+INSERT INTO "constellation_data" VALUES(72,'Sco','Scorpius','さそり',16.5,34.283332824707);
+INSERT INTO "constellation_data" VALUES(73,'Sct','Scutum','たて',18.5833339691162,11.8166666030884);
+INSERT INTO "constellation_data" VALUES(74,'Ser','Serpens(Caput)','へび(頭)',15.5833330154419,-17.1333332061768);
+INSERT INTO "constellation_data" VALUES(76,'Sex','Sextans','ろくぶんぎ',10.1666669845581,6.23333311080933);
+INSERT INTO "constellation_data" VALUES(77,'Sge','Sagitta','や',19.6666660308838,-19.3333339691162);
+INSERT INTO "constellation_data" VALUES(78,'Sgr','Sagittarius','いて',19.0,39.4500007629395);
+INSERT INTO "constellation_data" VALUES(79,'Tau','Taurus','おうし',4.5,-31.283332824707);
+INSERT INTO "constellation_data" VALUES(80,'Tel','Telescopium','ぼうえんきょう',19.0,56.2000007629395);
+INSERT INTO "constellation_data" VALUES(81,'TrA','Triangulum Australe','みなみのさんかく',15.6666669845581,66.8333358764648);
+INSERT INTO "constellation_data" VALUES(82,'Tri','Triangulum','さんかく',2.0,-34.2000007629395);
+INSERT INTO "constellation_data" VALUES(83,'Tuc','Tucana','きょしちょう',23.75,72.9166641235352);
+INSERT INTO "constellation_data" VALUES(84,'UMa','Ursa Major','おおぐま',11.0,-79.3333358764648);
+INSERT INTO "constellation_data" VALUES(85,'UMi','Ursa Minor','こぐま',15.6666669845581,-82.2666702270508);
+INSERT INTO "constellation_data" VALUES(86,'Vel','Vela','ほ',9.5,53.3333320617676);
+INSERT INTO "constellation_data" VALUES(87,'Vir','Virgo','おとめ',13.3333330154419,23.5666675567627);
+INSERT INTO "constellation_data" VALUES(88,'Vol','Volans','とびうお',7.66666650772095,71.3499984741211);
+INSERT INTO "constellation_data" VALUES(89,'Vul','Vulpecula','こぎつね',20.1666660308838,-29.466667175293);
 COMMIT;
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
-CREATE TABLE horoscope_path (
-    horoscope_code              TEXT    not null
+CREATE TABLE constellation_path (
+    constellation_code          TEXT    not null
   , hip_num_fm                  INTEGER not null    -- HIP番号の始点
   , hip_num_to                  INTEGER not null    -- HIP番号の終点
-  , constraint PK_horoscope_path primary key ( horoscope_code, hip_num_fm, hip_num_to )
+  , constraint PK_constellation_path primary key ( hip_num_fm, hip_num_to )
 );
+INSERT INTO "constellation_path" VALUES('Cas',-1,3179);
+INSERT INTO "constellation_path" VALUES('Cas',3179,746);
+INSERT INTO "constellation_path" VALUES('Cas',6686,-1);
+INSERT INTO "constellation_path" VALUES('Cas',8886,6686);
+INSERT INTO "constellation_path" VALUES('UMa',53910,54061);
+INSERT INTO "constellation_path" VALUES('UMa',58001,53910);
+INSERT INTO "constellation_path" VALUES('UMa',59774,58001);
+INSERT INTO "constellation_path" VALUES('UMa',59774,54061);
+INSERT INTO "constellation_path" VALUES('UMa',62956,59774);
+INSERT INTO "constellation_path" VALUES('UMa',65378,62956);
+INSERT INTO "constellation_path" VALUES('UMa',67301,65378);
 COMMIT;

@@ -1,3 +1,5 @@
+-- wikipediaの星データ
+-- 'γ Cas', 'ツィー'のHIPを-1にねつ造している
 drop table if exists wikipedia_star_name ;
 CREATE TABLE wikipedia_star_name (
     hip_num                     INTEGER not null    -- HIP番号
@@ -97,7 +99,7 @@ insert into wikipedia_star_name (hip_num, bayer_code, japanese_name, simbad, mem
 insert into wikipedia_star_name (hip_num, bayer_code, japanese_name, simbad, memo) values ('58001', 'γ UMa', 'フェクダ', 'Phecda', null);
 insert into wikipedia_star_name (hip_num, bayer_code, japanese_name, simbad, memo) values ('105199', 'α Cep', 'アルデラミン', 'Alderamin', null);
 insert into wikipedia_star_name (hip_num, bayer_code, japanese_name, simbad, memo) values ('45941', 'κ Vel', 'マルカブ', 'Markab', null);
-insert into wikipedia_star_name (hip_num, bayer_code, japanese_name, simbad, memo) values (null, 'γ Cas', 'ツィー', 'Tsih', null);
+insert into wikipedia_star_name (hip_num, bayer_code, japanese_name, simbad, memo) values (-1/*ねつ造*/, 'γ Cas', 'ツィー', 'Tsih', null);
 insert into wikipedia_star_name (hip_num, bayer_code, japanese_name, simbad, memo) values ('102488', 'ε Cyg A', 'ギェナー', 'Gienah', null);
 insert into wikipedia_star_name (hip_num, bayer_code, japanese_name, simbad, memo) values ('113963', 'α Peg', 'マルカブ', 'Markab', null);
 insert into wikipedia_star_name (hip_num, bayer_code, japanese_name, simbad, memo) values ('78820', 'β Sco', 'アクラブ', 'Acrab', null);

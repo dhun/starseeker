@@ -1,4 +1,5 @@
 -- NASAの星データ
+-- 'γ Cas', 'ツィー'をHIPで-1にねつ造している
 drop table if exists nasa_star_data ;
 create table nasa_star_data (
     hip_num                     INTEGER not null    -- HIP番号
@@ -10,6 +11,7 @@ create table nasa_star_data (
 
 delete from nasa_star_data ;
 
+insert into nasa_star_data ( hip_num, right_ascension, declination, magnitude ) values ('-1', '0h 56m 42.5317s', '60°43''', '2.47');   -- カシオペヤ座γ星. NASAにデータがなかったのでねつ造
 insert into nasa_star_data ( hip_num, right_ascension, declination, magnitude ) values ('32349', '6h 45m 9.2499s', '-16°42''', '-1.44');
 insert into nasa_star_data ( hip_num, right_ascension, declination, magnitude ) values ('30438', '6h 23m 57.0906s', '-52°41''', '-0.62');
 insert into nasa_star_data ( hip_num, right_ascension, declination, magnitude ) values ('69673', '14h 15m 40.3474s', '19°11''', '-0.05');

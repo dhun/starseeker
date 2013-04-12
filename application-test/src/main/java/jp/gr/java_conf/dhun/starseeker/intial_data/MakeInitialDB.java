@@ -29,16 +29,30 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
  * DB初期化用のダンプファイルを生成するプログラム.<br/>
  * 次の問題点が残っています.<br/>
  * <ul>
- * <li>130-constellation_name.sql(星座名データ)
+ * <li>200-wikipedia_star_name.sql
  * <ul>
- * <li>horoscope_code="Ser"が重複しており89行目をコメントアウトしているため「'Serpens(Cauda)', 'へび(尾)'」が未定義</li>
+ * <li>'γ Cas', 'ツィー'のHIPを-1にねつ造している</li>
  * </ul>
  * </li>
- * <li>110-fk_name.sql(恒星名データ)
+ * <li>210-wikipedia_constellation.sql
  * <ul>
- * <li>horoscope_code="Ser"が重複しているため、へび座を構成する星の見分けがつかない</li>
+ * <li>'γ Cas', 'ツィー'のHIPを-1にねつ造している</li>
  * </ul>
  * </li>
+ * <li>300-nasa_star_data.sql
+ * <ul>
+ * <li>'γ Cas', 'ツィー'をHIPで-1にねつ造している</li>
+ * </ul>
+ * </li>
+ * <li>130-hoshizora_constellation_name.sql(星座名データ)
+ * <ul>
+ * <li>horoscope_code='Ser'が重複しており89行目をコメントアウトしているため「'Serpens(Cauda)', 'へび(尾)'」が未定義</li>
+ * </ul>
+ * </li>
+ * <li>110-hoshizora_fk_name.sql(恒星名データ) <b>※このデータは使ってないので悪影響はなし</b>
+ * <ul>
+ * <li>horoscope_code='Ser'が重複しているため、へび座を構成する星の見分けがつかない</li>
+ * </ul>
  * </li>
  * </ul>
  * 
@@ -47,8 +61,9 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
  */
 public class MakeInitialDB {
 
-    private static final boolean COPY_TO_APPLICATION_IF_SUCCEED = true; // trueにすると、初期DBダンプの生成に成功したらアプリケーションプロジェクトにコピーする
-    private static final boolean REMOVE_TMP_DATABASE_IF_SUCCEED = true; // trueにすると、初期DBダンプの生成に成功したら一時DBを削除する
+    private static final boolean COPY_TO_APPLICATION_IF_SUCCEED = true; // trueにすると、初期DBダンプの生成に成功したとき、アプリケーションプロジェクトにコピーする
+    private static final boolean REMOVE_TMP_DATABASE_IF_SUCCEED = true; // trueにすると、初期DBダンプの生成に成功したとき、一時DBを削除する
+    private static final boolean REMOVE_TMP_DATABASE_IF_FAILURE = true; // trueにすると、初期DBダンプの生成に失敗したとき、一時DBを削除する
 
     private static final String SQLITE_PATH_WIN = "D:/dev/_opt/sqlite3/sqlite3.exe";
     private static final String SQLITE_PATH_MAC = "sqlite3";
@@ -118,15 +133,23 @@ public class MakeInitialDB {
             StringBuilder message = new StringBuilder();
             message.append("次の問題点が残っています.");
             message.append("\n");
-            message.append("\n・130-constellation_name.sql(星座名データ)");
+            message.append("\n・200-wikipedia_star_name.sql");
+            message.append("\n    ・'γ Cas', 'ツィー'のHIPを-1にねつ造している");
+            message.append("\n・210-wikipedia_constellation.sql");
+            message.append("\n    ・'γ Cas', 'ツィー'のHIPを-1にねつ造している");
+            message.append("\n・300-nasa_star_data.sql");
+            message.append("\n    ・'γ Cas', 'ツィー'をHIPで-1にねつ造している");
+            message.append("\n・130-hoshizora_constellation_name.sql(星座名データ)");
             message.append("\n    ・horoscope_code='Ser'が重複しており89行目をコメントアウトしているため「'Serpens(Cauda)', 'へび(尾)'」が未定義");
-            message.append("\n・110-fk_name.sql(恒星名データ) ");
+            message.append("\n・110-hoshizora_fk_name.sql(恒星名データ)  ※このデータは使ってないので悪影響はなし");
             message.append("\n    ・horoscope_code='Ser'が重複しているため、へび座を構成する星の見分けがつかない");
             message.append("\n");
             System.out.print(message.toString());
 
         } catch (Throwable t) {
-            // FileUtils.delete(TMP_DATABASE_FILE);
+            if (REMOVE_TMP_DATABASE_IF_FAILURE) {
+                FileUtils.delete(TMP_DATABASE_FILE);
+            }
             FileUtils.delete(INI_DATABASE_DUMP);
             System.out.println("abnormal end.");
             throw new RuntimeException(t);
@@ -237,7 +260,7 @@ public class MakeInitialDB {
             connection.setAutoCommit(false);
 
             convertStarData(connection);
-            convertHoroscopeData(connection);
+            convertConstellationData(connection);
 
             connection.commit();
 
@@ -269,19 +292,19 @@ public class MakeInitialDB {
         }
     }
 
-    private void convertHoroscopeData(Connection connection) throws SQLException {
-        System.out.println("---- convert : horoscope_data ----");
+    private void convertConstellationData(Connection connection) throws SQLException {
+        System.out.println("---- convert : constellation_data ----");
 
         Statement select = connection.createStatement();
-        PreparedStatement update = connection.prepareStatement("update horoscope_data set right_ascension=?, declination=? where horoscope_id=?");
-        ResultSet rs = select.executeQuery("select * from horoscope_data");
+        PreparedStatement update = connection.prepareStatement("update constellation_data set right_ascension=?, declination=? where constellation_id=?");
+        ResultSet rs = select.executeQuery("select * from constellation_data");
         while (rs.next()) {
             float right_ascension = StarLocationUtil.convertHourStringToFloat(rs.getString("right_ascension"));
             float declination = StarLocationUtil.convertAngleStringToFloat(rs.getString("declination"));
 
             update.setFloat(1, right_ascension);
             update.setFloat(2, declination);
-            update.setInt(3, rs.getInt("horoscope_id"));
+            update.setInt(3, rs.getInt("constellation_id"));
             update.execute();
         }
     }
@@ -323,8 +346,8 @@ public class MakeInitialDB {
 
         try {
             dumpFiles.add(dumpTable("star_data"));
-            dumpFiles.add(dumpTable("horoscope_data"));
-            dumpFiles.add(dumpTable("horoscope_path"));
+            dumpFiles.add(dumpTable("constellation_data"));
+            dumpFiles.add(dumpTable("constellation_path"));
 
             FileUtils.delete(INI_DATABASE_DUMP);
             for (File dumpFile : dumpFiles) {
