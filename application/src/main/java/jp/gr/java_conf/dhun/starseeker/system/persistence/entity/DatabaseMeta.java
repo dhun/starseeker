@@ -11,6 +11,7 @@ import java.util.Date;
  * @author jun
  * 
  */
+@Deprecated
 public class DatabaseMeta {
 
     public static final String TABLE_NAME = "database_info";
