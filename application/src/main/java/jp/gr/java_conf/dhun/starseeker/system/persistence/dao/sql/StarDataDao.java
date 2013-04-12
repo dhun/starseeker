@@ -12,6 +12,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
+ * 星データのDAO
+ * 
  * @author jun
  * 
  */
