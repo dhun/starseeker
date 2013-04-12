@@ -7,6 +7,8 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,12 +20,36 @@ import java.util.List;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.DatabaseHelper;
 
 /**
+ * ファイルユーティリティ
+ * 
  * @author j_hosoya
  * 
  */
 public final class FileUtils {
 
     private FileUtils() {
+    }
+
+    /**
+     * ファイルをコピーします.<br/>
+     * 
+     * @param srcFile コピー元となるファイル
+     * @param dstFile コピー先となるファイル
+     * @throws IOException I/O例外
+     */
+    public static void copyFile(File srcFile, File dstFile) throws IOException {
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+
+        try {
+            bis = new BufferedInputStream(new FileInputStream(srcFile));
+            bos = new BufferedOutputStream(new FileOutputStream(dstFile));
+            copyStream(bis, bos);
+
+        } finally {
+            closeIgnoreIOException(bis);
+            closeIgnoreIOException(bos);
+        }
     }
 
     /**
