@@ -23,6 +23,7 @@ import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.StarDataDao;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarEntity;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 /**
  * @author jun
@@ -34,16 +35,15 @@ public class StarManager {
     private static final float SET_DISPLAY_TEXT_LOWER_MAGNITUDE = 2;    // テキスト表示する下限となる等級
 
     private final DatabaseHelper databaseHelper;
-    private final StarDataDao starDataDao;
 
     private final Map<StarApproxMagnitude, StarSet> allStars;   // すべての星データ. おおよその等級別に管理
 
     private StarLocator starLocator;
     private ExtractStarIterator extractStarIterator;
 
-    private boolean needExtract;        // 抽出する等級が変更されたかどうか
-    private boolean needRelocate;       // 観測条件が変更されたかどうか
-    private boolean needNewStarLocator; //
+    private boolean needReextract;      // 星の再抽出が必要かどうか
+    private boolean needRelocate;       // 星の再配置が必要かどうか
+    private boolean needNewStarLocator; // 星ロケータの再生成が必要かどうか
 
     private float extractUpperStarMagnitude;        // 抽出する等級の上限
 
@@ -52,15 +52,14 @@ public class StarManager {
     private Calendar observationCalendar;           // 観測日時を示すカレンダー
 
     public StarManager(Context context) {
-        databaseHelper = new DatabaseHelper(context);
-        starDataDao = new StarDataDao(databaseHelper.getReadableDatabase());
+        databaseHelper = new DatabaseHelper(context.getApplicationContext());
 
         allStars = new HashMap<StarApproxMagnitude, StarSet>();
 
         starLocator = null;
         extractStarIterator = null;
 
-        needExtract = false;
+        needReextract = false;
         needRelocate = false;
         needNewStarLocator = false;
     }
@@ -82,35 +81,43 @@ public class StarManager {
      * @param extractUpperStarMagnitude 抽出する等級の上限
      */
     private void extract(float extractUpperStarMagnitude) {
-        int extractCount = 0;
-        for (StarApproxMagnitude approxMagnitude : StarApproxMagnitude.listApproxMagnitudes(extractUpperStarMagnitude)) {
-            StarSet starSet = allStars.get(approxMagnitude);
-            if (starSet != null) {
-                // この等級は抽出済みのためスキップ
-                continue;
+        final SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        final StarDataDao starDataDao = new StarDataDao(db);
+
+        try {
+            int extractCount = 0;
+            for (StarApproxMagnitude approxMagnitude : StarApproxMagnitude.listApproxMagnitudes(extractUpperStarMagnitude)) {
+                StarSet starSet = allStars.get(approxMagnitude);
+                if (starSet != null) {
+                    // この等級は抽出済みのためスキップ
+                    continue;
+                }
+
+                // 星マップに要素を追加. 星がゼロ件でも追加する
+                starSet = new StarSet();
+                starSet.setLocated(false);
+                allStars.put(approxMagnitude, starSet);
+
+                for (StarEntity entity : starDataDao.findByMagnitudeRange(approxMagnitude)) {
+                    starSet.add(new Star(entity));
+                    extractCount++;
+                }
             }
 
-            // 星マップに要素を追加. 星がゼロ件でも追加する
-            starSet = new StarSet();
-            starSet.setLocated(false);
-            allStars.put(approxMagnitude, starSet);
+            needReextract = false;
+            LogUtils.i(getClass(), "星を抽出しました. count=[" + extractCount + "]");
 
-            for (StarEntity entity : starDataDao.findByMagnitudeRange(approxMagnitude)) {
-                starSet.add(new Star(entity));
-                extractCount++;
-            }
+        } finally {
+            db.close();
         }
-
-        needExtract = false;
-        LogUtils.i(getClass(), "星を抽出しました. count=[" + extractCount + "]");
     }
 
     /**
-     * 指定された等級以下の星を再配置します.
+     * 指定された等級以下の星を配置します.
      * 
-     * @param extractUpperStarMagnitude 再配置する等級の上限
+     * @param extractUpperStarMagnitude 配置する等級の上限
      */
-    private void relocate(float extractUpperStarMagnitude) {
+    private void locate(float extractUpperStarMagnitude) {
         // フォーマッタ. インスタンスフィールドにしても構わないけど、大した負荷じゃないのでメソッドローカルにした
         DecimalFormat angleFormat = new DecimalFormat("0.00");
         angleFormat.setPositivePrefix("+");
@@ -122,7 +129,7 @@ public class StarManager {
             return;
         }
 
-        int relocateCount = 0;
+        int locateCount = 0;
         for (Entry<StarApproxMagnitude, StarSet> e : allStars.entrySet()) {
             StarSet starSet = e.getValue();
 
@@ -155,11 +162,11 @@ public class StarManager {
                     star.setDisplayText(null);
                 }
 
-                relocateCount++;
+                locateCount++;
             }
         }
 
-        LogUtils.i(getClass(), "星の地平座標を再配置しました. count=[" + relocateCount + "]");
+        LogUtils.i(getClass(), "星の地平座標を配置しました. count=[" + locateCount + "]");
     }
 
     /**
@@ -169,7 +176,7 @@ public class StarManager {
      */
     public void setExtractUpperStarMagnitude(float extractUpperStarMagnitude) {
         this.extractUpperStarMagnitude = extractUpperStarMagnitude;
-        this.needExtract = true;
+        this.needReextract = true;
         this.needRelocate = true;
     }
 
@@ -199,7 +206,7 @@ public class StarManager {
 
     public void prepare() {
         // 必要であれば星を抽出
-        if (needExtract) {
+        if (needReextract) {
             extract(extractUpperStarMagnitude);
         }
 
@@ -214,7 +221,7 @@ public class StarManager {
 
         // 必要であれば星を再配置
         if (needRelocate) {
-            relocate(extractUpperStarMagnitude);
+            locate(extractUpperStarMagnitude);
         }
 
         extractStarIterator = new ExtractStarIterator(extractUpperStarMagnitude);

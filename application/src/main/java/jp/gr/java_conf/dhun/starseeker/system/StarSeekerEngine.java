@@ -59,6 +59,8 @@ public class StarSeekerEngine implements //
 
     private String locationTitle;
 
+    private boolean enabled;
+
     /**
      * コンストラクタ
      */
@@ -69,6 +71,8 @@ public class StarSeekerEngine implements //
         orientations = new Orientations();
 
         fpsCounter = new FpsCounter();
+
+        enabled = false;
     }
 
     /**
@@ -93,7 +97,9 @@ public class StarSeekerEngine implements //
 
         starManager.setObservationLocation(longitude, latitude);
         starManager.setObservationDatetime(baseCalendar);
-        starManager.prepare();
+        if (enabled) {
+            starManager.prepare();
+        }
     }
 
     /**
@@ -103,7 +109,18 @@ public class StarSeekerEngine implements //
      */
     public void configureExtractUpperStarMagnitude(float magnitude) {
         starManager.setExtractUpperStarMagnitude(magnitude);
+        if (enabled) {
+            starManager.prepare();
+        }
+    }
+
+    public void resume() {
+        enabled = true;
         starManager.prepare();
+    }
+
+    public void pause() {
+        enabled = false;
     }
 
     // ＞＞＞ 開発中のコード
