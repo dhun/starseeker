@@ -38,12 +38,23 @@ public final class FileUtils {
      * @throws IOException I/O例外
      */
     public static void copyFile(File srcFile, File dstFile) throws IOException {
+        copyFile(srcFile, dstFile, false);
+    }
+
+    /**
+     * ファイルをコピーします.<br/>
+     * 
+     * @param srcFile コピー元となるファイル
+     * @param dstFile コピー先となるファイル
+     * @throws IOException I/O例外
+     */
+    public static void copyFile(File srcFile, File dstFile, boolean append) throws IOException {
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
 
         try {
             bis = new BufferedInputStream(new FileInputStream(srcFile));
-            bos = new BufferedOutputStream(new FileOutputStream(dstFile));
+            bos = new BufferedOutputStream(new FileOutputStream(dstFile, append));
             copyStream(bis, bos);
 
         } finally {
@@ -125,6 +136,19 @@ public final class FileUtils {
                 file.delete();
             }
             throw e;
+        }
+    }
+
+    /**
+     * 指定されたファイルを削除します.
+     * 
+     * @return ファイルを削除できたらtrue.
+     */
+    public static boolean delete(File file) {
+        if (null != file && file.exists()) {
+            return file.delete();
+        } else {
+            return true;
         }
     }
 

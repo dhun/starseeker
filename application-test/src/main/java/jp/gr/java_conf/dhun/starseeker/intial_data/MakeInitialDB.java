@@ -54,7 +54,8 @@ public class MakeInitialDB {
     private static final String SQLITE_PATH_MAC = "sqlite3";
 
     private static final String APPLICATION_ASSET_DIR = "../application/assets/sql";
-    private static final String ROOT_DIR = "initial_data";
+
+    private static final File ROOT_DIR = new File("initial_data");
 
     private static final File TMP_DATABASE_FILE = new File(ROOT_DIR, "starseeker.db");
     private static final File INI_DATABASE_DUMP = new File(ROOT_DIR, "starseeker-initial.dump");
@@ -75,15 +76,9 @@ public class MakeInitialDB {
             validateExistsSqlite();
 
             // 出力ファイルを初期化
-            if (TMP_DATABASE_FILE.exists()) {
-                TMP_DATABASE_FILE.delete();
-            }
-            if (INI_DATABASE_DUMP.exists()) {
-                INI_DATABASE_DUMP.delete();
-            }
-            if (INI_DATABASE_TIME.exists()) {
-                INI_DATABASE_TIME.delete();
-            }
+            FileUtils.delete(TMP_DATABASE_FILE);
+            FileUtils.delete(INI_DATABASE_DUMP);
+            FileUtils.delete(INI_DATABASE_TIME);
 
             // SQLスクリプトを実行して一時的なデータベースを作成
             executeSqlFiles(ROOT_DIR + File.separator + "original_data");
@@ -105,8 +100,8 @@ public class MakeInitialDB {
             createTimestampFile();
 
             // 一時的なデータベースを削除
-            if (TMP_DATABASE_FILE.exists() && REMOVE_TMP_DATABASE_IF_SUCCEED) {
-                TMP_DATABASE_FILE.delete();
+            if (REMOVE_TMP_DATABASE_IF_SUCCEED) {
+                FileUtils.delete(TMP_DATABASE_FILE);
             }
 
             // アプリケーションプロジェクトにダンプファイルをコピー
@@ -131,12 +126,8 @@ public class MakeInitialDB {
             System.out.print(message.toString());
 
         } catch (Throwable t) {
-            // if (TMP_DATABASE_FILE.exists()) {
-            // TMP_DATABASE_FILE.delete();
-            // }
-            if (INI_DATABASE_DUMP.exists()) {
-                INI_DATABASE_DUMP.delete();
-            }
+            // FileUtils.delete(TMP_DATABASE_FILE);
+            FileUtils.delete(INI_DATABASE_DUMP);
             System.out.println("abnormal end.");
             throw new RuntimeException(t);
         }
@@ -327,20 +318,37 @@ public class MakeInitialDB {
         statement.execute();
     }
 
-    private void dumpTables() throws IOException, InterruptedException, SQLException {
-        dumpTable("star_data");
-        dumpTable("horoscope_data");
-        dumpTable("horoscope_path");
+    private void dumpTables() throws IOException, InterruptedException {
+        List<File> dumpFiles = new ArrayList<File>();
+
+        try {
+            dumpFiles.add(dumpTable("star_data"));
+            dumpFiles.add(dumpTable("horoscope_data"));
+            dumpFiles.add(dumpTable("horoscope_path"));
+
+            FileUtils.delete(INI_DATABASE_DUMP);
+            for (File dumpFile : dumpFiles) {
+                FileUtils.copyFile(dumpFile, INI_DATABASE_DUMP, true/* append */);
+            }
+
+        } finally {
+            for (File dumpFile : dumpFiles) {
+                FileUtils.delete(dumpFile);
+            }
+        }
     }
 
-    private void dumpTable(String tableName) throws IOException, InterruptedException {
+    private File dumpTable(String tableName) throws IOException, InterruptedException {
         System.out.println("---- dump table : " + tableName + " ----");
+
+        // ダンプファイルを作成
+        File dumpFile = File.createTempFile("dump", ".dmp", ROOT_DIR);
 
         // 設定ファイルを作成
         List<String> settings = new ArrayList<String>();
-        settings.add(".output " + INI_DATABASE_DUMP.getAbsolutePath());
+        settings.add(".output " + dumpFile.getAbsolutePath());
 
-        File iniFile = FileUtils.createTempFileAndWriteLines(new File(ROOT_DIR), settings);
+        File iniFile = FileUtils.createTempFileAndWriteLines(ROOT_DIR, settings);
 
         // SQLITEのコマンドラインを構築
         List<String> commands = new ArrayList<String>();
@@ -383,12 +391,18 @@ public class MakeInitialDB {
             if (result != 0) {
                 throw new RuntimeException("データベースファイルのダンプ中に例外が発生した");
             }
-            return;
+            return dumpFile;
+
+        } catch (IOException e) {
+            FileUtils.delete(dumpFile);
+            throw e;
+
+        } catch (InterruptedException e) {
+            FileUtils.delete(dumpFile);
+            throw e;
 
         } finally {
-            if (iniFile != null) {
-                iniFile.delete();
-            }
+            FileUtils.delete(iniFile);
             FileUtils.closeIgnoreIOException(standardIn);
         }
     }
