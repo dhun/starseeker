@@ -17,6 +17,7 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
  * @author jun
  * 
  */
+@Deprecated
 public class StarDao {
 
     private static final Set<StarData> STARS;
