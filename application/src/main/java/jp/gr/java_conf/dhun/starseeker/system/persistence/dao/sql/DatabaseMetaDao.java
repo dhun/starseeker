@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
  * @author jun
  * 
  */
+@Deprecated
 public class DatabaseMetaDao {
 
     private final SQLiteDatabase db;
