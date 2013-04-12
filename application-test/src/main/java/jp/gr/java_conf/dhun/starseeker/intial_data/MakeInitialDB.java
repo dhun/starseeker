@@ -47,15 +47,18 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
  */
 public class MakeInitialDB {
 
-    private static final boolean REMOVE_TMP_DATABASE_IF_SUCCEED = true;
+    private static final boolean COPY_TO_APPLICATION_IF_SUCCEED = true; // trueにすると、初期DBダンプの生成に成功したらアプリケーションプロジェクトにコピーする
+    private static final boolean REMOVE_TMP_DATABASE_IF_SUCCEED = true; // trueにすると、初期DBダンプの生成に成功したら一時DBを削除する
 
     private static final String SQLITE_PATH_WIN = "D:/dev/_opt/sqlite3/sqlite3.exe";
     private static final String SQLITE_PATH_MAC = "sqlite3";
 
+    private static final String APPLICATION_ASSET_DIR = "../application/assets/sql";
     private static final String ROOT_DIR = "initial_data";
+
     private static final File TMP_DATABASE_FILE = new File(ROOT_DIR, "starseeker.db");
-    private static final File INI_DATABASE_TIME = new File(ROOT_DIR, "starseeker.timestamp");
-    private static final File INI_DATABASE_DUMP = new File(ROOT_DIR, "starseeker.dump");
+    private static final File INI_DATABASE_DUMP = new File(ROOT_DIR, "starseeker-initial.dump");
+    private static final File INI_DATABASE_TIME = new File(ROOT_DIR, "starseeker-initial.timestamp");
 
     private static final DateFormat timestampFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
@@ -104,6 +107,13 @@ public class MakeInitialDB {
             // 一時的なデータベースを削除
             if (TMP_DATABASE_FILE.exists() && REMOVE_TMP_DATABASE_IF_SUCCEED) {
                 TMP_DATABASE_FILE.delete();
+            }
+
+            // アプリケーションプロジェクトにダンプファイルをコピー
+            if (COPY_TO_APPLICATION_IF_SUCCEED) {
+                File dstDir = new File(APPLICATION_ASSET_DIR);
+                FileUtils.copyFile(INI_DATABASE_DUMP, new File(dstDir, INI_DATABASE_DUMP.getName()));
+                FileUtils.copyFile(INI_DATABASE_TIME, new File(dstDir, INI_DATABASE_TIME.getName()));
             }
 
             System.out.println("");
