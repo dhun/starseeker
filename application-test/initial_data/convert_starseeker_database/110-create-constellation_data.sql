@@ -2,9 +2,9 @@
 drop table if exists constellation_data ;
 create table constellation_data (
     constellation_id            INTEGER not null    -- 星座ID
-  , constellation_code          TEXT    not null    -- 略符
-  , constellation_name          TEXT    not null    -- 学名
-  , abbreviated_name            TEXT    not null    -- 星座名(日本語)
+  , constellation_code          TEXT    not null    -- 星座コード(略符)
+  , constellation_name          TEXT    not null    -- 星座名(学名)
+  , japanese_name               TEXT    not null    -- 星座名(日本語)
   , right_ascension             REAL    not null    -- 赤経
   , declination                 REAL    not null    -- 赤緯
   , constraint PK_constellation_name primary key ( constellation_id )

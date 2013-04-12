@@ -31,14 +31,14 @@ public class StarData {
     }
 
     /**
-     * IDを取得します.<br/>
+     * HIP番号を取得します.<br/>
      */
     public Integer getHipNumber() {
         return hipNumber;
     }
 
     /**
-     * IDを設定します.<br/>
+     * HIP番号を設定します.<br/>
      */
     public void setHipNumber(Integer hipNumber) {
         this.hipNumber = hipNumber;
@@ -127,11 +127,7 @@ public class StarData {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        long temp;
-        temp = Float.floatToIntBits(rightAscension);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Float.floatToIntBits(declination);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + ((hipNumber == null) ? 0 : hipNumber.hashCode());
         return result;
     }
 
@@ -147,10 +143,11 @@ public class StarData {
             return false;
         }
         StarData other = (StarData) obj;
-        if (Float.floatToIntBits(rightAscension) != Float.floatToIntBits(other.getRightAscension())) {
-            return false;
-        }
-        if (Float.floatToIntBits(declination) != Float.floatToIntBits(other.getDeclination())) {
+        if (hipNumber == null) {
+            if (other.hipNumber != null) {
+                return false;
+            }
+        } else if (!hipNumber.equals(other.hipNumber)) {
             return false;
         }
         return true;
