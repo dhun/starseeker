@@ -14,8 +14,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.regex.Pattern;
 
+import jp.gr.java_conf.dhun.starseeker.util.FileUtils;
 import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
 
 /**
@@ -40,11 +47,17 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
  */
 public class MakeInitialDB {
 
-    private static final String SQLITE_PATH = "D:/dev/_opt/sqlite3/sqlite3.exe";
-    private static final String SQL_ROOT_DIR = "initial_data";
+    private static final boolean REMOVE_TMP_DATABASE_IF_SUCCEED = true;
 
-    private final File databaseFile = new File("initial_data", "starseeker.db");
-    private final File databaseDump = new File("initial_data", "starseeker.dump");
+    private static final String SQLITE_PATH_WIN = "D:/dev/_opt/sqlite3/sqlite3.exe";
+    private static final String SQLITE_PATH_MAC = "sqlite3";
+
+    private static final String ROOT_DIR = "initial_data";
+    private static final File TMP_DATABASE_FILE = new File(ROOT_DIR, "starseeker.db");
+    private static final File INI_DATABASE_TIME = new File(ROOT_DIR, "starseeker.timestamp");
+    private static final File INI_DATABASE_DUMP = new File(ROOT_DIR, "starseeker.dump");
+
+    private static final DateFormat timestampFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     public static void main(String[] args) {
         MakeInitialDB instance = new MakeInitialDB();
@@ -53,28 +66,45 @@ public class MakeInitialDB {
 
     public void make() {
         try {
-            System.out.println("begin,");
+            System.out.println("begin.");
 
             Class.forName("org.sqlite.JDBC");
+            validateExistsSqlite();
 
-            if (databaseFile.exists()) {
-                databaseFile.delete();
+            // 出力ファイルを初期化
+            if (TMP_DATABASE_FILE.exists()) {
+                TMP_DATABASE_FILE.delete();
             }
-            if (databaseDump.exists()) {
-                databaseDump.delete();
+            if (INI_DATABASE_DUMP.exists()) {
+                INI_DATABASE_DUMP.delete();
+            }
+            if (INI_DATABASE_TIME.exists()) {
+                INI_DATABASE_TIME.delete();
             }
 
-            executeSqlFiles(SQL_ROOT_DIR + File.separator + "original_data");
-            executeSqlFiles(SQL_ROOT_DIR + File.separator + "convert_starseeker_database");
+            // SQLスクリプトを実行して一時的なデータベースを作成
+            executeSqlFiles(ROOT_DIR + File.separator + "original_data");
+            executeSqlFiles(ROOT_DIR + File.separator + "convert_starseeker_database");
 
+            // データの補正
             executeConvertSqlStatements();
 
+            // 不要なテーブルを削除
             boolean dropNotUsed = false;
             if (dropNotUsed) {
                 dropTables();
             }
 
+            // 初期DBに必要なテーブルをダンプ
             dumpTables();
+
+            // 初期DBのタイムスタンプファイルを作成
+            createTimestampFile();
+
+            // 一時的なデータベースを削除
+            if (TMP_DATABASE_FILE.exists() && REMOVE_TMP_DATABASE_IF_SUCCEED) {
+                TMP_DATABASE_FILE.delete();
+            }
 
             System.out.println("");
             System.out.println("normal end.");
@@ -91,11 +121,11 @@ public class MakeInitialDB {
             System.out.print(message.toString());
 
         } catch (Throwable t) {
-            // if (databaseFile.exists()) {
-            // databaseFile.delete();
+            // if (TMP_DATABASE_FILE.exists()) {
+            // TMP_DATABASE_FILE.delete();
             // }
-            if (databaseDump.exists()) {
-                databaseDump.delete();
+            if (INI_DATABASE_DUMP.exists()) {
+                INI_DATABASE_DUMP.delete();
             }
             System.out.println("abnormal end.");
             throw new RuntimeException(t);
@@ -103,7 +133,7 @@ public class MakeInitialDB {
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:sqlite:" + databaseFile.getPath());
+        return DriverManager.getConnection("jdbc:sqlite:" + TMP_DATABASE_FILE.getPath());
     }
 
     private void executeSqlFiles(String dirPath) throws ClassNotFoundException, SQLException, IOException, InterruptedException {
@@ -126,11 +156,56 @@ public class MakeInitialDB {
         }
     }
 
-    private int executeSqlFile(File sqlFile) throws IOException, InterruptedException, SQLException {
+    private boolean isWindows() {
+        Pattern pattern = Pattern.compile("windows", Pattern.CASE_INSENSITIVE);
+        return pattern.matcher(System.getProperty("os.name")).find();
+    }
+
+    private void validateExistsSqlite() throws IOException, InterruptedException {
+        // SQLITEのコマンドラインを構築
+        List<String> commands = new ArrayList<String>();
+        commands.add(SQLITE_PATH_MAC);
+        commands.add("--version");
+
+        // SQLITEを利用したダンプ処理
+        ProcessBuilder builder = new ProcessBuilder(commands);
+        builder.redirectErrorStream(true);
+        Process process = builder.start();
+
+        int result = process.waitFor();
+        if (result != 0) {
+            throw new RuntimeException("SQLITEが見つからない. path=[" + SQLITE_PATH_MAC + "]");
+        }
+    }
+
+    private int executeSqlFile(File sqlFile) throws IOException, InterruptedException {
         System.out.println("---- executeSqlFile: " + sqlFile.getPath() + " ----");
 
-        ProcessBuilder builder;
-        builder = new ProcessBuilder("cmd", "/c", SQLITE_PATH, "-batch", "-bail", "-echo", databaseFile.getAbsolutePath(), "<", sqlFile.getPath());
+        // SQLITEのコマンドラインを構築
+        List<String> commands = new ArrayList<String>();
+        if (isWindows()) {
+            // builder = new ProcessBuilder("cmd", "/c", SQLITE_PATH_WIN, "-batch", "-bail", TMP_DATABASE_FILE.getAbsolutePath(), ".dump " + tableName, ">>", databaseDump.getAbsolutePath());
+            commands.add("cmd");
+            commands.add("/c");
+            commands.add(SQLITE_PATH_WIN);
+            commands.add("-batch");
+            commands.add("-bail");
+            commands.add("-echo");
+            commands.add(TMP_DATABASE_FILE.getAbsolutePath());
+            commands.add("<");
+            commands.add(sqlFile.getPath());
+        } else {
+            // builder = new ProcessBuilder(SQLITE_PATH_MAC, "-batch", "-bail", "-echo", TMP_DATABASE_FILE.getAbsolutePath(), ".read " + sqlFile.getPath());
+            commands.add(SQLITE_PATH_MAC);
+            commands.add("-batch");
+            commands.add("-bail");
+            commands.add("-echo");
+            commands.add(TMP_DATABASE_FILE.getAbsolutePath());
+            commands.add(".read " + sqlFile.getPath());
+        }
+
+        // SQLITEを利用したSQLスクリプトファイルの実行
+        ProcessBuilder builder = new ProcessBuilder(commands);
         builder.redirectErrorStream(true);
         Process process = builder.start();
 
@@ -143,7 +218,7 @@ public class MakeInitialDB {
             }
             int result = process.waitFor();
             if (result != 0) {
-                throw new SQLException("SQLファイルの実行中に例外が発生した");
+                throw new RuntimeException("SQLファイルの実行中に例外が発生した");
             }
             return result;
 
@@ -213,7 +288,6 @@ public class MakeInitialDB {
     private void dropTables() throws ClassNotFoundException, SQLException {
         Connection connection = null;
         try {
-            // create a database connection
             connection = getConnection();
             // connection.setAutoCommit(false);
 
@@ -249,11 +323,42 @@ public class MakeInitialDB {
         dumpTable("horoscope_path");
     }
 
-    private void dumpTable(String tableName) throws IOException, InterruptedException, SQLException {
+    private void dumpTable(String tableName) throws IOException, InterruptedException {
         System.out.println("---- dump table : " + tableName + " ----");
 
-        ProcessBuilder builder;
-        builder = new ProcessBuilder("cmd", "/c", SQLITE_PATH, "-batch", "-bail", databaseFile.getAbsolutePath(), ".dump " + tableName, ">>", databaseDump.getAbsolutePath());
+        // 設定ファイルを作成
+        List<String> settings = new ArrayList<String>();
+        settings.add(".output " + INI_DATABASE_DUMP.getAbsolutePath());
+
+        File iniFile = FileUtils.createTempFileAndWriteLines(new File(ROOT_DIR), settings);
+
+        // SQLITEのコマンドラインを構築
+        List<String> commands = new ArrayList<String>();
+        if (isWindows()) {
+            // builder = new ProcessBuilder("cmd", "/c", SQLITE_PATH_WIN, "-batch", "-bail", TMP_DATABASE_FILE.getAbsolutePath(), ".dump " + tableName, ">>", databaseDump.getAbsolutePath());
+            commands.add("cmd");
+            commands.add("/");
+            commands.add(SQLITE_PATH_WIN);
+            commands.add("-batch");
+            commands.add("-bail");
+            // commands.add("-init");
+            // commands.add(iniFile.getPath());
+            commands.add(TMP_DATABASE_FILE.getAbsolutePath());
+            commands.add(".dump " + tableName);
+            commands.add(">>");
+            commands.add(INI_DATABASE_DUMP.getAbsolutePath());
+        } else {
+            commands.add(SQLITE_PATH_MAC);
+            commands.add("-batch");
+            commands.add("-bail");
+            commands.add("-init");
+            commands.add(iniFile.getPath());
+            commands.add(TMP_DATABASE_FILE.getAbsolutePath());
+            commands.add(".dump " + tableName);
+        }
+
+        // SQLITEを利用したダンプ処理
+        ProcessBuilder builder = new ProcessBuilder(commands);
         builder.redirectErrorStream(true);
         Process process = builder.start();
 
@@ -266,14 +371,20 @@ public class MakeInitialDB {
             }
             int result = process.waitFor();
             if (result != 0) {
-                throw new SQLException("データベースファイルのダンプ中に例外が発生した");
+                throw new RuntimeException("データベースファイルのダンプ中に例外が発生した");
             }
             return;
 
         } finally {
-            if (standardIn != null) {
-                standardIn.close();
+            if (iniFile != null) {
+                iniFile.delete();
             }
+            FileUtils.closeIgnoreIOException(standardIn);
         }
+    }
+
+    private static void createTimestampFile() throws IOException {
+        String timestamp = timestampFormat.format(new Date());
+        FileUtils.writeLines(INI_DATABASE_TIME, Arrays.asList(timestamp));
     }
 }
