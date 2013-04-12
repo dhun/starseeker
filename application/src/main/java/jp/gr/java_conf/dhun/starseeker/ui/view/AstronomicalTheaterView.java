@@ -90,8 +90,14 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
         terminalStateResolver.pause();      // 端末ステートリゾルバ
     }
 
+    @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+        resume();
+    }
+
     // ================================================================================
-    // SurfaceView
+    // SurfaceHolder.Callback2
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         LogUtils.d(getClass(), "surfaceCreated.");
