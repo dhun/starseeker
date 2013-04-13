@@ -15,7 +15,7 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
  */
 public class Star {
 
-    private final StarData starData;    // 星エンティティ
+    private final StarData starData;    // 星データ
 
     private boolean locaated;   // 配置済であるかどうか
     private float azimuth;      // 方位(A). -180 <= 0 <= +180. 数値表現ではないためStarLocationUtil.convertAngleFloatToString()をしてはいけない
@@ -56,7 +56,7 @@ public class Star {
     /**
      * コンストラクタ.<br/>
      * 
-     * @param starData 星のエンティティ
+     * @param starData 星データ
      */
     public Star(StarData starData) {
         this.starData = starData;
@@ -73,6 +73,13 @@ public class Star {
         this.locaated = true;
         this.azimuth = azimuth;
         this.altitude = altitude;
+    }
+
+    /**
+     * HIP番号を取得します.<br/>
+     */
+    public Integer getHipNumber() {
+        return starData.getHipNumber();
     }
 
     /**
