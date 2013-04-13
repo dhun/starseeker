@@ -108,8 +108,16 @@ public class StarManager {
         final SQLiteDatabase db = databaseHelper.getReadableDatabase();
 
         try {
+            // 指定された等級以下の星を抽出. 不足データを次に追加.
+            // ⇒ byMagnitudeExtractStars
+            // ⇒ byHipNumberExtractStars
             extractStar(db, extractUpperStarMagnitude);
+
+            // 指定された等級以下の星に関連する星を抽出. 不足データを次に追加.
+            // ⇒ extractConstellations
+            // ⇒ byHipNumberExtractStars
             extractConstellation(db, extractUpperStarMagnitude);
+
             needReextract = false;
 
         } finally {
@@ -225,41 +233,33 @@ public class StarManager {
             return;
         }
 
+        ExtractStarIterator extractStarIterator = new ExtractStarIterator(extractUpperStarMagnitude);
+
         int locateCount = 0;
-        for (Entry<StarMagnitude, StarSet> e : byMagnitudeExtractStars.entrySet()) {
-            StarSet starSet = e.getValue();
+        for (Star star : extractStarIterator) {
+            starLocator.locate(star);
 
-            if (e.getKey().getRoughMagnitude() > extractUpperStarMagnitude) {
-                starSet.setLocated(false);
-                continue;
-            }
-
-            starSet.setLocated(true);
-            for (Star star : starSet) {
-                starLocator.locate(star);
-
-                if (star.getMagnitude() <= SET_DISPLAY_TEXT_LOWER_MAGNITUDE && null != star.getName()) {
-                    // 星の等級がしきい値以下で、かつ名前が設定されていれば画面にデータを表示
-                    if (null != star.getMemo()) {
-                        star.setDisplayText(String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s], 備考=[%s]" //
-                                , angleFormat.format(star.getAzimuth())  // 方位(A)
-                                , angleFormat.format(star.getAltitude()) // 高度(h)
-                                , star.getName()
-                                , star.getMemo()));
-                    } else {
-                        star.setDisplayText(String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s]" //
-                                , angleFormat.format(star.getAzimuth())  // 方位(A)
-                                , angleFormat.format(star.getAltitude()) // 高度(h)
-                                , star.getName()));
-                    }
-
+            if (star.getMagnitude() <= SET_DISPLAY_TEXT_LOWER_MAGNITUDE && null != star.getName()) {
+                // 星の等級がしきい値以下で、かつ名前が設定されていれば画面にデータを表示
+                if (null != star.getMemo()) {
+                    star.setDisplayText(String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s], 備考=[%s]" //
+                            , angleFormat.format(star.getAzimuth())  // 方位(A)
+                            , angleFormat.format(star.getAltitude()) // 高度(h)
+                            , star.getName()
+                            , star.getMemo()));
                 } else {
-                    // 上記以外は、画面に星データを表示しない
-                    star.setDisplayText(null);
+                    star.setDisplayText(String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s]" //
+                            , angleFormat.format(star.getAzimuth())  // 方位(A)
+                            , angleFormat.format(star.getAltitude()) // 高度(h)
+                            , star.getName()));
                 }
 
-                locateCount++;
+            } else {
+                // 上記以外は、画面に星データを表示しない
+                star.setDisplayText(null);
             }
+
+            locateCount++;
         }
 
         LogUtils.i(getClass(), "星の地平座標を配置した. count=[" + locateCount + "]");
