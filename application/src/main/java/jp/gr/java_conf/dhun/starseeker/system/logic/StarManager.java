@@ -9,19 +9,27 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
 import jp.gr.java_conf.dhun.starseeker.logic.StarLocator;
+import jp.gr.java_conf.dhun.starseeker.model.Constellation;
+import jp.gr.java_conf.dhun.starseeker.model.ConstellationPath;
 import jp.gr.java_conf.dhun.starseeker.model.Star;
 import jp.gr.java_conf.dhun.starseeker.model.StarApproxMagnitude;
 import jp.gr.java_conf.dhun.starseeker.system.model.StarSet;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.ConstellationDataDao;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.ConstellationPathDataDao;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.DatabaseHelper;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.StarDataDao;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ConstellationData;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ConstellationPathData;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarData;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -34,30 +42,44 @@ public class StarManager {
     private static final boolean APPEND_MOCK_STAR = false;              // モックデータを含めるかどうか. 通常はfalse
     private static final float SET_DISPLAY_TEXT_LOWER_MAGNITUDE = 2;    // テキスト表示する下限となる等級
 
+    // DAO関連
     private final DatabaseHelper databaseHelper;
 
-    private final Map<StarApproxMagnitude, StarSet> allStars;   // すべての星データ. おおよその等級別に管理
+    // 星と星座の集合
+    private final Map<Integer, Star> byHipNumberExtractStars;                // 抽出した星のマップ. キーはHIP番号
+    private final Map<StarApproxMagnitude, StarSet> byMagnitudeExtractStars; // 抽出した星セットのマップ. キーはおおよその等級
+    private final Set<Constellation> extractConstellations;                  // 抽出した星座のセット
 
-    private StarLocator starLocator;
+    // 星の抽出関連
+    private float extractUpperStarMagnitude;        // 抽出する等級の上限
     private ExtractStarIterator extractStarIterator;
 
-    private boolean needReextract;      // 星の再抽出が必要かどうか
-    private boolean needRelocate;       // 星の再配置が必要かどうか
-    private boolean needNewStarLocator; // 星ロケータの再生成が必要かどうか
-
-    private float extractUpperStarMagnitude;        // 抽出する等級の上限
-
+    // 星の配置関連
+    private StarLocator starLocator;
     private double observationLocationLongitude;    // 観測地点の経度
     private double observationLocationLatitude;     // 観測地点の緯度
     private Calendar observationCalendar;           // 観測日時を示すカレンダー
 
+    // 自身の振る舞いを制御するフラグ
+    private boolean needReextract;      // 星の再抽出が必要かどうか
+    private boolean needRelocate;       // 星の再配置が必要かどうか
+    private boolean needNewStarLocator; // 星ロケータの再生成が必要かどうか
+
+    @SuppressLint("UseSparseArrays")
     public StarManager(Context context) {
         databaseHelper = new DatabaseHelper(context.getApplicationContext());
 
-        allStars = new HashMap<StarApproxMagnitude, StarSet>();
+        byHipNumberExtractStars = new HashMap<Integer, Star>();
+        byMagnitudeExtractStars = new HashMap<StarApproxMagnitude, StarSet>();
+        extractConstellations = new HashSet<Constellation>();
+
+        extractUpperStarMagnitude = 0.0f;
+        extractStarIterator = null;
 
         starLocator = null;
-        extractStarIterator = null;
+        observationLocationLongitude = 0.0;
+        observationLocationLatitude = 0.0;
+        observationCalendar = null;
 
         needReextract = false;
         needRelocate = false;
@@ -65,7 +87,7 @@ public class StarManager {
     }
 
     public void initialize() {
-        allStars.clear();
+        byMagnitudeExtractStars.clear();
 
         if (APPEND_MOCK_STAR) {
             addStar(newMock(+10, +80));
@@ -76,40 +98,109 @@ public class StarManager {
     }
 
     /**
-     * 指定された等級以下の星を抽出します.
+     * 指定された等級以下の星と星座を抽出します.
      * 
      * @param extractUpperStarMagnitude 抽出する等級の上限
      */
     private void extract(float extractUpperStarMagnitude) {
         final SQLiteDatabase db = databaseHelper.getReadableDatabase();
-        final StarDataDao starDataDao = new StarDataDao(db);
 
         try {
-            int extractCount = 0;
-            for (StarApproxMagnitude approxMagnitude : StarApproxMagnitude.listApproxMagnitudes(extractUpperStarMagnitude)) {
-                StarSet starSet = allStars.get(approxMagnitude);
-                if (starSet != null) {
-                    // この等級は抽出済みのためスキップ
-                    continue;
-                }
-
-                // 星マップに要素を追加. 星がゼロ件でも追加する
-                starSet = new StarSet();
-                starSet.setLocated(false);
-                allStars.put(approxMagnitude, starSet);
-
-                for (StarData entity : starDataDao.findByMagnitudeRange(approxMagnitude)) {
-                    starSet.add(new Star(entity));
-                    extractCount++;
-                }
-            }
-
+            extractStar(db, extractUpperStarMagnitude);
+            extractConstellation(db, extractUpperStarMagnitude);
             needReextract = false;
-            LogUtils.i(getClass(), "星を抽出しました. count=[" + extractCount + "]");
 
         } finally {
             db.close();
         }
+    }
+
+    /**
+     * 指定された等級以下の星を抽出します.
+     * 
+     * @param db データベース
+     * @param extractUpperStarMagnitude 抽出する等級の上限
+     */
+    private void extractStar(SQLiteDatabase db, float extractUpperStarMagnitude) {
+        final StarDataDao starDataDao = new StarDataDao(db);
+
+        int extractCount = 0;
+        for (StarApproxMagnitude approxMagnitude : StarApproxMagnitude.listApproxMagnitudes(extractUpperStarMagnitude)) {
+            StarSet starSet = byMagnitudeExtractStars.get(approxMagnitude);
+            if (starSet != null) {
+                // この等級は抽出済みのためスキップ
+                continue;
+            }
+
+            // 星マップに要素を追加. 星がゼロ件でも追加する
+            starSet = new StarSet();
+            starSet.setLocated(false);
+            byMagnitudeExtractStars.put(approxMagnitude, starSet);
+
+            for (StarData entity : starDataDao.findByMagnitudeRange(approxMagnitude)) {
+                Star star = new Star(entity);
+                starSet.add(star);
+                if (byHipNumberExtractStars.containsKey(star.getHipNumber()) == false) {
+                    byHipNumberExtractStars.put(star.getHipNumber(), star);
+                }
+                extractCount++;
+            }
+        }
+
+        LogUtils.i(getClass(), "星を抽出した. count=[" + extractCount + "]");
+    }
+
+    /**
+     * 指定された等級以下の星に関連する星座を抽出します.
+     * 
+     * @param db データベース
+     * @param extractUpperStarMagnitude 抽出する等級の上限
+     */
+    private void extractConstellation(SQLiteDatabase db, float extractUpperStarMagnitude) {
+        final StarDataDao starDataDao = new StarDataDao(db);
+        final ConstellationDataDao constellationDataDao = new ConstellationDataDao(db);
+        final ConstellationPathDataDao constellationPathDataDao = new ConstellationPathDataDao(db);
+
+        // 指定された等級以下の星を含む星座を抽出
+        StarApproxMagnitude approxMagnitude = new StarApproxMagnitude(extractUpperStarMagnitude);
+        List<ConstellationData> constellationDatas = constellationDataDao.findLessThanUpperMagnitude(approxMagnitude);
+
+        int extractCount = 0;
+        for (ConstellationData constellationData : constellationDatas) {
+            // 抽出済みの星座ならスキップ
+            if (this.extractConstellations.contains(constellationData)) {
+                continue;
+            }
+
+            // 星座を構築
+            Constellation constellation = new Constellation(constellationData);
+            extractConstellations.add(constellation);
+
+            // 星座を構成するパスを抽出
+            List<ConstellationPathData> constellationPathDatas = constellationPathDataDao.findByConstellationCode(constellationData.getConstellationCode());
+            for (ConstellationPathData pathData : constellationPathDatas) {
+                // 星座パスに星を割り当てる. 該当がなければ星データも抽出する
+                Star fmStar = findStar(starDataDao, pathData.getHipNumberFrom());
+                Star toStar = findStar(starDataDao, pathData.getHipNumberTo());
+
+                ConstellationPath path = new ConstellationPath(pathData, fmStar, toStar);
+                constellation.addPath(path);
+            }
+
+            extractCount++;
+        }
+
+        LogUtils.i(getClass(), "星座を抽出した. count=[" + extractCount + "]");
+    }
+
+    private Star findStar(StarDataDao starDataDao, Integer hipNumber) {
+        Star star = byHipNumberExtractStars.get(hipNumber);
+        if (star == null) {
+            StarData starData = starDataDao.findByPk(hipNumber);
+            star = new Star(starData);
+            byHipNumberExtractStars.put(hipNumber, star);
+        }
+        return star;
     }
 
     /**
@@ -130,7 +221,7 @@ public class StarManager {
         }
 
         int locateCount = 0;
-        for (Entry<StarApproxMagnitude, StarSet> e : allStars.entrySet()) {
+        for (Entry<StarApproxMagnitude, StarSet> e : byMagnitudeExtractStars.entrySet()) {
             StarSet starSet = e.getValue();
 
             if (e.getKey().getApproxMagnitude() > extractUpperStarMagnitude) {
@@ -166,7 +257,7 @@ public class StarManager {
             }
         }
 
-        LogUtils.i(getClass(), "星の地平座標を配置しました. count=[" + locateCount + "]");
+        LogUtils.i(getClass(), "星の地平座標を配置した. count=[" + locateCount + "]");
     }
 
     /**
@@ -277,7 +368,7 @@ public class StarManager {
          */
         public ExtractStarIterator(StarApproxMagnitude extractStarApproxMagnitude) {
             this.extractStars = new HashSet<StarSet>();
-            for (Entry<StarApproxMagnitude, StarSet> e : allStars.entrySet()) {
+            for (Entry<StarApproxMagnitude, StarSet> e : byMagnitudeExtractStars.entrySet()) {
                 if (e.getKey().getApproxMagnitude() <= extractStarApproxMagnitude.getApproxMagnitude()) {
                     extractStars.add(e.getValue());
                 }
@@ -363,16 +454,18 @@ public class StarManager {
 
     private void addStar(Star star) {
         StarApproxMagnitude approxMagnitude = new StarApproxMagnitude(star.getMagnitude());
-        StarSet starSet = allStars.get(approxMagnitude);
+        StarSet starSet = byMagnitudeExtractStars.get(approxMagnitude);
         if (starSet == null) {
             starSet = new StarSet();
-            allStars.put(approxMagnitude, starSet);
+            byMagnitudeExtractStars.put(approxMagnitude, starSet);
+            byHipNumberExtractStars.put(star.getHipNumber(), star);
         }
         starSet.add(star);
     }
 
     private Star newMock(final float azimuthFix, final float altitudeFix) { // FIXME モック
         StarData entity = new StarData();
+        entity.setHipNumber((int) (azimuthFix * 100 + altitudeFix));    // HIP番号は嘘情報
         entity.setRightAscension(azimuthFix);   // 赤径はうそ情報
         entity.setDeclination(altitudeFix);     // 赤緯はうそ情報
         entity.setMagnitude(-1);

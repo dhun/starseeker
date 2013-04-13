@@ -3,10 +3,12 @@
  */
 package jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import jp.gr.java_conf.dhun.starseeker.model.StarApproxMagnitude;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ConstellationData;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ConstellationPathData;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarData;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -16,41 +18,49 @@ import android.database.sqlite.SQLiteDatabase;
  * @author jun
  * 
  */
-public class ConstellationDataDao {
-
-    private final SQLiteDatabase db;
+public class ConstellationDataDao extends AbstractSqlDao<ConstellationData, String> {
 
     public ConstellationDataDao(SQLiteDatabase db) {
-        this.db = db;
+        super(db);
+    }
+
+    @Override
+    protected String getTableName() {
+        return ConstellationData.TABLE_NAME;
+    }
+
+    @Override
+    protected String[] getAllColumns() {
+        return ConstellationData.FieldNames.ALL_COLUMNS;
     }
 
     public List<ConstellationData> findAll() {
-        String[] columns = ConstellationData.FieldNames.ALL_COLUMNS;
         String selection = null;
         String[] selectionArgs = null;
-        String groupBy = null;
-        String having = null;
         String orderBy = null;
 
-        Cursor cursor = null;
-        try {
-            cursor = db.query(ConstellationData.TABLE_NAME, columns, selection, selectionArgs, groupBy, having, orderBy);
-
-            List<ConstellationData> results = new ArrayList<ConstellationData>(cursor.getCount());
-            while (cursor.moveToNext()) {
-                results.add(convertToEntity(cursor));
-            }
-            return results;
-
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-
+        return list(selection, selectionArgs, orderBy);
     }
 
-    private ConstellationData convertToEntity(Cursor cursor) {
+    public List<ConstellationData> findLessThanUpperMagnitude(StarApproxMagnitude approxMagnitude) {
+        StringBuilder selection = new StringBuilder();
+        selection.append(ConstellationData.TABLE_NAME + "." + ConstellationData.FieldNames.CONSTELLATION_CODE + " in (");
+        selection.append("  select x." + ConstellationPathData.FieldNames.CONSTELLATION_CODE);
+        selection.append("    from " + ConstellationPathData.TABLE_NAME + " x");
+        selection.append("    join " + StarData.TABLE_NAME + " y");
+        selection.append("      on y." + StarData.FieldNames.HIP_NUMBER + " = x." + ConstellationPathData.FieldNames.HIP_NUMBER_FROM);
+        selection.append("      or y." + StarData.FieldNames.HIP_NUMBER + " = x." + ConstellationPathData.FieldNames.HIP_NUMBER_TO);
+        selection.append("   where y." + StarData.FieldNames.MAGNITUDE + " < ?)");
+
+        String[] selectionArgs = { String.valueOf(approxMagnitude.getUpperMagnitude()) };
+
+        String orderBy = null;
+
+        return list(selection.toString(), selectionArgs, orderBy);
+    }
+
+    @Override
+    protected ConstellationData convertToEntity(Cursor cursor) {
         ConstellationData result = new ConstellationData();
         result.setConstellationCode(cursor.getString(cursor.getColumnIndex(ConstellationData.FieldNames.CONSTELLATION_CODE)));
         result.setConstellationName(cursor.getString(cursor.getColumnIndex(ConstellationData.FieldNames.CONSTELLATION_NAME)));

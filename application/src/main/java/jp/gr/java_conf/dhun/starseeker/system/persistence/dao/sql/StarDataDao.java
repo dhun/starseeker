@@ -3,7 +3,6 @@
  */
 package jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jp.gr.java_conf.dhun.starseeker.model.StarApproxMagnitude;
@@ -17,66 +16,48 @@ import android.database.sqlite.SQLiteDatabase;
  * @author jun
  * 
  */
-public class StarDataDao {
-
-    private final SQLiteDatabase db;
+public class StarDataDao extends AbstractSqlDao<StarData, Integer> {
 
     public StarDataDao(SQLiteDatabase db) {
-        this.db = db;
+        super(db);
+    }
+
+    @Override
+    protected String getTableName() {
+        return StarData.TABLE_NAME;
+    }
+
+    @Override
+    protected String[] getAllColumns() {
+        return StarData.FieldNames.ALL_COLUMNS;
+    }
+
+    public StarData findByPk(Integer hipNumber) {
+        String selection = StarData.FieldNames.HIP_NUMBER + " = ?";
+        String[] selectionArgs = { String.valueOf(hipNumber) };
+        String orderBy = null;
+
+        return find(selection, selectionArgs, orderBy);
     }
 
     public List<StarData> findAll() {
-        String[] columns = StarData.FieldNames.ALL_COLUMNS;
         String selection = null;
         String[] selectionArgs = null;
-        String groupBy = null;
-        String having = null;
         String orderBy = null;
 
-        Cursor cursor = null;
-        try {
-            cursor = db.query(StarData.TABLE_NAME, columns, selection, selectionArgs, groupBy, having, orderBy);
-
-            List<StarData> results = new ArrayList<StarData>(cursor.getCount());
-            while (cursor.moveToNext()) {
-                results.add(convertToEntity(cursor));
-            }
-            return results;
-
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-
+        return list(selection, selectionArgs, orderBy);
     }
 
     public List<StarData> findByMagnitudeRange(StarApproxMagnitude approxMagnitude) {
-        String[] columns = StarData.FieldNames.ALL_COLUMNS;
         String selection = String.format("%s >= ? and %s < ?", StarData.FieldNames.MAGNITUDE, StarData.FieldNames.MAGNITUDE);
         String[] selectionArgs = { String.valueOf(approxMagnitude.getLowerMagnitude()), String.valueOf(approxMagnitude.getUpperMagnitude()) };
-        String groupBy = null;
-        String having = null;
         String orderBy = null;
 
-        Cursor cursor = null;
-        try {
-            cursor = db.query(StarData.TABLE_NAME, columns, selection, selectionArgs, groupBy, having, orderBy);
-
-            List<StarData> results = new ArrayList<StarData>(cursor.getCount());
-            while (cursor.moveToNext()) {
-                results.add(convertToEntity(cursor));
-            }
-            return results;
-
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
+        return list(selection, selectionArgs, orderBy);
     }
 
-    private StarData convertToEntity(Cursor cursor) {
+    @Override
+    protected StarData convertToEntity(Cursor cursor) {
         StarData result = new StarData();
         result.setHipNumber(cursor.getInt(cursor.getColumnIndex(StarData.FieldNames.HIP_NUMBER)));
         result.setRightAscension(cursor.getFloat(cursor.getColumnIndex(StarData.FieldNames.RIGHT_ASCENSION)));

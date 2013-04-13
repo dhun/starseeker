@@ -4,13 +4,13 @@
 package jp.gr.java_conf.dhun.starseeker.system.persistence.entity;
 
 /**
- * 星座パスのエンティティ.<br/>
+ * 星座パスデータのエンティティ.<br/>
  * 精度はfloat. 厳密な値より処理速度を優先させた.
  * 
  * @author jun
  * 
  */
-public class ConstellationPath {
+public class ConstellationPathData {
 
     private Integer constellationPathId;    // 星座パスID
     private String constellationCode;       // 星座コード(略符)
@@ -20,7 +20,7 @@ public class ConstellationPath {
     /**
      * デフォルト・コンストラクタ
      */
-    public ConstellationPath() {
+    public ConstellationPathData() {
     }
 
     /**
@@ -100,10 +100,10 @@ public class ConstellationPath {
         if (obj == null) {
             return false;
         }
-        if (!(obj instanceof ConstellationPath)) {
+        if (!(obj instanceof ConstellationPathData)) {
             return false;
         }
-        ConstellationPath other = (ConstellationPath) obj;
+        ConstellationPathData other = (ConstellationPathData) obj;
         if (constellationPathId == null) {
             if (other.constellationPathId != null) {
                 return false;
@@ -119,8 +119,8 @@ public class ConstellationPath {
     public static class FieldNames {
         public static final String CONSTELLATION_PATH_ID = "constellation_path_id";
         public static final String CONSTELLATION_CODE = "constellation_code";
-        public static final String HIP_NUMBER_FROM = "hip_number_fm";
-        public static final String HIP_NUMBER_TO = "hip_number_to";
+        public static final String HIP_NUMBER_FROM = "hip_num_fm";
+        public static final String HIP_NUMBER_TO = "hip_num_to";
 
         public static final String[] ALL_COLUMNS = { CONSTELLATION_PATH_ID, CONSTELLATION_CODE, HIP_NUMBER_FROM, HIP_NUMBER_TO };
     }
