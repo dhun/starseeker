@@ -21,4 +21,4 @@ insert into constellation_data
         on b.horoscope_id = a.horoscope_id
     ;
 
-select count(*) from constellation_data limit 20 ;
+select count(*) from constellation_data ;

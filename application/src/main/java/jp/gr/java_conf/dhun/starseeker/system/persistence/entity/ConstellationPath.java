@@ -12,14 +12,29 @@ package jp.gr.java_conf.dhun.starseeker.system.persistence.entity;
  */
 public class ConstellationPath {
 
-    private String constellationCode;   // 星座コード(略符)
-    private Integer hipNumberFrom;      // HIP番号(起点)
-    private Integer hipNumberTo;        // HIP番号(終点)
+    private Integer constellationPathId;    // 星座パスID
+    private String constellationCode;       // 星座コード(略符)
+    private Integer hipNumberFrom;          // HIP番号(起点)
+    private Integer hipNumberTo;            // HIP番号(終点)
 
     /**
      * デフォルト・コンストラクタ
      */
     public ConstellationPath() {
+    }
+
+    /**
+     * 星座パスIDを取得します.<br/>
+     */
+    public Integer getConstellationPathId() {
+        return constellationPathId;
+    }
+
+    /**
+     * 星座パスIDを設定します.<br/>
+     */
+    public void setConstellationPathId(Integer constellationPathId) {
+        this.constellationPathId = constellationPathId;
     }
 
     /**
@@ -73,7 +88,7 @@ public class ConstellationPath {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((constellationCode == null) ? 0 : constellationCode.hashCode());
+        result = prime * result + ((constellationPathId == null) ? 0 : constellationPathId.hashCode());
         return result;
     }
 
@@ -89,11 +104,11 @@ public class ConstellationPath {
             return false;
         }
         ConstellationPath other = (ConstellationPath) obj;
-        if (constellationCode == null) {
-            if (other.constellationCode != null) {
+        if (constellationPathId == null) {
+            if (other.constellationPathId != null) {
                 return false;
             }
-        } else if (!constellationCode.equals(other.constellationCode)) {
+        } else if (!constellationPathId.equals(other.constellationPathId)) {
             return false;
         }
         return true;
@@ -102,10 +117,11 @@ public class ConstellationPath {
     public static final String TABLE_NAME = "constellation_path";
 
     public static class FieldNames {
+        public static final String CONSTELLATION_PATH_ID = "constellation_path_id";
         public static final String CONSTELLATION_CODE = "constellation_code";
         public static final String HIP_NUMBER_FROM = "hip_number_fm";
         public static final String HIP_NUMBER_TO = "hip_number_to";
 
-        public static final String[] ALL_COLUMNS = { CONSTELLATION_CODE, HIP_NUMBER_FROM, HIP_NUMBER_TO };
+        public static final String[] ALL_COLUMNS = { CONSTELLATION_PATH_ID, CONSTELLATION_CODE, HIP_NUMBER_FROM, HIP_NUMBER_TO };
     }
 }

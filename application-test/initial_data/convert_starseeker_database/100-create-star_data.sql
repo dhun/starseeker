@@ -26,4 +26,4 @@ insert into star_data
         on b.hip_num = a.hip_num
     ;
 
-select count(*), count(bayer_code), count(japanese_name) from star_data limit 20 ;
+select count(*), count(bayer_code), count(japanese_name) from star_data ;

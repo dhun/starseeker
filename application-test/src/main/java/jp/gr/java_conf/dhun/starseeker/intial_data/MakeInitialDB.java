@@ -61,9 +61,9 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
  */
 public class MakeInitialDB {
 
-    private static final boolean COPY_TO_APPLICATION_IF_SUCCEED = true; // trueにすると、初期DBダンプの生成に成功したとき、アプリケーションプロジェクトにコピーする
-    private static final boolean REMOVE_TMP_DATABASE_IF_SUCCEED = true; // trueにすると、初期DBダンプの生成に成功したとき、一時DBを削除する
-    private static final boolean REMOVE_TMP_DATABASE_IF_FAILURE = true; // trueにすると、初期DBダンプの生成に失敗したとき、一時DBを削除する
+    private static final boolean COPY_TO_APPLICATION_IF_SUCCEED = true;  // trueにすると、初期DBダンプの生成に成功したとき、アプリケーションプロジェクトにコピーする
+    private static final boolean REMOVE_TMP_DATABASE_IF_SUCCEED = true;  // trueにすると、初期DBダンプの生成に成功したとき、一時DBを削除する
+    private static final boolean REMOVE_TMP_DATABASE_IF_FAILURE = false; // trueにすると、初期DBダンプの生成に失敗したとき、一時DBを削除する
 
     private static final String SQLITE_PATH_WIN = "D:/dev/_opt/sqlite3/sqlite3.exe";
     private static final String SQLITE_PATH_MAC = "sqlite3";
@@ -149,8 +149,10 @@ public class MakeInitialDB {
         } catch (Throwable t) {
             if (REMOVE_TMP_DATABASE_IF_FAILURE) {
                 FileUtils.delete(TMP_DATABASE_FILE);
+                FileUtils.delete(INI_DATABASE_DUMP);
             }
-            FileUtils.delete(INI_DATABASE_DUMP);
+            FileUtils.delete(INI_DATABASE_TIME);
+
             System.out.println("abnormal end.");
             throw new RuntimeException(t);
         }
@@ -296,7 +298,7 @@ public class MakeInitialDB {
         System.out.println("---- convert : constellation_data ----");
 
         Statement select = connection.createStatement();
-        PreparedStatement update = connection.prepareStatement("update constellation_data set right_ascension=?, declination=? where constellation_id=?");
+        PreparedStatement update = connection.prepareStatement("update constellation_data set right_ascension=?, declination=? where constellation_code=?");
         ResultSet rs = select.executeQuery("select * from constellation_data");
         while (rs.next()) {
             float right_ascension = StarLocationUtil.convertHourStringToFloat(rs.getString("right_ascension"));
@@ -304,7 +306,7 @@ public class MakeInitialDB {
 
             update.setFloat(1, right_ascension);
             update.setFloat(2, declination);
-            update.setInt(3, rs.getInt("constellation_id"));
+            update.setString(3, rs.getString("constellation_code"));
             update.execute();
         }
     }
