@@ -3,6 +3,7 @@
  */
 package jp.gr.java_conf.dhun.starseeker.model;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ public class Constellation {
 
     private final ConstellationData constellationData;          // 星座データ
     private final Set<ConstellationPath> constellationPaths;    // 星座パスの集合
+    private final Set<Star> componentStars;                     // 構成要素となる星の集合
 
     private final boolean locaated;   // 配置済であるかどうか
 
@@ -31,6 +33,7 @@ public class Constellation {
     public Constellation(ConstellationData constellationData) {
         this.constellationData = constellationData;
         this.constellationPaths = new HashSet<ConstellationPath>();
+        this.componentStars = new HashSet<Star>();
         this.locaated = false;
     }
 
@@ -39,6 +42,12 @@ public class Constellation {
      */
     public void addPath(ConstellationPath path) {
         constellationPaths.add(path);
+        componentStars.add(path.getFromStar());
+        componentStars.add(path.getToStar());
+    }
+
+    public Set<Star> getComponentStars() {
+        return Collections.unmodifiableSet(componentStars);
     }
 
     /**

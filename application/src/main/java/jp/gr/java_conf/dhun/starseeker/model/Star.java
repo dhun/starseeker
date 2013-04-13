@@ -3,6 +3,10 @@
  */
 package jp.gr.java_conf.dhun.starseeker.model;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarData;
 import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
 
@@ -16,6 +20,9 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
 public class Star {
 
     private final StarData starData;    // 星データ
+
+    private boolean hasRelatedConstellationCode;
+    private Set<String> relatedConstellationCodeSet;   // 関連する星座コードの集合
 
     private boolean locaated;   // 配置済であるかどうか
     private float azimuth;      // 方位(A). -180 <= 0 <= +180. 数値表現ではないためStarLocationUtil.convertAngleFloatToString()をしてはいけない
@@ -60,6 +67,7 @@ public class Star {
      */
     public Star(StarData starData) {
         this.starData = starData;
+        this.relatedConstellationCodeSet = Collections.emptySet();
         this.locaated = false;
     }
 
@@ -73,6 +81,28 @@ public class Star {
         this.locaated = true;
         this.azimuth = azimuth;
         this.altitude = altitude;
+    }
+
+    /**
+     * 関連する星座コードを追加します.<br/>
+     * 
+     * @param code 星座コード(略符)
+     */
+    public void addRelatedConstellationCode(String code) {
+        if (hasRelatedConstellationCode == false) {
+            hasRelatedConstellationCode = true;
+            relatedConstellationCodeSet = new HashSet<String>();
+        }
+        relatedConstellationCodeSet.add(code);
+    }
+
+    /**
+     * 関連する星座コードの集合を取得します.<br/>
+     * 
+     * @return 星座コード(略符)の集合
+     */
+    public Set<String> getRelatedConstellationCodeSet() {
+        return Collections.unmodifiableSet(relatedConstellationCodeSet);
     }
 
     /**

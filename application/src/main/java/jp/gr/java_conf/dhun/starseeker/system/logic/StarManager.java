@@ -50,7 +50,7 @@ public class StarManager {
     // 星と星座の集合
     private final Map<Integer, Star> byHipNumberExtractStars;                // 抽出した星のマップ. キーはHIP番号
     private final Map<StarApproxMagnitude, StarSet> byMagnitudeExtractStars; // 抽出した星セットのマップ. キーはおおよその等級
-    private final Set<Constellation> extractConstellations;                  // 抽出した星座のセット
+    private final Map<String, Constellation> extractConstellations;          // 抽出した星座のマップ. キーは星座コード(略符)
 
     // 星の抽出関連
     private float extractUpperStarMagnitude;        // 抽出する等級の上限
@@ -73,7 +73,7 @@ public class StarManager {
 
         byHipNumberExtractStars = new HashMap<Integer, Star>();
         byMagnitudeExtractStars = new HashMap<StarApproxMagnitude, StarSet>();
-        extractConstellations = new HashSet<Constellation>();
+        extractConstellations = new HashMap<String, Constellation>();
 
         extractUpperStarMagnitude = 0.0f;
         extractStarIterator = null;
@@ -170,20 +170,23 @@ public class StarManager {
         int extractCount = 0;
         for (ConstellationData constellationData : constellationDatas) {
             // 抽出済みの星座ならスキップ
-            if (this.extractConstellations.contains(constellationData)) {
+            if (this.extractConstellations.containsKey(constellationData.getConstellationCode())) {
                 continue;
             }
 
             // 星座を構築
             Constellation constellation = new Constellation(constellationData);
-            extractConstellations.add(constellation);
+            extractConstellations.put(constellation.getConstellationCode(), constellation);
 
             // 星座を構成するパスを抽出
             List<ConstellationPathData> constellationPathDatas = constellationPathDataDao.findByConstellationCode(constellationData.getConstellationCode());
             for (ConstellationPathData pathData : constellationPathDatas) {
                 // 星座パスに星を割り当てる. 該当がなければ星データも抽出する
-                Star fmStar = findStar(starDataDao, pathData.getHipNumberFrom());
-                Star toStar = findStar(starDataDao, pathData.getHipNumberTo());
+                Star fmStar = findExtractedStar(starDataDao, pathData.getHipNumberFrom());
+                Star toStar = findExtractedStar(starDataDao, pathData.getHipNumberTo());
+
+                fmStar.addRelatedConstellationCode(constellation.getConstellationCode());
+                toStar.addRelatedConstellationCode(constellation.getConstellationCode());
 
                 ConstellationPath path = new ConstellationPath(pathData, fmStar, toStar);
                 constellation.addPath(path);
@@ -195,7 +198,7 @@ public class StarManager {
         LogUtils.i(getClass(), "星座を抽出した. count=[" + extractCount + "]");
     }
 
-    private Star findStar(StarDataDao starDataDao, Integer hipNumber) {
+    private Star findExtractedStar(StarDataDao starDataDao, Integer hipNumber) {
         Star star = byHipNumberExtractStars.get(hipNumber);
         if (star == null) {
             StarData starData = starDataDao.findByPk(hipNumber);
@@ -370,9 +373,34 @@ public class StarManager {
          */
         public ExtractStarIterator(StarApproxMagnitude extractStarApproxMagnitude) {
             this.extractStars = new HashSet<StarSet>();
+
+            Set<String> relatedConstellationCodes = new HashSet<String>();
+
+            // 指定された等級以下の星を抽出
             for (Entry<StarApproxMagnitude, StarSet> e : byMagnitudeExtractStars.entrySet()) {
                 if (e.getKey().getApproxMagnitude() <= extractStarApproxMagnitude.getApproxMagnitude()) {
-                    extractStars.add(e.getValue());
+                    StarSet starSet = e.getValue();
+                    extractStars.add(starSet);
+                    relatedConstellationCodes.addAll(starSet.getRelatedConstellationCodes());
+                }
+            }
+
+            // 指定された等級以下の星に関連する星座を構成する星も抽出
+            Map<StarApproxMagnitude, StarSet> relatedStars = new HashMap<StarApproxMagnitude, StarSet>();
+            for (String relatedConstellationCode : relatedConstellationCodes) {
+                Constellation relatedConstellation = extractConstellations.get(relatedConstellationCode);
+                for (Star componentStar : relatedConstellation.getComponentStars()) {
+                    StarApproxMagnitude approxMagnitude = new StarApproxMagnitude(componentStar.getMagnitude());
+                    if (approxMagnitude.getApproxMagnitude() <= extractStarApproxMagnitude.getApproxMagnitude()) {
+                        continue;
+                    }
+
+                    StarSet starSet = relatedStars.get(approxMagnitude);
+                    if (starSet == null) {
+                        starSet = new StarSet();
+                        extractStars.add(starSet);
+                    }
+                    starSet.add(componentStar);
                 }
             }
 
@@ -415,7 +443,7 @@ public class StarManager {
         }
 
         // ========================================
-        // Iterator implements
+        // Iterator and Iterable implements
         // ========================================
 
         @Override
