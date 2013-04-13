@@ -238,7 +238,7 @@ public class Star {
 
     @Override
     public String toString() {
-        return String.format("赤経(α)=[%s], 赤緯(δ)=[%s], 方位(A)=[%s], 高度(h)=[%s], 等級=[%3.1f], 名前=[%s]" //
+        return String.format("赤経(α)=[%s], 赤緯(δ)=[%s], 方位(A)=[%s], 高度(h)=[%s], 等級=[%4.2f], 名前=[%s]" //
                 , StarLocationUtil.convertAngleFloatToString(getRightAscension())  //
                 , StarLocationUtil.convertAngleFloatToString(getDeclination())     //
                 , StarLocationUtil.convertAngleFloatToString(getAzimuth())         //

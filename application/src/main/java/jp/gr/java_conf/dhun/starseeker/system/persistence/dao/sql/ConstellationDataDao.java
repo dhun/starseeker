@@ -5,7 +5,7 @@ package jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql;
 
 import java.util.List;
 
-import jp.gr.java_conf.dhun.starseeker.model.StarApproxMagnitude;
+import jp.gr.java_conf.dhun.starseeker.model.StarMagnitude;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ConstellationData;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ConstellationPathData;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarData;
@@ -42,7 +42,7 @@ public class ConstellationDataDao extends AbstractSqlDao<ConstellationData, Stri
         return list(selection, selectionArgs, orderBy);
     }
 
-    public List<ConstellationData> findLessThanUpperMagnitude(StarApproxMagnitude approxMagnitude) {
+    public List<ConstellationData> findLessThanUpperMagnitude(StarMagnitude magnitude) {
         StringBuilder selection = new StringBuilder();
         selection.append(ConstellationData.TABLE_NAME + "." + ConstellationData.FieldNames.CONSTELLATION_CODE + " in (");
         selection.append("  select x." + ConstellationPathData.FieldNames.CONSTELLATION_CODE);
@@ -52,7 +52,7 @@ public class ConstellationDataDao extends AbstractSqlDao<ConstellationData, Stri
         selection.append("      or y." + StarData.FieldNames.HIP_NUMBER + " = x." + ConstellationPathData.FieldNames.HIP_NUMBER_TO);
         selection.append("   where y." + StarData.FieldNames.MAGNITUDE + " < ?)");
 
-        String[] selectionArgs = { String.valueOf(approxMagnitude.getUpperMagnitude()) };
+        String[] selectionArgs = { String.valueOf(magnitude.getUpperMagnitude()) };
 
         String orderBy = null;
 

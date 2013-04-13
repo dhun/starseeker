@@ -5,7 +5,7 @@ package jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql;
 
 import java.util.List;
 
-import jp.gr.java_conf.dhun.starseeker.model.StarApproxMagnitude;
+import jp.gr.java_conf.dhun.starseeker.model.StarMagnitude;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarData;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -48,9 +48,9 @@ public class StarDataDao extends AbstractSqlDao<StarData, Integer> {
         return list(selection, selectionArgs, orderBy);
     }
 
-    public List<StarData> findByMagnitudeRange(StarApproxMagnitude approxMagnitude) {
+    public List<StarData> findByMagnitudeRange(StarMagnitude magnitude) {
         String selection = String.format("%s >= ? and %s < ?", StarData.FieldNames.MAGNITUDE, StarData.FieldNames.MAGNITUDE);
-        String[] selectionArgs = { String.valueOf(approxMagnitude.getLowerMagnitude()), String.valueOf(approxMagnitude.getUpperMagnitude()) };
+        String[] selectionArgs = { String.valueOf(magnitude.getLowerMagnitude()), String.valueOf(magnitude.getUpperMagnitude()) };
         String orderBy = null;
 
         return list(selection, selectionArgs, orderBy);
