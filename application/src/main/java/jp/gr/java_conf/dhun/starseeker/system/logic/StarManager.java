@@ -34,6 +34,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
+ * 星のマネージャ.<br/>
+ * 
  * @author jun
  * 
  */
@@ -90,10 +92,10 @@ public class StarManager {
         byMagnitudeExtractStars.clear();
 
         if (APPEND_MOCK_STAR) {
-            addStar(newMock(+10, +80));
-            addStar(newMock(-10, +75));
-            addStar(newMock(+10, -80));
-            addStar(newMock(-10, -75));
+            addMockStar(+10, +80);
+            addMockStar(-10, +75);
+            addMockStar(+10, -80);
+            addMockStar(-10, -75);
         }
     }
 
@@ -452,25 +454,14 @@ public class StarManager {
         }
     }
 
-    private void addStar(Star star) {
-        StarApproxMagnitude approxMagnitude = new StarApproxMagnitude(star.getMagnitude());
-        StarSet starSet = byMagnitudeExtractStars.get(approxMagnitude);
-        if (starSet == null) {
-            starSet = new StarSet();
-            byMagnitudeExtractStars.put(approxMagnitude, starSet);
-            byHipNumberExtractStars.put(star.getHipNumber(), star);
-        }
-        starSet.add(star);
-    }
-
-    private Star newMock(final float azimuthFix, final float altitudeFix) { // FIXME モック
+    private void addMockStar(final float azimuthFix, final float altitudeFix) {
         StarData entity = new StarData();
         entity.setHipNumber((int) (azimuthFix * 100 + altitudeFix));    // HIP番号は嘘情報
         entity.setRightAscension(azimuthFix);   // 赤径はうそ情報
         entity.setDeclination(altitudeFix);     // 赤緯はうそ情報
         entity.setMagnitude(-1);
         entity.setName("モック");
-        return new Star(entity) {
+        Star mockStar = new Star(entity) {
             @Override
             public float getAzimuth() {
                 return azimuthFix;  // 方位は固定. 観測条件の影響はうけない
@@ -481,27 +472,14 @@ public class StarManager {
                 return altitudeFix; // 高度は固定. 観測条件の影響はうけない
             }
         };
-        // return new Star(azimuthFix, altitudeFix) {
-        //
-        // @Override
-        // public float getAzimuth() {
-        // return azimuthFix;
-        // }
-        //
-        // @Override
-        // public float getAltitude() {
-        // return altitudeFix;
-        // }
-        //
-        // @Override
-        // public float getMagnitude() {
-        // return -1;
-        // }
-        //
-        // @Override
-        // public String getName() {
-        // return "モック";
-        // }
-        // };
+
+        StarApproxMagnitude approxMagnitude = new StarApproxMagnitude(mockStar.getMagnitude());
+        StarSet starSet = byMagnitudeExtractStars.get(approxMagnitude);
+        if (starSet == null) {
+            starSet = new StarSet();
+            byMagnitudeExtractStars.put(approxMagnitude, starSet);
+            byHipNumberExtractStars.put(mockStar.getHipNumber(), mockStar);
+        }
+        starSet.add(mockStar);
     }
 }
