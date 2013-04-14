@@ -166,13 +166,20 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
             // 正面のパネル
             // ・star.getAltitude() は不定
             // ・horizontalCoordinatesRect.yT >= star.getAltitude() >= horizontalCoordinatesRect.yB
-            return Math.abs(horizontalCoordinatesRect.yT - star.getAltitude());
+            return horizontalCoordinatesRect.yT - star.getAltitude();
 
         } else {
-            // 背面のパネル
-            // ・star.getAltitude() >= 0
-            // ・horizontalCoordinatesRect.yT <= star.getAltitude() <= horizontalCoordinatesRect.yB(+90)
-            return Math.abs(star.getAltitude() - horizontalCoordinatesRect.yT);
+            if (horizontalCoordinatesRect.yT > 0) {
+                // +90°をまたいだ背面のパネル
+                // ・star.getAltitude() >= 0
+                // ・horizontalCoordinatesRect.yT <= star.getAltitude() <= horizontalCoordinatesRect.yB(+90)
+                return star.getAltitude() - horizontalCoordinatesRect.yT;
+            } else {
+                // -90°をまたいだ背面のパネル
+                // ・star.getAltitude() <= 0
+                // ・horizontalCoordinatesRect.yT <= star.getAltitude() <= horizontalCoordinatesRect.yB(+90)
+                return -horizontalCoordinatesRect.yT + star.getAltitude();
+            }
         }
     }
 
