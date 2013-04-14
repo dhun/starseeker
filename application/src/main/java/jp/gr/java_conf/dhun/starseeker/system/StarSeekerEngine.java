@@ -157,6 +157,11 @@ public class StarSeekerEngine implements //
         try {
             astronomicalTheater.calculateCoordinatesRect(orientations.azimuth, orientations.pitch);
 
+            for (Star star : starManager.provideTargetStars()) {
+                star.resetDisplayCoordinatesLocated();
+            }
+            astronomicalTheater.remapDisplayCoordinates(starManager.provideTargetStars());
+
         } catch (Exception e) {
             LogUtils.e(getClass(), "演算処理で例外が発生しました.", e);
             if (starSeekerListener != null) {
@@ -184,7 +189,9 @@ public class StarSeekerEngine implements //
                 for (ConstellationPath path : constellation.getConstellationPaths()) {
                     Star fmStar = path.getFromStar();
                     Star toStar = path.getToStar();
-                    canvas.drawLine(fmStar.getDisplayX(), fmStar.getDisplayY(), toStar.getDisplayX(), toStar.getDisplayY(), pathPaint);
+                    if (fmStar.isDisplayCoordinatesLocated() || toStar.isDisplayCoordinatesLocated()) {
+                        canvas.drawLine(fmStar.getDisplayX(), fmStar.getDisplayY(), toStar.getDisplayX(), toStar.getDisplayY(), pathPaint);
+                    }
                 }
             }
 

@@ -27,12 +27,13 @@ public class Star {
     private Set<Constellation> relatedConstellations;   // 関連する星座のセット
 
     private boolean locaated;   // 配置済であるかどうか
-    private float azimuth;      // 方位(A). -180 <= 0 <= +180. 数値表現ではないためStarLocationUtil.convertAngleFloatToString()をしてはいけない
-    private float altitude;     // 高度(h). - 90 <= 0 <= + 90. 数値表現ではないためStarLocationUtil.convertAngleFloatToString()をしてはいけない
+    private float azimuth;      // 方位(A). -180 <= 0 <= +180. 数値表現ではないためそのまま使う. StarLocationUtil.convertAngleFloatToString()で変換してはいけない
+    private float altitude;     // 高度(h). - 90 <= 0 <= + 90. 数値表現ではないためそのまま使う. StarLocationUtil.convertAngleFloatToString()で変換してはいけない
 
-    private String displayText; // ディスプレイに出力するテキスト
+    private boolean displayCoordinatesLocated;  // ディスプレイ座標を配置済みであるかどうか
     private float displayX;     // ディスプレイのX座標
     private float displayY;     // ディスプレイのY座標
+    private String displayText; // ディスプレイに出力するテキスト
 
     /**
      * コンストラクタ.<br/>
@@ -72,6 +73,7 @@ public class Star {
         this.hasRelatedConstellations = false;
         this.relatedConstellations = Collections.emptySet();
         this.locaated = false;
+        this.displayCoordinatesLocated = false;
     }
 
     /**
@@ -81,9 +83,19 @@ public class Star {
      * @param altitude 高度(h)の数値表現
      */
     public void relocate(float azimuth, float altitude) {
-        this.locaated = true;
         this.azimuth = azimuth;
         this.altitude = altitude;
+        this.locaated = true;
+    }
+
+    public void resetDisplayCoordinatesLocated() {
+        this.displayCoordinatesLocated = false;
+    }
+
+    public void relocateDisplayCoordinates(float displayX, float displayY) {
+        this.displayX = displayX;
+        this.displayY = displayY;
+        this.displayCoordinatesLocated = true;
     }
 
     /**
@@ -198,6 +210,27 @@ public class Star {
     }
 
     /**
+     * 星が配置済であるかどうかを取得します.<br/>
+     */
+    public boolean isDisplayCoordinatesLocated() {
+        return displayCoordinatesLocated;
+    }
+
+    /**
+     * ディスプレイのX座標を取得します.<br/>
+     */
+    public float getDisplayX() {
+        return displayX;
+    }
+
+    /**
+     * ディスプレイのY座標を取得します.<br/>
+     */
+    public float getDisplayY() {
+        return displayY;
+    }
+
+    /**
      * ディスプレイに出力するテキストを取得します.<br/>
      */
     public String getDisplayText() {
@@ -209,34 +242,6 @@ public class Star {
      */
     public void setDisplayText(String displayText) {
         this.displayText = displayText;
-    }
-
-    /**
-     * ディスプレイのX座標を取得します.<br/>
-     */
-    public float getDisplayX() {
-        return displayX;
-    }
-
-    /**
-     * ディスプレイのX座標を設定します.<br/>
-     */
-    public void setDisplayX(float displayX) {
-        this.displayX = displayX;
-    }
-
-    /**
-     * ディスプレイのY座標を取得します.<br/>
-     */
-    public float getDisplayY() {
-        return displayY;
-    }
-
-    /**
-     * ディスプレイのY座標を設定します.<br/>
-     */
-    public void setDisplayY(float displayY) {
-        this.displayY = displayY;
     }
 
     @Override

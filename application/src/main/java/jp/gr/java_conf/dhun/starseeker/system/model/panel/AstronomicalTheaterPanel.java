@@ -114,8 +114,10 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
         float displayRatioX = calcAzimuthDisplayVector(star) / horizontalCoordinatesRect.width();
         float displayRatioY = calcAltitudeDisplayVector(star) / horizontalCoordinatesRect.height();
 
-        star.setDisplayX(displayCoordinatesRect.xL + (displayCoordinatesRect.width() * displayRatioX));
-        star.setDisplayY(displayCoordinatesRect.yT + (displayCoordinatesRect.height() * displayRatioY));
+        float displayX = displayCoordinatesRect.xL + (displayCoordinatesRect.width() * displayRatioX);
+        float displayY = displayCoordinatesRect.yT + (displayCoordinatesRect.height() * displayRatioY);
+
+        star.relocateDisplayCoordinates(displayX, displayY);
     }
 
     /**

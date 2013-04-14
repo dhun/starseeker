@@ -3,6 +3,7 @@
  */
 package jp.gr.java_conf.dhun.starseeker.system.model.panel;
 
+import jp.gr.java_conf.dhun.starseeker.model.Constellation;
 import jp.gr.java_conf.dhun.starseeker.model.Star;
 import jp.gr.java_conf.dhun.starseeker.system.model.coordinates.CoordinatesRect;
 import jp.gr.java_conf.dhun.starseeker.system.renderer.indicator.IAltitudeIndicator;
@@ -350,6 +351,25 @@ public class AstronomicalTheater {
         }
     }
 
+    public void remapDisplayCoordinates(Iterable<Star> starIterable) {
+        for (Star star : starIterable) {
+            AstronomicalTheaterPanel panel = containsPanel(star);
+            if (null == panel) {
+                continue;
+            }
+
+            // 星にディスプレイ座標を割り当て
+            panel.remapDisplayCoordinates(star);
+
+            // 関連する星座を構成する星にもディスプレイ座標を割り当て
+            for (Constellation constellation : star.getRelatedConstellations()) {
+                for (Star componentStars : constellation.getComponentStars()) {
+                    panel.remapDisplayCoordinates(componentStars);
+                }
+            }
+        }
+    }
+
     /**
      * 描画します.<br/>
      * 
@@ -387,13 +407,15 @@ public class AstronomicalTheater {
      * @param canvas キャンバス
      */
     public void draw(Canvas canvas, Star star) {
-        AstronomicalTheaterPanel panel = containsPanel(star);
-        if (null == panel) {
-            return;
+        // AstronomicalTheaterPanel panel = containsPanel(star);
+        // if (null == panel) {
+        // return;
+        // }
+        //
+        // panel.remapDisplayCoordinates(star);
+        if (star.isDisplayCoordinatesLocated()) {
+            starRenderer.drawStar(canvas, star);
         }
-
-        panel.remapDisplayCoordinates(star);
-        starRenderer.drawStar(canvas, star);
     }
 
 }
