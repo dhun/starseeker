@@ -26,6 +26,8 @@ import android.graphics.Paint;
  */
 public class AstronomicalTheater {
 
+    private static final boolean VERIFY_PANEL_COODINATES = true;      // パネルの座標を検証するかどうか. FIXME リリース時にはfalseにする
+
     private static final float DEFAULT_PORTRAIT_THEATER_WIDTH = 140;  // 縦向き）天体シアターの基底の横幅
     private static final float DEFAULT_PORTRAIT_THEATER_HEIGHT = 30;  // 縦向き）天体シアターの基底の高さ
     private static final float DEFAULT_LANDSCAPE_THEATER_WIDTH = 90;  // 横向き）天体シアターの基底の横幅
@@ -131,6 +133,10 @@ public class AstronomicalTheater {
 
         assignPanelTheaterRect();
         assignPanelDisplayRect();
+
+        if (VERIFY_PANEL_COODINATES) {
+            verifyPanelCoordinatesRect();
+        }
 
         for (AstronomicalTheaterPanel panel : panels) {
             panel.prepareContains();
@@ -348,6 +354,12 @@ public class AstronomicalTheater {
         } else {
             panelFaceL.displayCoordinatesRect.setupZero();
             panelFaceR.displayCoordinatesRect.setupZero();
+        }
+    }
+
+    private void verifyPanelCoordinatesRect() {
+        for (AstronomicalTheaterPanel panel : panels) {
+            panel.verifyCoordinatesRect();
         }
     }
 

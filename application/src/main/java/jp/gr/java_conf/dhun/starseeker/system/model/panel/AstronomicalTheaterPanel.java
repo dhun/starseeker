@@ -1,7 +1,6 @@
 package jp.gr.java_conf.dhun.starseeker.system.model.panel;
 
 import jp.gr.java_conf.dhun.starseeker.model.Star;
-import jp.gr.java_conf.dhun.starseeker.system.exception.StarSeekerCoordinatesException;
 import jp.gr.java_conf.dhun.starseeker.system.model.coordinates.CoordinatesRect;
 import android.annotation.SuppressLint;
 import android.graphics.Canvas;
@@ -19,7 +18,7 @@ import android.text.TextPaint;
  */
 public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPanel {
 
-    private final AstronomicalTheaterPanelType panelType; // 天体シアターパネルの種類
+    protected final AstronomicalTheaterPanelType panelType; // 天体シアターパネルの種類
 
     protected final int displayWidth;   // ディスプレイの横幅(pixel)
     protected final int displayHeight;  // ディスプレイの高さ(pixel)
@@ -222,129 +221,13 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
      */
     @Override
     public void verifyCoordinatesRect() {
-        if (panelType.isEast()) {
-            verifyForEastPanel();
-        } else {
-            verifyForWestPanel();
-        }
-        if (panelType.isFace()) {
-            verifyForFacePanel();
-        } else {
-            verifyForBackPanel();
-        }
+        verifyCoordinatesRectX();
+        verifyCoordinatesRectY();
     }
 
-    /**
-     * 東側パネル向けの検証
-     */
-    protected void verifyForEastPanel() {
-        // 地平座標の検証
-        if (horizontalCoordinatesRect.hasWidth()) {
-            if (!(0 <= horizontalCoordinatesRect.xL)) {
-                throw new StarSeekerCoordinatesException(panelType, horizontalCoordinatesRect, "!(0 <= horizontalCoordinatesRect.xL)");
-            }
-            if (!(0 <= horizontalCoordinatesRect.xR)) {
-                throw new StarSeekerCoordinatesException(panelType, horizontalCoordinatesRect, "!(0 <= horizontalCoordinatesRect.xR)");
-            }
-            if (!(horizontalCoordinatesRect.xL < horizontalCoordinatesRect.xR)) {
-                throw new StarSeekerCoordinatesException(panelType, horizontalCoordinatesRect, "!(horizontalCoordinatesRect.xL < horizontalCoordinatesRect.xR)");
-            }
-        }
+    protected abstract void verifyCoordinatesRectX();
 
-        // ディスプレイ座標の検証
-        if (displayCoordinatesRect.hasWidth()) {
-            if (!(0 <= displayCoordinatesRect.xL)) {
-                throw new StarSeekerCoordinatesException(panelType, displayCoordinatesRect, "!(0 <= displayCoordinatesRect.xL)");
-            }
-            if (!(0 <= displayCoordinatesRect.xR)) {
-                throw new StarSeekerCoordinatesException(panelType, displayCoordinatesRect, "!(0 <= displayCoordinatesRect.xR)");
-            }
-            if (!(displayCoordinatesRect.xL < displayCoordinatesRect.xR)) {
-                throw new StarSeekerCoordinatesException(panelType, displayCoordinatesRect, "!(displayCoordinatesRect.xL < displayCoordinatesRect.xR)");
-            }
-        }
-    }
-
-    /**
-     * 西側パネル向けの検証
-     */
-    protected void verifyForWestPanel() {
-        // 地平座標の検証
-        if (horizontalCoordinatesRect.hasWidth()) {
-            if (!(0 >= horizontalCoordinatesRect.xL)) {
-                throw new StarSeekerCoordinatesException(panelType, horizontalCoordinatesRect, "!(0 >= horizontalCoordinatesRect.xL)");
-            }
-            if (!(0 >= horizontalCoordinatesRect.xR)) {
-                throw new StarSeekerCoordinatesException(panelType, horizontalCoordinatesRect, "!(0 >= horizontalCoordinatesRect.xR)");
-            }
-            if (!(horizontalCoordinatesRect.xL < horizontalCoordinatesRect.xR)) {
-                throw new StarSeekerCoordinatesException(panelType, horizontalCoordinatesRect, "!(horizontalCoordinatesRect.xL < horizontalCoordinatesRect.xR)");
-            }
-        }
-
-        // ディスプレイ座標の検証
-        if (displayCoordinatesRect.hasWidth()) {
-            if (!(0 <= displayCoordinatesRect.xL)) {
-                throw new StarSeekerCoordinatesException(panelType, displayCoordinatesRect, "!(0 <= displayCoordinatesRect.xL)");
-            }
-            if (!(0 <= displayCoordinatesRect.xR)) {
-                throw new StarSeekerCoordinatesException(panelType, displayCoordinatesRect, "!(0 <= displayCoordinatesRect.xR)");
-            }
-            if (!(displayCoordinatesRect.xL < displayCoordinatesRect.xR)) {
-                throw new StarSeekerCoordinatesException(panelType, displayCoordinatesRect, "!(displayCoordinatesRect.xL < displayCoordinatesRect.xR)");
-            }
-        }
-    }
-
-    /**
-     * 正面パネル向けの検証
-     */
-    protected void verifyForFacePanel() {
-        // 地平座標の検証
-        if (horizontalCoordinatesRect.hasHeight()) {
-            if (!(horizontalCoordinatesRect.yB < horizontalCoordinatesRect.yT)) {
-                throw new StarSeekerCoordinatesException(panelType, horizontalCoordinatesRect, "!(horizontalCoordinatesRect.yB < horizontalCoordinatesRect.yT)");
-            }
-        }
-
-        // ディスプレイ座標の検証
-        if (displayCoordinatesRect.hasHeight()) {
-            if (!(0 <= displayCoordinatesRect.yT)) {
-                throw new StarSeekerCoordinatesException(panelType, displayCoordinatesRect, "!(0 <= displayCoordinatesRect.yT)");
-            }
-            if (!(0 < displayCoordinatesRect.yB)) {
-                throw new StarSeekerCoordinatesException(panelType, displayCoordinatesRect, "!(0 < displayCoordinatesRect.yB)");
-            }
-            if (!(displayCoordinatesRect.yT < displayCoordinatesRect.yB)) {
-                throw new StarSeekerCoordinatesException(panelType, displayCoordinatesRect, "!(displayCoordinatesRect.yT < displayCoordinatesRect.yB)");
-            }
-        }
-    }
-
-    /**
-     * 背面パネル向けの検証
-     */
-    protected void verifyForBackPanel() {
-        // 地平座標の検証
-        if (horizontalCoordinatesRect.hasHeight()) {
-            if (!(horizontalCoordinatesRect.yB > horizontalCoordinatesRect.yT)) {
-                throw new StarSeekerCoordinatesException(panelType, horizontalCoordinatesRect, "!(horizontalCoordinatesRect.yB > horizontalCoordinatesRect.yT)");
-            }
-        }
-
-        // ディスプレイ座標の検証
-        if (displayCoordinatesRect.hasHeight()) {
-            if (!(0 <= displayCoordinatesRect.yT)) {
-                throw new StarSeekerCoordinatesException(panelType, displayCoordinatesRect, "!(0 <= displayCoordinatesRect.yT)");
-            }
-            if (!(0 < displayCoordinatesRect.yB)) {
-                throw new StarSeekerCoordinatesException(panelType, displayCoordinatesRect, "!(0 < displayCoordinatesRect.yB)");
-            }
-            if (!(displayCoordinatesRect.yT < displayCoordinatesRect.yB)) {
-                throw new StarSeekerCoordinatesException(panelType, displayCoordinatesRect, "!(displayCoordinatesRect.yT < displayCoordinatesRect.yB)");
-            }
-        }
-    }
+    protected abstract void verifyCoordinatesRectY();
 
     @Override
     public String toString() {
