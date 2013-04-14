@@ -41,6 +41,8 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public class StarManager {
 
+    private static final boolean DISPLAY_STAR_LOCATION = false;   // 星の地平座標を表示するかどうか
+
     private static final boolean APPEND_MOCK_STAR = false;              // モックデータを含めるかどうか. 通常はfalse
     private static final float SET_DISPLAY_TEXT_LOWER_MAGNITUDE = 2;    // テキスト表示する下限となる等級
 
@@ -242,16 +244,27 @@ public class StarManager {
             if (star.getMagnitude() <= SET_DISPLAY_TEXT_LOWER_MAGNITUDE && null != star.getName()) {
                 // 星の等級がしきい値以下で、かつ名前が設定されていれば画面にデータを表示
                 if (null != star.getMemo()) {
-                    star.setDisplayText(String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s], 備考=[%s]" //
-                            , angleFormat.format(star.getAzimuth())  // 方位(A)
-                            , angleFormat.format(star.getAltitude()) // 高度(h)
-                            , star.getName()
-                            , star.getMemo()));
+                    if (DISPLAY_STAR_LOCATION) {
+                        star.setDisplayText(String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s], 備考=[%s]" //
+                                , angleFormat.format(star.getAzimuth())  // 方位(A)
+                                , angleFormat.format(star.getAltitude()) // 高度(h)
+                                , star.getName()
+                                , star.getMemo()));
+                    } else {
+                        star.setDisplayText(String.format("名前=[%s], 備考=[%s]" //
+                                , star.getName()
+                                , star.getMemo()));
+                    }
                 } else {
-                    star.setDisplayText(String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s]" //
-                            , angleFormat.format(star.getAzimuth())  // 方位(A)
-                            , angleFormat.format(star.getAltitude()) // 高度(h)
-                            , star.getName()));
+                    if (DISPLAY_STAR_LOCATION) {
+                        star.setDisplayText(String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s]" //
+                                , angleFormat.format(star.getAzimuth())  // 方位(A)
+                                , angleFormat.format(star.getAltitude()) // 高度(h)
+                                , star.getName()));
+                    } else {
+                        star.setDisplayText(String.format("名前=[%s]" //
+                                , star.getName()));
+                    }
                 }
 
             } else {
