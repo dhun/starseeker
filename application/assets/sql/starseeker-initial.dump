@@ -1743,7 +1743,7 @@ COMMIT;
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE constellation_path (
-    constellation_path_id       INTEGER not null
+    constellation_path_id       INTEGER not null    -- 星座パスID
   , constellation_code          TEXT    not null    -- 星座コード(略符)
   , hip_num_fm                  INTEGER not null    -- HIP番号の始点
   , hip_num_to                  INTEGER not null    -- HIP番号の終点
@@ -1754,11 +1754,37 @@ INSERT INTO "constellation_path" VALUES(1,'Cas',-1,3179);
 INSERT INTO "constellation_path" VALUES(2,'Cas',3179,746);
 INSERT INTO "constellation_path" VALUES(3,'Cas',6686,-1);
 INSERT INTO "constellation_path" VALUES(4,'Cas',8886,6686);
-INSERT INTO "constellation_path" VALUES(5,'UMa',53910,54061);
-INSERT INTO "constellation_path" VALUES(6,'UMa',58001,53910);
-INSERT INTO "constellation_path" VALUES(7,'UMa',59774,58001);
-INSERT INTO "constellation_path" VALUES(8,'UMa',59774,54061);
-INSERT INTO "constellation_path" VALUES(9,'UMa',62956,59774);
-INSERT INTO "constellation_path" VALUES(10,'UMa',65378,62956);
-INSERT INTO "constellation_path" VALUES(11,'UMa',67301,65378);
+INSERT INTO "constellation_path" VALUES(5,'Ori',25336,25930);
+INSERT INTO "constellation_path" VALUES(6,'Ori',25930,24436);
+INSERT INTO "constellation_path" VALUES(7,'Ori',26311,25930);
+INSERT INTO "constellation_path" VALUES(8,'Ori',26727,27366);
+INSERT INTO "constellation_path" VALUES(9,'Ori',26727,26311);
+INSERT INTO "constellation_path" VALUES(10,'Ori',27989,26727);
+INSERT INTO "constellation_path" VALUES(11,'Sco',78265,80112);
+INSERT INTO "constellation_path" VALUES(12,'Sco',78401,80112);
+INSERT INTO "constellation_path" VALUES(13,'Sco',78820,80112);
+INSERT INTO "constellation_path" VALUES(14,'Sco',80112,80763);
+INSERT INTO "constellation_path" VALUES(15,'Sco',80763,81266);
+INSERT INTO "constellation_path" VALUES(16,'Sco',81266,82396);
+INSERT INTO "constellation_path" VALUES(17,'Sco',82396,82514);
+INSERT INTO "constellation_path" VALUES(18,'Sco',82514,82729);
+INSERT INTO "constellation_path" VALUES(19,'Sco',82729,84143);
+INSERT INTO "constellation_path" VALUES(20,'Sco',84143,86228);
+INSERT INTO "constellation_path" VALUES(21,'Sco',85696,86670);
+INSERT INTO "constellation_path" VALUES(22,'Sco',85927,79374);
+INSERT INTO "constellation_path" VALUES(23,'Sco',86228,85696);
+INSERT INTO "constellation_path" VALUES(24,'Sco',86670,85927);
+INSERT INTO "constellation_path" VALUES(25,'Tau',17702,20889);
+INSERT INTO "constellation_path" VALUES(26,'Tau',20889,25428);
+INSERT INTO "constellation_path" VALUES(27,'Tau',20894,17702);
+INSERT INTO "constellation_path" VALUES(28,'Tau',21421,20894);
+INSERT INTO "constellation_path" VALUES(29,'Tau',25428,23497);
+INSERT INTO "constellation_path" VALUES(30,'Tau',26451,21421);
+INSERT INTO "constellation_path" VALUES(31,'UMa',53910,54061);
+INSERT INTO "constellation_path" VALUES(32,'UMa',58001,53910);
+INSERT INTO "constellation_path" VALUES(33,'UMa',59774,58001);
+INSERT INTO "constellation_path" VALUES(34,'UMa',59774,54061);
+INSERT INTO "constellation_path" VALUES(35,'UMa',62956,59774);
+INSERT INTO "constellation_path" VALUES(36,'UMa',65378,62956);
+INSERT INTO "constellation_path" VALUES(37,'UMa',67301,65378);
 COMMIT;
