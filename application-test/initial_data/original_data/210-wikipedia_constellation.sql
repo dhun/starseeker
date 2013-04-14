@@ -47,10 +47,10 @@ insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code)
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('82514', '82729', 'Sco');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('82729', '84143', 'Sco');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('84143', '86228', 'Sco');
-insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('86228', '85696', 'Sco');
-insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('85696', '86670', 'Sco');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('86228', '87073', 'Sco');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('87073', '86670', 'Sco');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('86670', '85927', 'Sco');
-insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('85927', '79374', 'Sco');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('85927', '85696', 'Sco');
 
 -- おうし座
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('26451', '21421', 'Tau');
