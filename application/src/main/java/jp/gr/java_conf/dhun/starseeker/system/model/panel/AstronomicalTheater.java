@@ -361,7 +361,8 @@ public class AstronomicalTheater {
             // 星にディスプレイ座標を割り当て
             panel.remapDisplayCoordinates(star);
 
-            // 関連する星座を構成する星にもディスプレイ座標を割り当て
+            // 同じパネルを使って、関連する星座を構成する星にもディスプレイ座標を割り当て
+            // TODO 同じパネルであってる？？
             for (Constellation constellation : star.getRelatedConstellations()) {
                 for (Star componentStars : constellation.getComponentStars()) {
                     panel.remapDisplayCoordinates(componentStars);
