@@ -164,7 +164,7 @@ public class StarSeekerEngine implements //
     public void draw(Canvas canvas) {
         try {
             astronomicalTheater.draw(canvas);
-            for (Star star : starManager.iterateExtractStar()) {
+            for (Star star : starManager.provideTargetStars()) {
                 astronomicalTheater.draw(canvas, star);
             }
 
