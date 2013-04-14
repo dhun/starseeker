@@ -8,6 +8,8 @@ import java.text.NumberFormat;
 import java.util.Calendar;
 
 import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.ITerminalOrientationsCalculator;
+import jp.gr.java_conf.dhun.starseeker.model.Constellation;
+import jp.gr.java_conf.dhun.starseeker.model.ConstellationPath;
 import jp.gr.java_conf.dhun.starseeker.model.Orientations;
 import jp.gr.java_conf.dhun.starseeker.model.Star;
 import jp.gr.java_conf.dhun.starseeker.system.listener.IStarSeekerListener;
@@ -137,6 +139,13 @@ public class StarSeekerEngine implements //
         }
     };
 
+    private final Paint pathPaint = new Paint() {
+        {
+            setFlags(Paint.ANTI_ALIAS_FLAG);
+            setColor(Color.WHITE);
+        }
+    };
+
     // ＜＜＜ 開発中のコード. ここまで
 
     /**
@@ -166,6 +175,15 @@ public class StarSeekerEngine implements //
             astronomicalTheater.draw(canvas);
             for (Star star : starManager.provideTargetStars()) {
                 astronomicalTheater.draw(canvas, star);
+            }
+
+            // TODO 星座の座標補正が必要なので、このままではダメ
+            for (Constellation constellation : starManager.provideTargetConstellations()) {
+                for (ConstellationPath path : constellation.getConstellationPaths()) {
+                    Star fmStar = path.getFromStar();
+                    Star toStar = path.getToStar();
+                    canvas.drawLine(fmStar.getDisplayX(), fmStar.getDisplayY(), toStar.getDisplayX(), toStar.getDisplayY(), pathPaint);
+                }
             }
 
             fpsCounter.finish();

@@ -46,6 +46,10 @@ public class Constellation {
         componentStars.add(path.getToStar());
     }
 
+    public Set<ConstellationPath> getConstellationPaths() {
+        return Collections.unmodifiableSet(constellationPaths);
+    }
+
     public Set<Star> getComponentStars() {
         return Collections.unmodifiableSet(componentStars);
     }
