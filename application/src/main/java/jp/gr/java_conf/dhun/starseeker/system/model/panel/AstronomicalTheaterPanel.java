@@ -128,16 +128,30 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
      */
     protected float calcAzimuthDisplayVector(Star star) {
         if (panelType.isEast()) {
-            // 東側のパネル
-            // ・star.getAzimuth() >= 0
-            // ・horizontalCoordinatesRect.xL <= star.getAzimuth() <= horizontalCoordinatesRect.xR
-            return Math.abs(star.getAzimuth() - horizontalCoordinatesRect.xL);
+            if (panelType.isFace()) {
+                // 東側＆正面のパネル
+                // ・star.getAzimuth() >= 0
+                // ・horizontalCoordinatesRect.xL <= star.getAzimuth() <= horizontalCoordinatesRect.xR
+                return +star.getAzimuth() - horizontalCoordinatesRect.xL;
+            } else {
+                // 東側＆背面のパネル
+                // ・star.getAzimuth() >= 0
+                // ・horizontalCoordinatesRect.xL >= star.getAzimuth() >= horizontalCoordinatesRect.xR
+                return +horizontalCoordinatesRect.xL - star.getAzimuth();
+            }
 
         } else {
-            // 西側のパネル
-            // ・star.getAzimuth() < 0
-            // ・horizontalCoordinatesRect.xL <= star.getAzimuth() <= horizontalCoordinatesRect.xR
-            return Math.abs(star.getAzimuth() + Math.abs(horizontalCoordinatesRect.xL));
+            if (panelType.isFace()) {
+                // 西側＆正面のパネル
+                // ・star.getAzimuth() < 0
+                // ・horizontalCoordinatesRect.xL <= star.getAzimuth() <= horizontalCoordinatesRect.xR
+                return -horizontalCoordinatesRect.xL + star.getAzimuth();
+            } else {
+                // 西側＆背面のパネル
+                // ・star.getAzimuth() < 0
+                // ・horizontalCoordinatesRect.xL >= star.getAzimuth() >= horizontalCoordinatesRect.xR
+                return -star.getAzimuth() + horizontalCoordinatesRect.xL;
+            }
         }
     }
 
