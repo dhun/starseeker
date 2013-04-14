@@ -50,6 +50,7 @@ public class ConstellationPathDataDao extends AbstractSqlDao<ConstellationPathDa
     @Override
     protected ConstellationPathData convertToEntity(Cursor cursor) {
         ConstellationPathData result = new ConstellationPathData();
+        result.setConstellationPathId(cursor.getInt(cursor.getColumnIndex(ConstellationPathData.FieldNames.CONSTELLATION_PATH_ID)));
         result.setConstellationCode(cursor.getString(cursor.getColumnIndex(ConstellationPathData.FieldNames.CONSTELLATION_CODE)));
         result.setHipNumberFrom(cursor.getInt(cursor.getColumnIndex(ConstellationPathData.FieldNames.HIP_NUMBER_FROM)));
         result.setHipNumberTo(cursor.getInt(cursor.getColumnIndex(ConstellationPathData.FieldNames.HIP_NUMBER_TO)));

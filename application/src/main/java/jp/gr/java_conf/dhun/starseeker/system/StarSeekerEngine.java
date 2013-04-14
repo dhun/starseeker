@@ -178,6 +178,8 @@ public class StarSeekerEngine implements //
             }
 
             // TODO 星座の座標補正が必要なので、このままではダメ
+            int i = 0; // FIXME ゴミコード
+            i = i + 1;
             for (Constellation constellation : starManager.provideTargetConstellations()) {
                 for (ConstellationPath path : constellation.getConstellationPaths()) {
                     Star fmStar = path.getFromStar();

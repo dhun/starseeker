@@ -74,7 +74,6 @@ public class ConstellationPath {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((constellationPathData == null) ? 0 : constellationPathData.hashCode());
-        result = prime * result + ((fromStar == null) ? 0 : fromStar.hashCode());
         return result;
     }
 
@@ -97,14 +96,6 @@ public class ConstellationPath {
         } else if (!constellationPathData.equals(other.constellationPathData)) {
             return false;
         }
-        if (fromStar == null) {
-            if (other.fromStar != null) {
-                return false;
-            }
-        } else if (!fromStar.equals(other.fromStar)) {
-            return false;
-        }
         return true;
     }
-
 }
