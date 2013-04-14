@@ -62,6 +62,8 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
  */
 public class MakeInitialDB {
 
+    private static final boolean RECREATE_CONSTELLATION_ONLY = true;     // trueにすると、星座パスの再生性だけを行います
+
     private static final boolean COPY_TO_APPLICATION_IF_SUCCEED = true;  // trueにすると、初期DBダンプの生成に成功したとき、アプリケーションプロジェクトにコピーする
     private static final boolean REMOVE_TMP_DATABASE_IF_SUCCEED = true;  // trueにすると、初期DBダンプの生成に成功したとき、一時DBを削除する
     private static final boolean REMOVE_TMP_DATABASE_IF_FAILURE = false; // trueにすると、初期DBダンプの生成に失敗したとき、一時DBを削除する
@@ -92,13 +94,19 @@ public class MakeInitialDB {
             validateExistsSqlite();
 
             // 出力ファイルを初期化
-            FileUtils.delete(TMP_DATABASE_FILE);
-            FileUtils.delete(INI_DATABASE_DUMP);
-            FileUtils.delete(INI_DATABASE_TIME);
+            if (!RECREATE_CONSTELLATION_ONLY) {
+                FileUtils.delete(TMP_DATABASE_FILE);
+                FileUtils.delete(INI_DATABASE_DUMP);
+                FileUtils.delete(INI_DATABASE_TIME);
 
-            // SQLスクリプトを実行して一時的なデータベースを作成
-            executeSqlFiles(ROOT_DIR + File.separator + "original_data");
-            executeSqlFiles(ROOT_DIR + File.separator + "convert_starseeker_database");
+                // SQLスクリプトを実行して一時的なデータベースを作成
+                executeSqlFiles(ROOT_DIR + File.separator + "original_data");
+                executeSqlFiles(ROOT_DIR + File.separator + "convert_starseeker_database");
+            } else {
+                // SQLスクリプトを実行して一時的なデータベースを作成
+                executeSqlFiles(ROOT_DIR + File.separator + "original_data", Arrays.asList(new String[] { "210-wikipedia_constellation.sql" }));
+                executeSqlFiles(ROOT_DIR + File.separator + "convert_starseeker_database");
+            }
 
             // データの補正
             executeConvertSqlStatements();
@@ -116,9 +124,9 @@ public class MakeInitialDB {
             createTimestampFile();
 
             // 一時的なデータベースを削除
-            if (REMOVE_TMP_DATABASE_IF_SUCCEED) {
-                FileUtils.delete(TMP_DATABASE_FILE);
-            }
+            // if (REMOVE_TMP_DATABASE_IF_SUCCEED ) {
+            // FileUtils.delete(TMP_DATABASE_FILE);
+            // }
 
             // アプリケーションプロジェクトにダンプファイルをコピー
             if (COPY_TO_APPLICATION_IF_SUCCEED) {
@@ -149,9 +157,11 @@ public class MakeInitialDB {
             System.out.print(message.toString());
 
         } catch (Throwable t) {
-            if (REMOVE_TMP_DATABASE_IF_FAILURE) {
-                FileUtils.delete(TMP_DATABASE_FILE);
-                FileUtils.delete(INI_DATABASE_DUMP);
+            if (!RECREATE_CONSTELLATION_ONLY) {
+                if (REMOVE_TMP_DATABASE_IF_FAILURE) {
+                    // FileUtils.delete(TMP_DATABASE_FILE);
+                    FileUtils.delete(INI_DATABASE_DUMP);
+                }
             }
             FileUtils.delete(INI_DATABASE_TIME);
 
@@ -165,6 +175,10 @@ public class MakeInitialDB {
     }
 
     private void executeSqlFiles(String dirPath) throws ClassNotFoundException, SQLException, IOException, InterruptedException {
+        executeSqlFiles(dirPath, Arrays.asList(new String[] {}));
+    }
+
+    private void executeSqlFiles(String dirPath, final List<String> includeFiles) throws ClassNotFoundException, SQLException, IOException, InterruptedException {
         File dir = new File(dirPath);
         if (!dir.exists()) {
             throw new IOException("no such directory. path=[" + dirPath + "]");
@@ -173,7 +187,15 @@ public class MakeInitialDB {
         File[] sqlFiles = dir.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                return name.endsWith(".sql");
+                if (name.endsWith(".sql")) {
+                    if (includeFiles.isEmpty()) {
+                        return true;
+                    } else {
+                        return includeFiles.contains(name);
+                    }
+                } else {
+                    return false;
+                }
             }
         });
 

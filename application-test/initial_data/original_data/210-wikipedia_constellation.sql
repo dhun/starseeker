@@ -55,9 +55,9 @@ insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code)
 -- おうし座
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('26451', '21421', 'Tau');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('21421', '20894', 'Tau');
-insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('20894', '17702', 'Tau');
-insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('17702', '20889', 'Tau');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('20894', '20205', 'Tau');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('20205', '20889', 'Tau');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('20889', '25428', 'Tau');
-insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('25428', '23497', 'Tau');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('25428', '20711', 'Tau');
 
 select count(*) from wikipedia_constellation ;
