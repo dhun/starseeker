@@ -3,6 +3,7 @@
  */
 package jp.gr.java_conf.dhun.starseeker.model;
 
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +13,8 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
 
 /**
  * 星座.<br/>
- * 精度はfloat. 厳密な値より処理速度を優先させた.
+ * 精度はfloat. 厳密な値より処理速度を優先させた.<br/>
+ * TODO 星と星座を循環参照させているため、参照を{@link WeakReference} などに変更しないといけないかもしれない
  * 
  * @author j_hosoya
  * 

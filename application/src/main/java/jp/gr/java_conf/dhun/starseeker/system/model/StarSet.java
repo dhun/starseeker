@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import jp.gr.java_conf.dhun.starseeker.model.Constellation;
 import jp.gr.java_conf.dhun.starseeker.model.Star;
 
 /**
@@ -30,14 +31,14 @@ public class StarSet extends HashSet<Star> {
     }
 
     /**
-     * 関連する星座コードの集合を取得します.<br/>
+     * 関連する星座の集合を取得します.<br/>
      * 
-     * @return 星座コード(略符)の集合
+     * @return 星座の集合
      */
-    public Set<String> getRelatedConstellationCodes() {
-        Set<String> results = new HashSet<String>();
+    public Set<Constellation> getRelatedConstellations() {
+        Set<Constellation> results = new HashSet<Constellation>();
         for (Star star : this) {
-            results.addAll(star.getRelatedConstellationCodeSet());
+            results.addAll(star.getRelatedConstellations());
         }
         return Collections.unmodifiableSet(results);
     }

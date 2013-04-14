@@ -3,6 +3,7 @@
  */
 package jp.gr.java_conf.dhun.starseeker.model;
 
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +13,8 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
 
 /**
  * 星.<br/>
- * 精度はfloat. 厳密な値より処理速度を優先させた.
+ * 精度はfloat. 厳密な値より処理速度を優先させた.<br/>
+ * TODO 星と星座を循環参照させているため、参照を{@link WeakReference} などに変更しないといけないかもしれない
  * 
  * @author jun
  * 
@@ -21,8 +23,8 @@ public class Star {
 
     private final StarData starData;    // 星データ
 
-    private boolean hasRelatedConstellationCode;
-    private Set<String> relatedConstellationCodeSet;   // 関連する星座コードの集合
+    private boolean hasRelatedConstellations;           // 関連する星座が設定されているかどうか
+    private Set<Constellation> relatedConstellations;   // 関連する星座のセット
 
     private boolean locaated;   // 配置済であるかどうか
     private float azimuth;      // 方位(A). -180 <= 0 <= +180. 数値表現ではないためStarLocationUtil.convertAngleFloatToString()をしてはいけない
@@ -67,7 +69,8 @@ public class Star {
      */
     public Star(StarData starData) {
         this.starData = starData;
-        this.relatedConstellationCodeSet = Collections.emptySet();
+        this.hasRelatedConstellations = false;
+        this.relatedConstellations = Collections.emptySet();
         this.locaated = false;
     }
 
@@ -84,25 +87,25 @@ public class Star {
     }
 
     /**
-     * 関連する星座コードを追加します.<br/>
+     * 関連する星座を追加します.<br/>
      * 
-     * @param code 星座コード(略符)
+     * @param constellation 星座
      */
-    public void addRelatedConstellationCode(String code) {
-        if (hasRelatedConstellationCode == false) {
-            hasRelatedConstellationCode = true;
-            relatedConstellationCodeSet = new HashSet<String>();
+    public void addRelatedConstellation(Constellation constellation) {
+        if (hasRelatedConstellations == false) {
+            hasRelatedConstellations = true;
+            relatedConstellations = new HashSet<Constellation>();
         }
-        relatedConstellationCodeSet.add(code);
+        relatedConstellations.add(constellation);
     }
 
     /**
-     * 関連する星座コードの集合を取得します.<br/>
+     * 関連する星座の集合を取得します.<br/>
      * 
-     * @return 星座コード(略符)の集合
+     * @return 星座の集合
      */
-    public Set<String> getRelatedConstellationCodeSet() {
-        return Collections.unmodifiableSet(relatedConstellationCodeSet);
+    public Set<Constellation> getRelatedConstellations() {
+        return Collections.unmodifiableSet(relatedConstellations);
     }
 
     /**
