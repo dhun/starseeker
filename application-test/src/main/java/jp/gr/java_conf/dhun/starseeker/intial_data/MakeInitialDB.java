@@ -37,7 +37,7 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
  * <li>210-wikipedia_constellation.sql
  * <ul>
  * <li>'γ Cas', 'ツィー'のHIPを-1にねつ造している</li>
- * <li>さそり座のパスがあやしい</li>
+ * <li>おうし座のパスがあやしい</li>
  * </ul>
  * </li>
  * <li>300-nasa_star_data.sql
@@ -146,7 +146,7 @@ public class MakeInitialDB {
             message.append("\n    ・'γ Cas', 'ツィー'のHIPを-1にねつ造している");
             message.append("\n・210-wikipedia_constellation.sql");
             message.append("\n    ・'γ Cas', 'ツィー'のHIPを-1にねつ造している");
-            message.append("\n    ・さそり座のパスがあやしい");
+            message.append("\n    ・おうし座のパスがあやしい");
             message.append("\n・300-nasa_star_data.sql");
             message.append("\n    ・'γ Cas', 'ツィー'をHIPで-1にねつ造している");
             message.append("\n・130-hoshizora_constellation_name.sql(星座名データ)");
