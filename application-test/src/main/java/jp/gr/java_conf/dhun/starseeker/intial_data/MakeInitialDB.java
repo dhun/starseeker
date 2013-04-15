@@ -62,14 +62,13 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
  */
 public class MakeInitialDB {
 
-    private static final boolean RECREATE_CONSTELLATION_ONLY = false;     // trueにすると、星座パスの再生性だけを行います
+    private static final boolean RECREATE_CONSTELLATION_ONLY = false;     // trueにすると、星座パスの再生成だけを行います
 
     private static final boolean COPY_TO_APPLICATION_IF_SUCCEED = true;  // trueにすると、初期DBダンプの生成に成功したとき、アプリケーションプロジェクトにコピーする
-    private static final boolean REMOVE_TMP_DATABASE_IF_SUCCEED = true;  // trueにすると、初期DBダンプの生成に成功したとき、一時DBを削除する
+    private static final boolean REMOVE_TMP_DATABASE_IF_SUCCEED = false; // trueにすると、初期DBダンプの生成に成功したとき、一時DBを削除する
     private static final boolean REMOVE_TMP_DATABASE_IF_FAILURE = false; // trueにすると、初期DBダンプの生成に失敗したとき、一時DBを削除する
 
-    private static final String SQLITE_PATH_WIN = "D:/dev/_opt/sqlite3/sqlite3.exe";
-    private static final String SQLITE_PATH_MAC = "sqlite3";
+    private static final String SQLITE_PATH = "sqlite3";
 
     private static final String APPLICATION_ASSET_DIR = "../application/assets/sql";
 
@@ -124,9 +123,9 @@ public class MakeInitialDB {
             createTimestampFile();
 
             // 一時的なデータベースを削除
-            // if (REMOVE_TMP_DATABASE_IF_SUCCEED ) {
-            // FileUtils.delete(TMP_DATABASE_FILE);
-            // }
+            if (REMOVE_TMP_DATABASE_IF_SUCCEED) {
+                FileUtils.delete(TMP_DATABASE_FILE);
+            }
 
             // アプリケーションプロジェクトにダンプファイルをコピー
             if (COPY_TO_APPLICATION_IF_SUCCEED) {
@@ -211,10 +210,18 @@ public class MakeInitialDB {
         return pattern.matcher(System.getProperty("os.name")).find();
     }
 
+    private String replacePathIfNeed(String path) {
+        if (isWindows()) {
+            return path.replaceAll("\\\\", "/");
+        } else {
+            return path;
+        }
+    }
+
     private void validateExistsSqlite() throws IOException, InterruptedException {
         // SQLITEのコマンドラインを構築
         List<String> commands = new ArrayList<String>();
-        commands.add(SQLITE_PATH_MAC);
+        commands.add(SQLITE_PATH);
         commands.add("--version");
 
         // SQLITEを利用したダンプ処理
@@ -224,7 +231,7 @@ public class MakeInitialDB {
 
         int result = process.waitFor();
         if (result != 0) {
-            throw new RuntimeException("SQLITEが見つからない. path=[" + SQLITE_PATH_MAC + "]");
+            throw new RuntimeException("SQLITEが見つからない. path=[" + SQLITE_PATH + "]");
         }
     }
 
@@ -233,26 +240,12 @@ public class MakeInitialDB {
 
         // SQLITEのコマンドラインを構築
         List<String> commands = new ArrayList<String>();
-        if (isWindows()) {
-            // builder = new ProcessBuilder("cmd", "/c", SQLITE_PATH_WIN, "-batch", "-bail", TMP_DATABASE_FILE.getAbsolutePath(), ".dump " + tableName, ">>", databaseDump.getAbsolutePath());
-            commands.add("cmd");
-            commands.add("/c");
-            commands.add(SQLITE_PATH_WIN);
-            commands.add("-batch");
-            commands.add("-bail");
-            commands.add("-echo");
-            commands.add(TMP_DATABASE_FILE.getAbsolutePath());
-            commands.add("<");
-            commands.add(sqlFile.getPath());
-        } else {
-            // builder = new ProcessBuilder(SQLITE_PATH_MAC, "-batch", "-bail", "-echo", TMP_DATABASE_FILE.getAbsolutePath(), ".read " + sqlFile.getPath());
-            commands.add(SQLITE_PATH_MAC);
-            commands.add("-batch");
-            commands.add("-bail");
-            commands.add("-echo");
-            commands.add(TMP_DATABASE_FILE.getAbsolutePath());
-            commands.add(".read " + sqlFile.getPath());
-        }
+        commands.add(SQLITE_PATH);
+        commands.add("-batch");
+        commands.add("-bail");
+        commands.add("-echo");
+        commands.add(TMP_DATABASE_FILE.getAbsolutePath());
+        commands.add(".read " + replacePathIfNeed(sqlFile.getAbsolutePath()));
 
         // SQLITEを利用したSQLスクリプトファイルの実行
         ProcessBuilder builder = new ProcessBuilder(commands);
@@ -395,34 +388,19 @@ public class MakeInitialDB {
 
         // 設定ファイルを作成
         List<String> settings = new ArrayList<String>();
-        settings.add(".output " + dumpFile.getAbsolutePath());
+        settings.add(".output " + replacePathIfNeed(dumpFile.getAbsolutePath()));
 
         File iniFile = FileUtils.createTempFileAndWriteLines(ROOT_DIR, settings);
 
         // SQLITEのコマンドラインを構築
         List<String> commands = new ArrayList<String>();
-        if (isWindows()) {
-            // builder = new ProcessBuilder("cmd", "/c", SQLITE_PATH_WIN, "-batch", "-bail", TMP_DATABASE_FILE.getAbsolutePath(), ".dump " + tableName, ">>", databaseDump.getAbsolutePath());
-            commands.add("cmd");
-            commands.add("/");
-            commands.add(SQLITE_PATH_WIN);
-            commands.add("-batch");
-            commands.add("-bail");
-            // commands.add("-init");
-            // commands.add(iniFile.getPath());
-            commands.add(TMP_DATABASE_FILE.getAbsolutePath());
-            commands.add(".dump " + tableName);
-            commands.add(">>");
-            commands.add(INI_DATABASE_DUMP.getAbsolutePath());
-        } else {
-            commands.add(SQLITE_PATH_MAC);
-            commands.add("-batch");
-            commands.add("-bail");
-            commands.add("-init");
-            commands.add(iniFile.getPath());
-            commands.add(TMP_DATABASE_FILE.getAbsolutePath());
-            commands.add(".dump " + tableName);
-        }
+        commands.add(SQLITE_PATH);
+        commands.add("-batch");
+        commands.add("-bail");
+        commands.add("-init");
+        commands.add(iniFile.getPath());
+        commands.add(TMP_DATABASE_FILE.getAbsolutePath());
+        commands.add(".dump " + tableName);
 
         // SQLITEを利用したダンプ処理
         ProcessBuilder builder = new ProcessBuilder(commands);
