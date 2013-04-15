@@ -126,30 +126,43 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
      * @return 方位ディスプレイ・ベクトル. 常に正の値
      */
     protected float calcAzimuthDisplayVector(Star star) {
+        float azimuth = star.getAzimuth();
         if (panelType.isEast()) {
             if (panelType.isFace()) {
                 // 東側＆正面のパネル
-                // ・star.getAzimuth() >= 0
+                // ・star.getAzimuth() >= 0. とは限らなくなった
                 // ・horizontalCoordinatesRect.xL <= star.getAzimuth() <= horizontalCoordinatesRect.xR
-                return +star.getAzimuth() - horizontalCoordinatesRect.xL;
+                if (azimuth < 0) {
+                    azimuth = 360 + azimuth;
+                }
+                return +azimuth - horizontalCoordinatesRect.xL;
             } else {
                 // 東側＆背面のパネル
-                // ・star.getAzimuth() >= 0
+                // ・star.getAzimuth() >= 0. とは限らなくなった
                 // ・horizontalCoordinatesRect.xL >= star.getAzimuth() >= horizontalCoordinatesRect.xR
-                return +horizontalCoordinatesRect.xL - star.getAzimuth();
+                if (azimuth < 0) {
+                    azimuth = 360 + azimuth;
+                }
+                return +horizontalCoordinatesRect.xL - azimuth;
             }
 
         } else {
             if (panelType.isFace()) {
                 // 西側＆正面のパネル
-                // ・star.getAzimuth() < 0
+                // ・star.getAzimuth() < 0. とは限らなくなった
                 // ・horizontalCoordinatesRect.xL <= star.getAzimuth() <= horizontalCoordinatesRect.xR
-                return -horizontalCoordinatesRect.xL + star.getAzimuth();
+                if (azimuth > 0) {
+                    azimuth = -360 + azimuth;
+                }
+                return -horizontalCoordinatesRect.xL + azimuth;
             } else {
                 // 西側＆背面のパネル
-                // ・star.getAzimuth() < 0
+                // ・star.getAzimuth() < 0. とは限らなくなった
                 // ・horizontalCoordinatesRect.xL >= star.getAzimuth() >= horizontalCoordinatesRect.xR
-                return -star.getAzimuth() + horizontalCoordinatesRect.xL;
+                if (azimuth > 0) {
+                    azimuth = -360 + azimuth;
+                }
+                return -azimuth + horizontalCoordinatesRect.xL;
             }
         }
     }
