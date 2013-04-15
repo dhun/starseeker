@@ -62,7 +62,7 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
  */
 public class MakeInitialDB {
 
-    private static final boolean RECREATE_CONSTELLATION_ONLY = true;     // trueにすると、星座パスの再生性だけを行います
+    private static final boolean RECREATE_CONSTELLATION_ONLY = false;     // trueにすると、星座パスの再生性だけを行います
 
     private static final boolean COPY_TO_APPLICATION_IF_SUCCEED = true;  // trueにすると、初期DBダンプの生成に成功したとき、アプリケーションプロジェクトにコピーする
     private static final boolean REMOVE_TMP_DATABASE_IF_SUCCEED = true;  // trueにすると、初期DBダンプの生成に成功したとき、一時DBを削除する

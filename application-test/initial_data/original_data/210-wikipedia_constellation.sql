@@ -1,12 +1,12 @@
 -- wikipediaの星座のパスデータ
 -- 'γ Cas', 'ツィー'のHIPを-1にねつ造している
--- さそり座のパスがあやしい
+-- おうし座のパスがあやしい
 drop table if exists wikipedia_constellation ;
 create table wikipedia_constellation (
     hip_num_fm                  INTEGER not null    -- HIP番号の起点
   , hip_num_to                  INTEGER not null    -- HIP番号の終点
   , constellation_code          TEXT    not null    -- 略符
-  , constraint PK_wikipedia_constellation primary key ( hip_num_fm, hip_num_to )
+  , constraint PK_wikipedia_constellation primary key ( hip_num_fm, hip_num_to, constellation_code )
 );
 
 delete from wikipedia_constellation ;
@@ -59,5 +59,23 @@ insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code)
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('20205', '20889', 'Tau');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('20889', '25428', 'Tau');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('25428', '20711', 'Tau');
+
+-- 冬の大三角
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('32349', '37279', 'winter-triangle');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('37279', '27989', 'winter-triangle');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('27989', '32349', 'winter-triangle');
+
+-- 冬のダイアモンド
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('32349', '37279', 'winter-diamond');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('37279', '37826', 'winter-diamond');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('37826', '24608', 'winter-diamond');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('24608', '21421', 'winter-diamond');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('21421', '24436', 'winter-diamond');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('24436', '32349', 'winter-diamond');
+
+-- 春の大三角
+-- 春のダイヤモンド
+-- 夏の大三角
+-- 秋の四辺形(ペガサス)
 
 select count(*) from wikipedia_constellation ;

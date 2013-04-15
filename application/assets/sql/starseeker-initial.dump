@@ -1651,6 +1651,8 @@ CREATE TABLE constellation_data (
   , constraint PK_constellation_name primary key ( constellation_code )
   , constraint UK_constellation_name unique ( right_ascension, declination )
 );
+INSERT INTO "constellation_data" VALUES('winter-diamond','Winter Diamond','冬のダイアモンド',0.0333333350718021,0.0);
+INSERT INTO "constellation_data" VALUES('winter-triangle','Winter Triangle','冬の大三角',0.0166666675359011,0.0);
 INSERT INTO "constellation_data" VALUES('And','Andromeda','アンドロメダ',0.666666686534882,-50.033332824707);
 INSERT INTO "constellation_data" VALUES('Ant','Antlia','ポンプ',10.0,38.9833335876465);
 INSERT INTO "constellation_data" VALUES('Aps','Apus','ふうちょう',16.0,79.4333343505859);
@@ -1787,4 +1789,13 @@ INSERT INTO "constellation_path" VALUES(34,'UMa',59774,54061);
 INSERT INTO "constellation_path" VALUES(35,'UMa',62956,59774);
 INSERT INTO "constellation_path" VALUES(36,'UMa',65378,62956);
 INSERT INTO "constellation_path" VALUES(37,'UMa',67301,65378);
+INSERT INTO "constellation_path" VALUES(38,'winter-diamond',21421,24436);
+INSERT INTO "constellation_path" VALUES(39,'winter-diamond',24436,32349);
+INSERT INTO "constellation_path" VALUES(40,'winter-diamond',24608,21421);
+INSERT INTO "constellation_path" VALUES(41,'winter-diamond',32349,37279);
+INSERT INTO "constellation_path" VALUES(42,'winter-diamond',37279,37826);
+INSERT INTO "constellation_path" VALUES(43,'winter-diamond',37826,24608);
+INSERT INTO "constellation_path" VALUES(44,'winter-triangle',27989,32349);
+INSERT INTO "constellation_path" VALUES(45,'winter-triangle',32349,37279);
+INSERT INTO "constellation_path" VALUES(46,'winter-triangle',37279,27989);
 COMMIT;
