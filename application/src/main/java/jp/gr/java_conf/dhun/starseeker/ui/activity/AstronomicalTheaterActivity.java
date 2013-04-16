@@ -76,6 +76,7 @@ public class AstronomicalTheaterActivity extends Activity //
         configDao = new StarSeekerConfigDao(getApplicationContext());
         config = configDao.findOrDefault();
         config.setCoordinatesCalculateBaseDate(new Date()); // 画面起動時はシステム日時
+        // config.setCoordinatesCalculateBaseDate(new Date(2013 - 1900, 3, 16, 17, 28)); // 画面起動時はシステム日時. FIXME
 
         Object nonConfigObject = getLastNonConfigurationInstance();
         if (null != nonConfigObject) {
