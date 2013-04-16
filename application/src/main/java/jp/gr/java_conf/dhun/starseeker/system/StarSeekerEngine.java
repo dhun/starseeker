@@ -189,7 +189,7 @@ public class StarSeekerEngine implements //
                 for (ConstellationPath path : constellation.getConstellationPaths()) {
                     Star fmStar = path.getFromStar();
                     Star toStar = path.getToStar();
-                    if (fmStar.isDisplayCoordinatesLocated() || toStar.isDisplayCoordinatesLocated()) {
+                    if (fmStar.isDisplayCoordinatesLocated() && toStar.isDisplayCoordinatesLocated()) {
                         canvas.drawLine(fmStar.getDisplayX(), fmStar.getDisplayY(), toStar.getDisplayX(), toStar.getDisplayY(), pathPaint);
                     }
                 }
