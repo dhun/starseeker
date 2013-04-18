@@ -38,7 +38,7 @@ public class ResolveObservationSiteByChooseActivity extends Activity {
             }
 
             @Override
-            public void onResolveObservationSiteLocation(int index, ObservationSiteLocation location) {
+            public void onResolveObservationSiteLocation(IObservationSiteLocationResolver resolver, ObservationSiteLocation location) {
                 observationSiteLocationResolver.pause();
 
                 String text = String.format("緯度：%s\n経度：%s\n高度：%s", //
@@ -49,16 +49,16 @@ public class ResolveObservationSiteByChooseActivity extends Activity {
             }
 
             @Override
-            public void onNotAvailableLocationProvider(int index) {
+            public void onNotAvailableLocationProvider(IObservationSiteLocationResolver resolver) {
                 Toast.makeText(getApplicationContext(), "位置情報プロバイダを利用できません.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onStartResolveObservationSiteLocation(int index) {
+            public void onStartResolveObservationSiteLocation(IObservationSiteLocationResolver resolver) {
             }
 
             @Override
-            public void onStopResolveObservationSiteLocation(int index) {
+            public void onStopResolveObservationSiteLocation(IObservationSiteLocationResolver resolver) {
             }
         });
 

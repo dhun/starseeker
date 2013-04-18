@@ -24,7 +24,7 @@ public class ObservationSiteLocationGpsResolver implements IObservationSiteLocat
     private final ObservationSiteLocationResolverType locationProviderType;
 
     private ObservationSiteLocationResolverListener onResolveObservationSiteLocationListener;
-    private int index;
+    private Object tag;
 
     /**
      * コンストラクタ.<br/>
@@ -65,7 +65,7 @@ public class ObservationSiteLocationGpsResolver implements IObservationSiteLocat
         default:
             LogUtils.i(ObservationSiteLocationGpsResolver.class, "位置情報プロバイダを利用できません..");
             if (onResolveObservationSiteLocationListener != null) {
-                onResolveObservationSiteLocationListener.onNotAvailableLocationProvider(index);
+                onResolveObservationSiteLocationListener.onNotAvailableLocationProvider(this);
             }
             return;
         }
@@ -74,7 +74,7 @@ public class ObservationSiteLocationGpsResolver implements IObservationSiteLocat
         locationManager.requestLocationUpdates(providerName, 1000/* msec */, 1000/* meter */, this);
 
         if (onResolveObservationSiteLocationListener != null) {
-            onResolveObservationSiteLocationListener.onStartResolveObservationSiteLocation(index);
+            onResolveObservationSiteLocationListener.onStartResolveObservationSiteLocation(this);
         }
 
     }
@@ -89,7 +89,7 @@ public class ObservationSiteLocationGpsResolver implements IObservationSiteLocat
         locationManager.removeUpdates(this);
 
         if (onResolveObservationSiteLocationListener != null) {
-            onResolveObservationSiteLocationListener.onStopResolveObservationSiteLocation(index);
+            onResolveObservationSiteLocationListener.onStopResolveObservationSiteLocation(this);
         }
 
     }
@@ -97,6 +97,17 @@ public class ObservationSiteLocationGpsResolver implements IObservationSiteLocat
     @Override
     public void setObservationSiteLocationResolverListener(ObservationSiteLocationResolverListener listener) {
         this.onResolveObservationSiteLocationListener = listener;
+    }
+
+    @Override
+    public Object getTag() {
+        return tag;
+
+    }
+
+    @Override
+    public void setTag(Object tag) {
+        this.tag = tag;
     }
 
     // ********************************************************************************
@@ -117,7 +128,7 @@ public class ObservationSiteLocationGpsResolver implements IObservationSiteLocat
                     location.getAltitude());    // 高度
             result.setId(locationProviderType.getObservationSiteLocationId());
             result.setName("現在地"); // XXX strings.xml
-            onResolveObservationSiteLocationListener.onResolveObservationSiteLocation(index, result);
+            onResolveObservationSiteLocationListener.onResolveObservationSiteLocation(this, result);
         }
     }
 
@@ -147,10 +158,4 @@ public class ObservationSiteLocationGpsResolver implements IObservationSiteLocat
         }
         LogUtils.v(getClass(), "onStatusChanged:provider=" + provider + ", status=" + statusName);
     }
-
-    @Override
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
 }

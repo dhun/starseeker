@@ -16,8 +16,8 @@ public class ObservationSiteLocationChooseResolver implements IObservationSiteLo
     /** 観測地点の位置を解決できたことの通知を受け取るリスナ */
     private ObservationSiteLocationResolverListener onResolveObservationSiteLocationListener;
 
-    private int index;
     private ObservationSiteLocation location;
+    private Object tag;
 
     /**
      * コンストラクタ.<br/>
@@ -36,7 +36,7 @@ public class ObservationSiteLocationChooseResolver implements IObservationSiteLo
 
     @Override
     public void resume() {
-        onResolveObservationSiteLocationListener.onResolveObservationSiteLocation(index, location);
+        onResolveObservationSiteLocationListener.onResolveObservationSiteLocation(this, location);
     }
 
     @Override
@@ -49,7 +49,13 @@ public class ObservationSiteLocationChooseResolver implements IObservationSiteLo
     }
 
     @Override
-    public void setIndex(int index) {
-        this.index = index;
+    public Object getTag() {
+        return tag;
+
+    }
+
+    @Override
+    public void setTag(Object tag) {
+        this.tag = tag;
     }
 }

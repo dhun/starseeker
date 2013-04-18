@@ -248,7 +248,7 @@ public class AstronomicalTheaterActivity extends Activity //
                 @Override
                 public void onChooseData(IObservationSiteLocationResolver data) {
                     data.setObservationSiteLocationResolverListener(AstronomicalTheaterActivity.this);
-                    data.setIndex(isMaster ? 0 : 1);
+                    data.setTag(isMaster);
                     data.resume();
                 }
             });
@@ -348,8 +348,10 @@ public class AstronomicalTheaterActivity extends Activity //
     }
 
     @Override
-    public void onResolveObservationSiteLocation(int index, ObservationSiteLocation location) {
-        if (index == 0) {
+    public void onResolveObservationSiteLocation(IObservationSiteLocationResolver resolver, ObservationSiteLocation location) {
+        resolver.pause();
+
+        if (Boolean.TRUE.equals(resolver.getTag())) {
             config.setMasterObservationSiteLocation(location);
             refreshMasterTheaterView();
         } else {
@@ -359,19 +361,19 @@ public class AstronomicalTheaterActivity extends Activity //
     }
 
     @Override
-    public void onStartResolveObservationSiteLocation(int index) {
+    public void onStartResolveObservationSiteLocation(IObservationSiteLocationResolver resolver) {
         // TODO 自動生成されたメソッド・スタブ
 
     }
 
     @Override
-    public void onStopResolveObservationSiteLocation(int index) {
+    public void onStopResolveObservationSiteLocation(IObservationSiteLocationResolver resolver) {
         // TODO 自動生成されたメソッド・スタブ
 
     }
 
     @Override
-    public void onNotAvailableLocationProvider(int index) {
+    public void onNotAvailableLocationProvider(IObservationSiteLocationResolver resolver) {
         // TODO 自動生成されたメソッド・スタブ
 
     }

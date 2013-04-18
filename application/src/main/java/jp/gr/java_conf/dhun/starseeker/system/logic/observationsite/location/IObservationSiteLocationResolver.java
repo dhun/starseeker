@@ -27,7 +27,15 @@ public interface IObservationSiteLocationResolver {
      */
     void setObservationSiteLocationResolverListener(ObservationSiteLocationResolverListener listener);
 
-    void setIndex(int index);
+    /**
+     * タグを取得します.<br/>
+     */
+    Object getTag();
+
+    /**
+     * タグを設定します.<br/>
+     */
+    void setTag(Object tag);
 
     /**
      * 観測地点リゾルバのリスナ.<br/>
@@ -39,22 +47,22 @@ public interface IObservationSiteLocationResolver {
          * 
          * @param location 観測地点
          */
-        void onResolveObservationSiteLocation(int index, ObservationSiteLocation location);
+        void onResolveObservationSiteLocation(IObservationSiteLocationResolver resolver, ObservationSiteLocation location);
 
         /**
          * 観測地点の解決を開始したことを通知します.<br/>
          */
-        void onStartResolveObservationSiteLocation(int index);
+        void onStartResolveObservationSiteLocation(IObservationSiteLocationResolver resolver);
 
         /**
          * 観測地点の解決を停止したことを通知します.<br/>
          */
-        void onStopResolveObservationSiteLocation(int index);
+        void onStopResolveObservationSiteLocation(IObservationSiteLocationResolver resolver);
 
         /**
          * 位置情報プロバイダを利用できないことを通知します.<br/>
          */
-        void onNotAvailableLocationProvider(int index);
+        void onNotAvailableLocationProvider(IObservationSiteLocationResolver resolver);
     }
 
     /**

@@ -17,7 +17,7 @@ public class ObservationSiteLocation {
     public static final int ID_GPS = -1;     // GPSを利用した観測地点のID
     public static final int ID_NETWORK = -2; // NETWORKを利用した観測地点のID
 
-    private int id;             // ID
+    private Integer id;         // ID
 
     private double latitude;    // 緯度
     private double longitude;   // 経度
@@ -100,14 +100,14 @@ public class ObservationSiteLocation {
     /**
      * IDを取得します.<br>
      */
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
     /**
      * IDを取得します.<br>
      */
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
         ;
     }

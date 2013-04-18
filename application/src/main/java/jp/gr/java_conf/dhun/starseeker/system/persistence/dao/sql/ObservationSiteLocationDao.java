@@ -16,10 +16,19 @@ import android.database.sqlite.SQLiteDatabase;
  * @author jun
  * 
  */
-public class ObservationSiteLocationDao extends AbstractSqlDao<ObservationSiteLocation, Object> {
+public class ObservationSiteLocationDao extends AbstractSqlDao<ObservationSiteLocation, Integer> {
 
     public ObservationSiteLocationDao(SQLiteDatabase db) {
         super(db);
+    }
+
+    public ObservationSiteLocation findByPk(Integer pk) {
+        for (ObservationSiteLocation entity : listAll()) {
+            if (entity.getId().equals(pk)) {
+                return entity;
+            }
+        }
+        return null;
     }
 
     public List<ObservationSiteLocation> listAll() {

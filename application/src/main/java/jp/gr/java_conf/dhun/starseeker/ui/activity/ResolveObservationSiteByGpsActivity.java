@@ -50,7 +50,7 @@ public class ResolveObservationSiteByGpsActivity extends Activity {
             }
 
             @Override
-            public void onResolveObservationSiteLocation(int index, ObservationSiteLocation location) {
+            public void onResolveObservationSiteLocation(IObservationSiteLocationResolver resolver, ObservationSiteLocation location) {
                 observationSiteLocationResolver.pause();
 
                 String text = String.format("緯度：%s\n経度：%s\n高度：%s", //
@@ -61,17 +61,17 @@ public class ResolveObservationSiteByGpsActivity extends Activity {
             }
 
             @Override
-            public void onNotAvailableLocationProvider(int index) {
+            public void onNotAvailableLocationProvider(IObservationSiteLocationResolver resolver) {
                 Toast.makeText(getApplicationContext(), "位置情報プロバイダを利用できません.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onStartResolveObservationSiteLocation(int index) {
+            public void onStartResolveObservationSiteLocation(IObservationSiteLocationResolver resolver) {
                 progressDialog = ProgressDialog.show(ResolveObservationSiteByGpsActivity.this, "位置情報の取得", "現在位置を取得中です"); // XXX strings.xml
             }
 
             @Override
-            public void onStopResolveObservationSiteLocation(int index) {
+            public void onStopResolveObservationSiteLocation(IObservationSiteLocationResolver resolver) {
                 if (null != progressDialog && progressDialog.isShowing()) {
                     progressDialog.dismiss();
                     progressDialog = null;
