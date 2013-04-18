@@ -1,7 +1,7 @@
 /**
  *
  */
-package jp.gr.java_conf.dhun.starseeker.model;
+package jp.gr.java_conf.dhun.starseeker.system.persistence.entity;
 
 import java.util.TimeZone;
 
@@ -14,7 +14,8 @@ import java.util.TimeZone;
  */
 public class ObservationSiteLocation {
 
-    public static final int GPS_OBSERVATION_SITE_LOCATION = -1;
+    public static final int ID_GPS = -1;     // GPSを利用した観測地点のID
+    public static final int ID_NETWORK = -2; // NETWORKを利用した観測地点のID
 
     private int id;             // ID
 

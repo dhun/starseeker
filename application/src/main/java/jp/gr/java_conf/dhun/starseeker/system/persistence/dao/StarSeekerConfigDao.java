@@ -5,8 +5,8 @@ package jp.gr.java_conf.dhun.starseeker.system.persistence.dao;
 
 import java.util.Date;
 
-import jp.gr.java_conf.dhun.starseeker.logic.observationsite.location.ChooseObservationSiteLocationResolver;
-import jp.gr.java_conf.dhun.starseeker.model.ObservationSiteLocation;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.ObservationSiteLocationDao;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSiteLocation;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarSeekerConfig;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -69,12 +69,13 @@ public class StarSeekerConfigDao {
     }
 
     private ObservationSiteLocation findObservationSiteLocation(int id) {
-        for (ObservationSiteLocation location : ChooseObservationSiteLocationResolver.getObservationSiteLocations()) {
+        ObservationSiteLocationDao dao = new ObservationSiteLocationDao(null);
+        for (ObservationSiteLocation location : dao.listAll()) {
             if (location.getId() == id) {
                 return location;
             }
         }
-        return ChooseObservationSiteLocationResolver.getObservationSiteLocations().get(0);
+        return dao.listAll().get(0);
     }
 
     /**

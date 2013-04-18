@@ -5,8 +5,6 @@ package jp.gr.java_conf.dhun.starseeker.system.persistence.entity;
 
 import java.util.Date;
 
-import jp.gr.java_conf.dhun.starseeker.model.ObservationSiteLocation;
-
 /**
  * スターシーカーシステム設定のエンティティ
  * 

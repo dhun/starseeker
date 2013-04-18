@@ -5,8 +5,7 @@ package jp.gr.java_conf.dhun.starseeker.ui.activity;
 
 import java.util.List;
 
-import jp.gr.java_conf.dhun.starseeker.logic.observationsite.location.ChooseObservationSiteLocationResolver;
-import jp.gr.java_conf.dhun.starseeker.model.ObservationSiteLocation;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSiteLocation;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.app.Activity;
 import android.content.Context;
@@ -35,7 +34,7 @@ public class ChooseLocationActivity extends Activity {
         ListView listView = new ListView(this);
         setContentView(listView);
 
-        listView.setAdapter(new CustomArrayAdapter(this, ChooseObservationSiteLocationResolver.getObservationSiteLocations()));
+        // listView.setAdapter(new CustomArrayAdapter(this, ObservationSiteLocationChooseResolver.getObservationSiteLocations()));
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
 public class DevelopmentMenuActivity extends Activity implements View.OnClickListener {
 
@@ -20,7 +19,7 @@ public class DevelopmentMenuActivity extends Activity implements View.OnClickLis
         findViewById(R.id.surfaceViewActivity).setOnClickListener(this);
         findViewById(R.id.astronomicalTheaterActivity).setOnClickListener(this);
 
-        ((Button) findViewById(R.id.astronomicalTheaterActivity)).performClick();
+        // ((Button) findViewById(R.id.astronomicalTheaterActivity)).performClick();
     }
 
     @Override

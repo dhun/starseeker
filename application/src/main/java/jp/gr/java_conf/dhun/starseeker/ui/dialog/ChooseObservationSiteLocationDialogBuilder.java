@@ -6,18 +6,27 @@ package jp.gr.java_conf.dhun.starseeker.ui.dialog;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.gr.java_conf.dhun.starseeker.logic.observationsite.location.ChooseObservationSiteLocationResolver;
-import jp.gr.java_conf.dhun.starseeker.model.ObservationSiteLocation;
+import jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location.IObservationSiteLocationResolver;
+import jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location.IObservationSiteLocationResolver.ObservationSiteLocationResolverType;
+import jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location.ObservationSiteLocationChooseResolver;
+import jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location.ObservationSiteLocationGpsResolver;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.DatabaseHelper;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.ObservationSiteLocationDao;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSiteLocation;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 
 /**
- * 観測地点の位置を選択するダイアログのビルダ
+ * 観測地点の位置を解決するリゾルバを選択するダイアログのビルダ
  * 
  * @author j_hosoya
  * 
  */
-public class ChooseObservationSiteLocationDialogBuilder extends AbstractChooseDataDialogBuilder<ObservationSiteLocation> {
+public class ChooseObservationSiteLocationDialogBuilder extends AbstractChooseDataDialogBuilder<IObservationSiteLocationResolver> {
+
+    private final Context context;
 
     private final List<ObservationSiteLocation> locations;
     private ObservationSiteLocation initialLocation;
@@ -28,14 +37,31 @@ public class ChooseObservationSiteLocationDialogBuilder extends AbstractChooseDa
     public ChooseObservationSiteLocationDialogBuilder(Activity activity) {
         super(activity);
 
-        locations = new ArrayList<ObservationSiteLocation>();
+        this.context = activity.getApplicationContext();
+        this.locations = new ArrayList<ObservationSiteLocation>();
         setupLocations();
     }
 
     private void setupLocations() {
-        // FIXME ここでGPSリゾルバを追加
-        // FIXME マニュアルリゾルバも追加する？
-        this.locations.addAll(ChooseObservationSiteLocationResolver.getObservationSiteLocations());
+        DatabaseHelper dbHelper = new DatabaseHelper(context);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        try {
+            ObservationSiteLocationDao dao = new ObservationSiteLocationDao(db);
+            locations.addAll(dao.listUseLocationManagerObservationSiteLocations());
+            locations.addAll(dao.listChooseObservationSiteLocation());
+            // FIXME マニュアルリゾルバも追加する？
+
+        } finally {
+            db.close();
+        }
+    }
+
+    /**
+     * 初期表示する観測地点の位置を設定します
+     */
+    public void setInitialLocation(ObservationSiteLocation initialLocation) {
+        this.initialLocation = initialLocation;
     }
 
     @Override
@@ -55,16 +81,27 @@ public class ChooseObservationSiteLocationDialogBuilder extends AbstractChooseDa
         builder.setSingleChoiceItems(locationNames.toArray(new String[0]), checkedItem, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                onChooseDataListener.onChooseData(locations.get(which));
+                final ObservationSiteLocation location = locations.get(which);
+                final IObservationSiteLocationResolver resolver;
+
+                switch (location.getId()) {
+                case ObservationSiteLocation.ID_GPS:
+                    resolver = new ObservationSiteLocationGpsResolver(context, ObservationSiteLocationResolverType.GPS);
+                    break;
+
+                case ObservationSiteLocation.ID_NETWORK:
+                    resolver = new ObservationSiteLocationGpsResolver(context, ObservationSiteLocationResolverType.NETWORK);
+                    break;
+
+                default:
+                    ObservationSiteLocationChooseResolver chooseResolver = new ObservationSiteLocationChooseResolver(context);
+                    chooseResolver.setObservationSiteLocation(location);
+                    resolver = chooseResolver;
+                }
+
+                onChooseDataListener.onChooseData(resolver);
                 dialog.dismiss();
             }
         });
-    }
-
-    /**
-     * 初期表示する観測地点の位置を設定します
-     */
-    public void setInitialLocation(ObservationSiteLocation initialLocation) {
-        this.initialLocation = initialLocation;
     }
 }

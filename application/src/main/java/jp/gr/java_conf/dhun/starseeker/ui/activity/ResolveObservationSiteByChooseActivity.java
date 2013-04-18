@@ -3,10 +3,10 @@ package jp.gr.java_conf.dhun.starseeker.ui.activity;
 import java.text.DecimalFormat;
 
 import jp.gr.java_conf.dhun.starseeker.R;
-import jp.gr.java_conf.dhun.starseeker.logic.observationsite.location.ChooseObservationSiteLocationResolver;
-import jp.gr.java_conf.dhun.starseeker.logic.observationsite.location.IObservationSiteLocationResolver;
-import jp.gr.java_conf.dhun.starseeker.logic.observationsite.location.IObservationSiteLocationResolver.ObservationSiteLocationResolverListener;
-import jp.gr.java_conf.dhun.starseeker.model.ObservationSiteLocation;
+import jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location.IObservationSiteLocationResolver;
+import jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location.IObservationSiteLocationResolver.ObservationSiteLocationResolverListener;
+import jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location.ObservationSiteLocationChooseResolver;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSiteLocation;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -28,7 +28,7 @@ public class ResolveObservationSiteByChooseActivity extends Activity {
 
         tv1 = (TextView) findViewById(R.id.textView1);
 
-        observationSiteLocationResolver = new ChooseObservationSiteLocationResolver(this);
+        observationSiteLocationResolver = new ObservationSiteLocationChooseResolver(this);
         observationSiteLocationResolver.setObservationSiteLocationResolverListener(new ObservationSiteLocationResolverListener() {
             private DecimalFormat nf;
             {
@@ -38,7 +38,7 @@ public class ResolveObservationSiteByChooseActivity extends Activity {
             }
 
             @Override
-            public void onResolveObservationSiteLocation(ObservationSiteLocation location) {
+            public void onResolveObservationSiteLocation(int index, ObservationSiteLocation location) {
                 observationSiteLocationResolver.pause();
 
                 String text = String.format("緯度：%s\n経度：%s\n高度：%s", //
@@ -49,16 +49,16 @@ public class ResolveObservationSiteByChooseActivity extends Activity {
             }
 
             @Override
-            public void onNotAvailableLocationProvider() {
+            public void onNotAvailableLocationProvider(int index) {
                 Toast.makeText(getApplicationContext(), "位置情報プロバイダを利用できません.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onStartResolveObservationSiteLocation() {
+            public void onStartResolveObservationSiteLocation(int index) {
             }
 
             @Override
-            public void onStopResolveObservationSiteLocation() {
+            public void onStopResolveObservationSiteLocation(int index) {
             }
         });
 
