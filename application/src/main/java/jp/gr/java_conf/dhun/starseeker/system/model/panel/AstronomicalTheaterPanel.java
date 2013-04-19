@@ -1,7 +1,7 @@
 package jp.gr.java_conf.dhun.starseeker.system.model.panel;
 
-import jp.gr.java_conf.dhun.starseeker.model.Star;
 import jp.gr.java_conf.dhun.starseeker.system.model.coordinates.CoordinatesRect;
+import jp.gr.java_conf.dhun.starseeker.system.model.star.Star;
 import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Color;

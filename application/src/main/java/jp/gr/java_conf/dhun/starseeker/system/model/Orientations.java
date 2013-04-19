@@ -1,7 +1,7 @@
 /**
  *
  */
-package jp.gr.java_conf.dhun.starseeker.model;
+package jp.gr.java_conf.dhun.starseeker.system.model;
 
 import android.view.Display;
 import android.view.Surface;

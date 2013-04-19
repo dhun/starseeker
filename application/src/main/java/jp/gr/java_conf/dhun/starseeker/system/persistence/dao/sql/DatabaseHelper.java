@@ -85,7 +85,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static boolean needSetupInitialDatabaseFileNeed(Context context) {
         // DBファイルが存在しなければ、再作成が必要
-        if (!context.getDatabasePath(APPLICATION_DB_FILE).exists()) {
+        // if (!context.getDatabasePath(APPLICATION_DB_FILE).exists()) {
+        if (null == context.getDatabasePath(APPLICATION_DB_FILE)) {
+            return false; // TODO need roboletric orz
+        } else if (!context.getDatabasePath(APPLICATION_DB_FILE).exists()) {
             return true;
         }
 

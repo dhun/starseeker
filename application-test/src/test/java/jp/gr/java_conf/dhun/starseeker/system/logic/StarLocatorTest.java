@@ -1,4 +1,4 @@
-package jp.gr.java_conf.dhun.starseeker.logic;
+package jp.gr.java_conf.dhun.starseeker.system.logic;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -9,7 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import jp.gr.java_conf.dhun.starseeker.TestUtils;
-import jp.gr.java_conf.dhun.starseeker.model.Star;
+import jp.gr.java_conf.dhun.starseeker.system.logic.StarLocator;
+import jp.gr.java_conf.dhun.starseeker.system.model.star.Star;
 import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
 
 import org.junit.After;

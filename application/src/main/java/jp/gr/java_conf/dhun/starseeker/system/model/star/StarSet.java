@@ -1,14 +1,12 @@
 /**
  *
  */
-package jp.gr.java_conf.dhun.starseeker.system.model;
+package jp.gr.java_conf.dhun.starseeker.system.model.star;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import jp.gr.java_conf.dhun.starseeker.model.Constellation;
-import jp.gr.java_conf.dhun.starseeker.model.Star;
 
 /**
  * @author jun

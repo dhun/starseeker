@@ -1,7 +1,7 @@
 /**
  *
  */
-package jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations;
+package jp.gr.java_conf.dhun.starseeker.system.logic.terminal.orientations;
 
 import android.content.Context;
 import android.hardware.SensorManager;
@@ -14,7 +14,7 @@ import android.view.Surface;
  * @author jun
  * 
  */
-public class PortraitTerminalOrientationsCalculator extends AbstractTerminalOrientationsCalculator {
+public class FazzyPortraitTerminalOrientationsCalculator extends AbstractFazzyTerminalOrientationsCalculator {
 
     private int axisX; // １回目のSensorManager.remapCoordinateSystemのX軸
     private int axisY; // １回目のSensorManager.remapCoordinateSystemのY軸
@@ -25,7 +25,7 @@ public class PortraitTerminalOrientationsCalculator extends AbstractTerminalOrie
      * @param context コンテキスト
      * @param displayRotation 端末の回転状態. {@link Display#getRotation()}の値
      */
-    public PortraitTerminalOrientationsCalculator(Context context, int displayRotation) {
+    public FazzyPortraitTerminalOrientationsCalculator(Context context, int displayRotation) {
         super(context, displayRotation);
     }
 

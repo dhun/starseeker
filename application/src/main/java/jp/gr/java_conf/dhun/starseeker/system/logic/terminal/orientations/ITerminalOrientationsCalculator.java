@@ -1,6 +1,6 @@
-package jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations;
+package jp.gr.java_conf.dhun.starseeker.system.logic.terminal.orientations;
 
-import jp.gr.java_conf.dhun.starseeker.model.Orientations;
+import jp.gr.java_conf.dhun.starseeker.system.model.Orientations;
 import android.view.Display;
 
 //

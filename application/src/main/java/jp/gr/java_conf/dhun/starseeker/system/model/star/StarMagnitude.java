@@ -1,7 +1,7 @@
 /**
  *
  */
-package jp.gr.java_conf.dhun.starseeker.model;
+package jp.gr.java_conf.dhun.starseeker.system.model.star;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

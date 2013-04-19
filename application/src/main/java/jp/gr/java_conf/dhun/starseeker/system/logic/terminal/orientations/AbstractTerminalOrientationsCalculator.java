@@ -1,11 +1,11 @@
 /**
  *
  */
-package jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations;
+package jp.gr.java_conf.dhun.starseeker.system.logic.terminal.orientations;
 
 import java.util.List;
 
-import jp.gr.java_conf.dhun.starseeker.model.Orientations;
+import jp.gr.java_conf.dhun.starseeker.system.model.Orientations;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;

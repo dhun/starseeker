@@ -3,9 +3,9 @@
  */
 package jp.gr.java_conf.dhun.starseeker.system.model.panel;
 
-import jp.gr.java_conf.dhun.starseeker.model.Constellation;
-import jp.gr.java_conf.dhun.starseeker.model.Star;
 import jp.gr.java_conf.dhun.starseeker.system.model.coordinates.CoordinatesRect;
+import jp.gr.java_conf.dhun.starseeker.system.model.star.Constellation;
+import jp.gr.java_conf.dhun.starseeker.system.model.star.Star;
 import jp.gr.java_conf.dhun.starseeker.system.renderer.indicator.IAltitudeIndicator;
 import jp.gr.java_conf.dhun.starseeker.system.renderer.indicator.IAzimuthIndicator;
 import jp.gr.java_conf.dhun.starseeker.system.renderer.indicator.NumericAltitudeIndicator;

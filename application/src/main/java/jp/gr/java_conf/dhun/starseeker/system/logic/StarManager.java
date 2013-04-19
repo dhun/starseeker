@@ -15,12 +15,11 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import jp.gr.java_conf.dhun.starseeker.logic.StarLocator;
-import jp.gr.java_conf.dhun.starseeker.model.Constellation;
-import jp.gr.java_conf.dhun.starseeker.model.ConstellationPath;
-import jp.gr.java_conf.dhun.starseeker.model.Star;
-import jp.gr.java_conf.dhun.starseeker.model.StarMagnitude;
-import jp.gr.java_conf.dhun.starseeker.system.model.StarSet;
+import jp.gr.java_conf.dhun.starseeker.system.model.star.Constellation;
+import jp.gr.java_conf.dhun.starseeker.system.model.star.ConstellationPath;
+import jp.gr.java_conf.dhun.starseeker.system.model.star.Star;
+import jp.gr.java_conf.dhun.starseeker.system.model.star.StarMagnitude;
+import jp.gr.java_conf.dhun.starseeker.system.model.star.StarSet;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.ConstellationDataDao;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.ConstellationPathDataDao;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.DatabaseHelper;

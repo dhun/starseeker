@@ -1,7 +1,7 @@
 /**
  *
  */
-package jp.gr.java_conf.dhun.starseeker.model;
+package jp.gr.java_conf.dhun.starseeker.system.model.star;
 
 import java.lang.ref.WeakReference;
 import java.util.Collections;

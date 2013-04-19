@@ -3,7 +3,7 @@
  */
 package jp.gr.java_conf.dhun.starseeker.system.renderer.star;
 
-import jp.gr.java_conf.dhun.starseeker.model.Star;
+import jp.gr.java_conf.dhun.starseeker.system.model.star.Star;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;

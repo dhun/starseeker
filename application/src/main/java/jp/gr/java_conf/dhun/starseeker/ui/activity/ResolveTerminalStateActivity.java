@@ -3,10 +3,10 @@ package jp.gr.java_conf.dhun.starseeker.ui.activity;
 import java.text.DecimalFormat;
 
 import jp.gr.java_conf.dhun.starseeker.R;
-import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.FlatTerminalOrientationsCalculator2;
-import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.ITerminalOrientationsCalculator;
-import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.TerminalOrientationsCalculatorFactory;
-import jp.gr.java_conf.dhun.starseeker.model.Orientations;
+import jp.gr.java_conf.dhun.starseeker.system.logic.terminal.orientations.FlatTerminalOrientationsCalculator2;
+import jp.gr.java_conf.dhun.starseeker.system.logic.terminal.orientations.ITerminalOrientationsCalculator;
+import jp.gr.java_conf.dhun.starseeker.system.logic.terminal.orientations.TerminalOrientationsCalculatorFactory;
+import jp.gr.java_conf.dhun.starseeker.system.model.Orientations;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.app.Activity;
 import android.content.res.Configuration;

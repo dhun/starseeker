@@ -5,7 +5,7 @@ package jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql;
 
 import java.util.List;
 
-import jp.gr.java_conf.dhun.starseeker.model.StarMagnitude;
+import jp.gr.java_conf.dhun.starseeker.system.model.star.StarMagnitude;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ConstellationData;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ConstellationPathData;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarData;

@@ -1,6 +1,6 @@
 package jp.gr.java_conf.dhun.starseeker.system.model.panel;
 
-import jp.gr.java_conf.dhun.starseeker.model.Star;
+import jp.gr.java_conf.dhun.starseeker.system.model.star.Star;
 
 /**
  * 天体シアターのパネルのインターフェース.<br/>

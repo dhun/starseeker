@@ -1,13 +1,13 @@
 /**
  *
  */
-package jp.gr.java_conf.dhun.starseeker.logic;
+package jp.gr.java_conf.dhun.starseeker.system.logic;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import jp.gr.java_conf.dhun.starseeker.model.Star;
+import jp.gr.java_conf.dhun.starseeker.system.model.star.Star;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import jp.gr.java_conf.dhun.starseeker.util.MathUtils;
 

@@ -8,10 +8,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.ITerminalOrientationsCalculator;
-import jp.gr.java_conf.dhun.starseeker.logic.terminal.orientations.TerminalOrientationsCalculatorFactory;
 import jp.gr.java_conf.dhun.starseeker.system.StarSeekerEngine;
 import jp.gr.java_conf.dhun.starseeker.system.listener.IStarSeekerListener;
+import jp.gr.java_conf.dhun.starseeker.system.logic.terminal.orientations.ITerminalOrientationsCalculator;
+import jp.gr.java_conf.dhun.starseeker.system.logic.terminal.orientations.TerminalOrientationsCalculatorFactory;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.content.Context;
 import android.graphics.Canvas;
