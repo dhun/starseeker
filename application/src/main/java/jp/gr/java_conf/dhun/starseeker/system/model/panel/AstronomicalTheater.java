@@ -365,6 +365,10 @@ public class AstronomicalTheater {
 
     public void remapDisplayCoordinates(Iterable<Star> starIterable) {
         for (Star star : starIterable) {
+            if (star.isDisplayCoordinatesLocated()) {
+                continue;
+            }
+
             AstronomicalTheaterPanel panel = containsPanel(star);
             if (null == panel) {
                 continue;
@@ -374,9 +378,11 @@ public class AstronomicalTheater {
             panel.remapDisplayCoordinates(star);
 
             // 同じパネルを使って、関連する星座を構成する星にもディスプレイ座標を割り当て
-            // TODO 同じパネルであってる？？
             for (Constellation constellation : star.getRelatedConstellations()) {
                 for (Star componentStars : constellation.getComponentStars()) {
+                    if (componentStars.isDisplayCoordinatesLocated()) {
+                        continue;
+                    }
                     panel.remapDisplayCoordinates(componentStars);
                 }
             }
