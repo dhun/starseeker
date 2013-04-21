@@ -120,7 +120,7 @@ public class ObservationSiteLocation {
     }
 
     /**
-     * 緯度を取得します.<br>
+     * 経度を取得します.<br>
      */
     public double getLongitude() {
         return longitude;
