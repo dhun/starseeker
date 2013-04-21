@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import jp.gr.java_conf.dhun.starseeker.R;
 import jp.gr.java_conf.dhun.starseeker.system.StarSeekerEngine;
 import jp.gr.java_conf.dhun.starseeker.system.StarSeekerEngineRefreshTask;
 import jp.gr.java_conf.dhun.starseeker.system.listener.IStarSeekerListener;
@@ -22,10 +23,13 @@ import android.os.AsyncTask.Status;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 /**
@@ -34,10 +38,13 @@ import android.widget.Toast;
  * @author jun
  * 
  */
-public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolder.Callback2 {
+public class AstronomicalTheaterView extends RelativeLayout implements SurfaceHolder.Callback2 {
 
     private static final int EXPECTED_FPS = 60;                            // FPSの期待値
     private static final int EXPECTED_FPS_OF_MILLIS = 1000 / EXPECTED_FPS; // FPSの期待値に対するミリ秒
+
+    private SurfaceView surfaceView;
+    private ProgressBar progressBar;
 
     private StarSeekerEngine starSeekerEngine;        // スターシーカーエンジン
     private StarSeekerEngineConfig engineConfig;      // スターシーカーエンジンの設定
@@ -48,15 +55,28 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
 
     public AstronomicalTheaterView(Context context) {
         super(context);
+        init();
     }
 
     public AstronomicalTheaterView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
+    }
+
+    private void init() {
+        LayoutInflater.from(getContext()).inflate(R.layout.view_astronomical_theater, this, true);
+        surfaceView = (SurfaceView) findViewById(R.id.surfaceView);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
     }
 
     public void initialize() {
         // SurfaceViewを設定
-        getHolder().addCallback(this);
+        surfaceView.getHolder().addCallback(this);
 
         // スターシーカーシステムのエンジンを設定
         starSeekerEngine = new StarSeekerEngine(getContext().getApplicationContext());
@@ -96,8 +116,7 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
         refreshTask = new StarSeekerEngineRefreshTask(starSeekerEngine) {
             @Override
             protected void onPreExecute() {
-                // TODO 自動生成されたメソッド・スタブ
-                super.onPreExecute();
+                progressBar.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -108,14 +127,16 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
                     public void run() {
                         starSeekerEngine.calculate();
 
-                        Canvas canvas = getHolder().lockCanvas();
+                        SurfaceHolder holder = surfaceView.getHolder();
+                        Canvas canvas = holder.lockCanvas();
                         starSeekerEngine.draw(canvas);
-                        getHolder().unlockCanvasAndPost(canvas);
+                        holder.unlockCanvasAndPost(canvas);
                     }
                 };
                 executorService = Executors.newSingleThreadScheduledExecutor();
                 executorService.scheduleAtFixedRate(command, EXPECTED_FPS_OF_MILLIS, EXPECTED_FPS_OF_MILLIS, TimeUnit.MILLISECONDS);
 
+                progressBar.setVisibility(View.GONE);
                 refreshTask = null;
             }
         };
