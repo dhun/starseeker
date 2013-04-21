@@ -64,6 +64,7 @@ public class ObservationSiteLocationDao extends AbstractSqlDao<ObservationSiteLo
         locations.add(newInstance(nextId++, "-000°12'", "+51°49'", "0°0'", "Europe/London", "イギリス－ロンドン"));
         locations.add(newInstance(nextId++, "-154°40'", "+18°55'", "0°0'", "US/Hawaii", "アメリカ－ハワイ"));
         locations.add(newInstance(nextId++, "+059°33'", "+18°07'", "0°0'", "Europe/Stockholm", "スウェーデン－ストックホルム"));
+        locations.add(newInstance(nextId++, "-023°32'", "-46°38'", "0°0'", "Brazil/East", "サンパウロ"));    // FIXME タイムゾーンが違うかも
 
         return locations;
     }
