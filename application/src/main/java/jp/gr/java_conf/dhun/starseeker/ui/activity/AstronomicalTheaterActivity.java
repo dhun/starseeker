@@ -190,7 +190,7 @@ public class AstronomicalTheaterActivity extends Activity //
             break;
 
         case R.id.switchShowSecondTheaterButton:
-            setSecondTheaterViewVisible(secondTheaterView.getVisibility() != View.VISIBLE);
+            setSecondTheaterViewVisibleWithRefresh(secondTheaterView.getVisibility() != View.VISIBLE);
             return;
 
         case R.id.imageButton2:
@@ -341,15 +341,24 @@ public class AstronomicalTheaterActivity extends Activity //
         return display.getRotation();
     }
 
+    private void setSecondTheaterViewVisibleWithRefresh(boolean visible) {
+        setSecondTheaterViewVisible(visible);
+        if (visible) {
+            secondTheaterView.refresh();
+            secondTheaterView.resume();
+        } else {
+            secondTheaterView.pause();
+        }
+        config.setSecondAstronomicalTheaterVisible(visible);
+    }
+
     private void setSecondTheaterViewVisible(boolean visible) {
         if (visible) {
             secondTheaterView.setVisibility(View.VISIBLE);
-            secondTheaterView.refresh();    // FIXME この辺があやしい
             switchShowSecondTheaterButton.setImageLevel(1);
             chooseSecondObservationSiteLocationButton.setEnabled(true);
         } else {
             secondTheaterView.setVisibility(View.GONE);
-            secondTheaterView.pause();
             switchShowSecondTheaterButton.setImageLevel(0);
             chooseSecondObservationSiteLocationButton.setEnabled(false);
         }
