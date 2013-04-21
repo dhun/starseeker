@@ -9,12 +9,16 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import jp.gr.java_conf.dhun.starseeker.system.StarSeekerEngine;
+import jp.gr.java_conf.dhun.starseeker.system.StarSeekerEngineRefreshTask;
 import jp.gr.java_conf.dhun.starseeker.system.listener.IStarSeekerListener;
 import jp.gr.java_conf.dhun.starseeker.system.logic.terminal.orientations.ITerminalOrientationsCalculator;
 import jp.gr.java_conf.dhun.starseeker.system.logic.terminal.orientations.TerminalOrientationsCalculatorFactory;
+import jp.gr.java_conf.dhun.starseeker.system.model.StarSeekerEngineConfig;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSiteLocation;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.os.AsyncTask.Status;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.Display;
@@ -35,7 +39,9 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
     private static final int EXPECTED_FPS = 60;                            // FPSの期待値
     private static final int EXPECTED_FPS_OF_MILLIS = 1000 / EXPECTED_FPS; // FPSの期待値に対するミリ秒
 
-    private StarSeekerEngine starSeekerEngine;        // スターシーカーシステムのエンジン
+    private StarSeekerEngine starSeekerEngine;        // スターシーカーエンジン
+    private StarSeekerEngineConfig engineConfig;      // スターシーカーエンジンの設定
+    private StarSeekerEngineRefreshTask refreshTask;  // スターシーカーエンジンの更新タスク
     private ScheduledExecutorService executorService; // スターシーカーシステムのスレッドエクスキュータ
 
     private ITerminalOrientationsCalculator terminalStateResolver;
@@ -53,20 +59,13 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
         getHolder().addCallback(this);
 
         // スターシーカーシステムのエンジンを設定
-        starSeekerEngine = new StarSeekerEngine(getContext());
+        starSeekerEngine = new StarSeekerEngine(getContext().getApplicationContext());
+        engineConfig = new StarSeekerEngineConfig();
 
         // 端末ステートリゾルバを設定
         int displayRotation = getDisplayRotation();
-        terminalStateResolver = TerminalOrientationsCalculatorFactory.create(getContext(), displayRotation);
+        terminalStateResolver = TerminalOrientationsCalculatorFactory.create(getContext().getApplicationContext(), displayRotation);
         terminalStateResolver.setOnChangeTerminalOrientationsListener(starSeekerEngine);
-    }
-
-    public void configureObservationSiteLocation(double longitude, double latitude, Calendar baseCalendar) {
-        starSeekerEngine.configureObservationCondition(longitude, latitude, baseCalendar);
-    }
-
-    public void configureExtractLowerstarMagnitude(float magnitude) {
-        starSeekerEngine.configureExtractUpperStarMagnitude(magnitude);
     }
 
     private int getDisplayRotation() {
@@ -76,25 +75,89 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
         return display.getRotation();
     }
 
+    public void configureObservationSiteLocation(double longitude, double latitude, Calendar baseCalendar) {
+        ObservationSiteLocation location = new ObservationSiteLocation(latitude, longitude);
+        engineConfig.setObservationSiteLocation(location);
+        engineConfig.setCoordinatesCalculateBaseCalendar(baseCalendar);
+    }
+
+    public AstronomicalTheaterView configureExtractLowerstarMagnitude(float magnitude) {
+        engineConfig.setExtractUpperStarMagnitude(magnitude);
+        return this;
+    }
+
+    public void refresh() {
+        LogUtils.i(getClass(), "do refresh");
+
+        synchronized (this) {
+            cancelThreads();
+        }
+
+        refreshTask = new StarSeekerEngineRefreshTask(starSeekerEngine) {
+            @Override
+            protected void onPreExecute() {
+                // TODO 自動生成されたメソッド・スタブ
+                super.onPreExecute();
+            }
+
+            @Override
+            protected void onPostExecute(StarSeekerEngine result) {
+                // スレッドエクスキュータの設定
+                Runnable command = new Runnable() {
+                    @Override
+                    public void run() {
+                        starSeekerEngine.calculate();
+
+                        Canvas canvas = getHolder().lockCanvas();
+                        starSeekerEngine.draw(canvas);
+                        getHolder().unlockCanvasAndPost(canvas);
+                    }
+                };
+                executorService = Executors.newSingleThreadScheduledExecutor();
+                executorService.scheduleAtFixedRate(command, EXPECTED_FPS_OF_MILLIS, EXPECTED_FPS_OF_MILLIS, TimeUnit.MILLISECONDS);
+
+                refreshTask = null;
+            }
+        };
+        refreshTask.execute(engineConfig);
+    }
+
+    private synchronized void cancelThreads() {
+        if (refreshTask != null && refreshTask.getStatus() == Status.RUNNING) {
+            refreshTask.cancel(true);
+            refreshTask = null;
+        }
+        if (executorService != null) {
+            executorService.shutdown();
+            executorService = null;
+        }
+    }
+
     public void resume() {
         // 再開
         if (getVisibility() == View.VISIBLE) {
-            starSeekerEngine.resume();          // エンジン
+            refresh();
+            // starSeekerEngine.resume(); // エンジン
             terminalStateResolver.prepare();    // 端末ステートリゾルバ
         }
     }
 
     public void pause() {
         // 中断
+        cancelThreads();
         starSeekerEngine.pause();           // エンジン
         terminalStateResolver.pause();      // 端末ステートリゾルバ
     }
 
-    @Override
-    public void setVisibility(int visibility) {
-        super.setVisibility(visibility);
-        resume();
-    }
+    // @Override
+    // public void setVisibility(int visibility) {
+    // super.setVisibility(visibility);
+    // if (visibility == View.VISIBLE) {
+    // resume();
+    // } else {
+    // pause();
+    // }
+    // }
 
     // ================================================================================
     // SurfaceHolder.Callback2
@@ -118,7 +181,7 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
         }
 
         // エンジンの設定
-        starSeekerEngine.prepare(width, height);
+        starSeekerEngine.setDisplaySize(width, height);
         starSeekerEngine.setStarSeekerListener(new IStarSeekerListener() {
             @Override
             public void onException(Exception e) {
@@ -134,27 +197,15 @@ public class AstronomicalTheaterView extends SurfaceView implements SurfaceHolde
                 });
             }
         });
-
-        // スレッドエクスキュータの設定
-        Runnable command = new Runnable() {
-            @Override
-            public void run() {
-                starSeekerEngine.calculate();
-
-                Canvas canvas = getHolder().lockCanvas();
-                starSeekerEngine.draw(canvas);
-                getHolder().unlockCanvasAndPost(canvas);
-            }
-        };
-        executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(command, EXPECTED_FPS_OF_MILLIS, EXPECTED_FPS_OF_MILLIS, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         LogUtils.d(getClass(), "surfaceDestroyed.");
 
-        executorService.shutdown();
+        if (executorService != null && !executorService.isShutdown()) {
+            executorService.shutdown();
+        }
     }
 
     @Override

@@ -16,6 +16,7 @@ import jp.gr.java_conf.dhun.starseeker.system.model.panel.AstronomicalTheater;
 import jp.gr.java_conf.dhun.starseeker.system.model.star.Constellation;
 import jp.gr.java_conf.dhun.starseeker.system.model.star.ConstellationPath;
 import jp.gr.java_conf.dhun.starseeker.system.model.star.Star;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSiteLocation;
 import jp.gr.java_conf.dhun.starseeker.util.DateTimeUtils;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.content.Context;
@@ -78,12 +79,12 @@ public class StarSeekerEngine implements //
     }
 
     /**
-     * エンジンを準備します.<br/>
+     * ディスプレイサイズを設定します.<br/>
      * 
      * @param displayWidth ディスプレイの横幅
      * @param displayHeight ディスプレイの高さ
      */
-    public void prepare(int displayWidth, int displayHeight) {
+    public void setDisplaySize(int displayWidth, int displayHeight) {
         astronomicalTheater = new AstronomicalTheater(displayWidth, displayHeight);
     }
 
@@ -94,27 +95,74 @@ public class StarSeekerEngine implements //
      * @param latitude 観測地点の緯度
      * @param baseCalendar 座標算出の基準日時となるカレンダー
      */
-    public void configureObservationCondition(double longitude, double latitude, Calendar baseCalendar) {
-        locationTitle = String.format("経度=[%6.2f], 緯度=[%6.2f], 日時=[%s]", longitude, latitude, DateTimeUtils.toLocalYYYYMMDDHHMMSSWithSegment(baseCalendar));
+    public void setObservationCondition(ObservationSiteLocation location, Calendar baseCalendar) {
+        locationTitle = String.format("経度=[%6.2f], 緯度=[%6.2f], 日時=[%s]" //
+                , location.getLongitude()   //
+                , location.getLatitude()    //
+                // , location.getAltitude() // XXX 高度は使ってない
+                , DateTimeUtils.toLocalYYYYMMDDHHMMSSWithSegment(baseCalendar));
 
-        starManager.setObservationLocation(longitude, latitude);
+        starManager.setObservationLocation(location.getLongitude(), location.getLatitude());
         starManager.setObservationDatetime(baseCalendar);
-        if (enabled) {
-            starManager.prepare();
-        }
     }
 
     /**
-     * 抽出する星の等級の上限値を設定します.<br/>
+     * 抽出する等級の上限値を設定します.
      * 
-     * @param magnitude 等級
+     * @param magnitude 抽出する等級の上限
      */
-    public void configureExtractUpperStarMagnitude(float magnitude) {
+    public void setExtractUpperStarMagnitude(float magnitude) {
         starManager.setExtractUpperStarMagnitude(magnitude);
-        if (enabled) {
-            starManager.prepare();
-        }
     }
+
+    /**
+     * 星を抽出します.
+     */
+    public void extract() {
+        starManager.extract();
+    }
+
+    /**
+     * 星を配置します.
+     */
+    public void locate() {
+        starManager.locate();
+    }
+
+    public void prepare() {
+        starManager.prepare();  // FIXME 呼び出し先のFIXMEを除去
+    }
+
+    // /**
+    // * 観測条件を設定します.<br/>
+    // *
+    // * @param longitude 観測地点の経度
+    // * @param latitude 観測地点の緯度
+    // * @param baseCalendar 座標算出の基準日時となるカレンダー
+    // */
+    // @Deprecated
+    // public void configureObservationCondition(double longitude, double latitude, Calendar baseCalendar) {
+    // locationTitle = String.format("経度=[%6.2f], 緯度=[%6.2f], 日時=[%s]", longitude, latitude, DateTimeUtils.toLocalYYYYMMDDHHMMSSWithSegment(baseCalendar));
+    //
+    // starManager.setObservationLocation(longitude, latitude);
+    // starManager.setObservationDatetime(baseCalendar);
+    // if (enabled) {
+    // starManager.prepare();
+    // }
+    // }
+
+    // /**
+    // * 抽出する星の等級の上限値を設定します.<br/>
+    // *
+    // * @param magnitude 等級
+    // */
+    // @Deprecated
+    // public void configureExtractUpperStarMagnitude(float magnitude) {
+    // starManager.setExtractUpperStarMagnitude(magnitude);
+    // if (enabled) {
+    // starManager.prepare();
+    // }
+    // }
 
     public void resume() {
         enabled = true;

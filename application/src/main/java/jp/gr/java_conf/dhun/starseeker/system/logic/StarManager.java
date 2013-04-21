@@ -102,22 +102,24 @@ public class StarManager {
 
     /**
      * 指定された等級以下の星と星座を抽出します.
-     * 
-     * @param extractUpperStarMagnitude 抽出する等級の上限
      */
-    private void extract(float extractUpperStarMagnitude) {
+    public void extract() {
+        if (!needReextract) {
+            return;
+        }
+
         final SQLiteDatabase db = databaseHelper.getReadableDatabase();
 
         try {
             // 指定された等級以下の星を抽出. 不足データを次に追加.
             // ⇒ byMagnitudeExtractStars
             // ⇒ byHipNumberExtractStars
-            extractStar(db, extractUpperStarMagnitude);
+            extractStar(db);
 
             // 指定された等級以下の星に関連する星を抽出. 不足データを次に追加.
             // ⇒ extractConstellations
             // ⇒ byHipNumberExtractStars
-            extractConstellation(db, extractUpperStarMagnitude);
+            extractConstellation(db);
 
             needReextract = false;
 
@@ -130,9 +132,8 @@ public class StarManager {
      * 指定された等級以下の星を抽出します.
      * 
      * @param db データベース
-     * @param extractUpperStarMagnitude 抽出する等級の上限
      */
-    private void extractStar(SQLiteDatabase db, float extractUpperStarMagnitude) {
+    private void extractStar(SQLiteDatabase db) {
         final StarDataDao starDataDao = new StarDataDao(db);
 
         int extractCount = 0;
@@ -165,9 +166,8 @@ public class StarManager {
      * 指定された等級以下の星に関連する星座を抽出します.
      * 
      * @param db データベース
-     * @param extractUpperStarMagnitude 抽出する等級の上限
      */
-    private void extractConstellation(SQLiteDatabase db, float extractUpperStarMagnitude) {
+    private void extractConstellation(SQLiteDatabase db) {
         final StarDataDao starDataDao = new StarDataDao(db);
         final ConstellationDataDao constellationDataDao = new ConstellationDataDao(db);
         final ConstellationPathDataDao constellationPathDataDao = new ConstellationPathDataDao(db);
@@ -219,10 +219,21 @@ public class StarManager {
 
     /**
      * 指定された等級以下の星を配置します.
-     * 
-     * @param extractUpperStarMagnitude 配置する等級の上限
      */
-    private void locate(float extractUpperStarMagnitude) {
+    public void locate() {
+        if (!needRelocate) {
+            return;
+        }
+
+        // 観測条件が変更されていれば、星ロケータを再生成
+        // ⇒ 星ロケータは「観測地点と観測日時」に対してインスタンスが必要になる
+        if (needNewStarLocator) {
+            if (null != observationCalendar) { // FIXME 本当は不要. ノイズ
+                needNewStarLocator = false;
+                starLocator = new StarLocator(observationLocationLongitude, observationLocationLatitude, observationCalendar.getTime()); // UTC
+            }
+        }
+
         // フォーマッタ. インスタンスフィールドにしても構わないけど、大した負荷じゃないのでメソッドローカルにした
         DecimalFormat angleFormat = new DecimalFormat("0.00");
         angleFormat.setPositivePrefix("+");
@@ -274,18 +285,23 @@ public class StarManager {
             locateCount++;
         }
 
+        needRelocate = false;
         LogUtils.i(getClass(), "星の地平座標を配置した. count=[" + locateCount + "]");
     }
 
     /**
      * 抽出する等級の上限値を設定します.
      * 
-     * @param extractUpperStarMagnitude 抽出する等級の上限
+     * @param magnitude 抽出する等級の上限
      */
-    public void setExtractUpperStarMagnitude(float extractUpperStarMagnitude) {
-        this.extractUpperStarMagnitude = extractUpperStarMagnitude;
-        this.needReextract = true;
-        this.needRelocate = true;
+    public void setExtractUpperStarMagnitude(float magnitude) {
+        if (extractUpperStarMagnitude == magnitude) {
+            return;
+        }
+
+        extractUpperStarMagnitude = magnitude;
+        needReextract = true;
+        needRelocate = true;
     }
 
     /**
@@ -295,10 +311,14 @@ public class StarManager {
      * @param latitude 緯度
      */
     public void setObservationLocation(double longitude, double latitude) {
-        this.observationLocationLongitude = longitude;
-        this.observationLocationLatitude = latitude;
-        this.needRelocate = true;
-        this.needNewStarLocator = true;
+        if (observationLocationLongitude == longitude && observationLocationLatitude == latitude) {
+            return;
+        }
+
+        observationLocationLongitude = longitude;
+        observationLocationLatitude = latitude;
+        needRelocate = true;
+        needNewStarLocator = true;
     }
 
     /**
@@ -307,30 +327,35 @@ public class StarManager {
      * @param calendar 観測日時を示すカレンダー
      */
     public void setObservationDatetime(Calendar calendar) {
-        this.observationCalendar = calendar;
-        this.needRelocate = true;
-        this.needNewStarLocator = true;
+        if (null != observationCalendar && observationCalendar.equals(calendar)) {
+            return;
+        }
+
+        observationCalendar = calendar;
+        needRelocate = true;
+        needNewStarLocator = true;
     }
 
+    @Deprecated
     public void prepare() {
-        // 必要であれば星を抽出
-        if (needReextract) {
-            extract(extractUpperStarMagnitude);
-        }
-
-        // 観測条件が変更されていれば、星ロケータを再生成
-        // ⇒ 星ロケータは「観測地点と観測日時」に対してインスタンスが必要になる
-        if (needNewStarLocator) {
-            if (null != observationCalendar) { // FIXME 本当は不要. ノイズ
-                needNewStarLocator = false;
-                starLocator = new StarLocator(observationLocationLongitude, observationLocationLatitude, observationCalendar.getTime()); // UTC
-            }
-        }
-
-        // 必要であれば星を再配置
-        if (needRelocate) {
-            locate(extractUpperStarMagnitude);
-        }
+        // // 必要であれば星を抽出
+        // if (needReextract) {
+        // extract();
+        // }
+        //
+        // // 観測条件が変更されていれば、星ロケータを再生成
+        // // ⇒ 星ロケータは「観測地点と観測日時」に対してインスタンスが必要になる
+        // if (needNewStarLocator) {
+        // if (null != observationCalendar) { // FIXME 本当は不要. ノイズ
+        // needNewStarLocator = false;
+        // starLocator = new StarLocator(observationLocationLongitude, observationLocationLatitude, observationCalendar.getTime()); // UTC
+        // }
+        // }
+        //
+        // // 必要であれば星を再配置
+        // if (needRelocate) {
+        // locate();
+        // }
 
         targetStarIterator = new TargetStarIterator(extractUpperStarMagnitude);
     }

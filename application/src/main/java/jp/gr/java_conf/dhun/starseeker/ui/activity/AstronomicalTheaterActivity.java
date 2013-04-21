@@ -78,6 +78,7 @@ public class AstronomicalTheaterActivity extends Activity //
         config = configDao.findOrDefault();
         config.setCoordinatesCalculateBaseDate(new Date()); // 画面起動時はシステム日時
         // config.setCoordinatesCalculateBaseDate(new Date(2013 - 1900, 3, 17, 1, 29)); // 画面起動時はシステム日時. FIXME
+        // config.setCoordinatesCalculateBaseDate(new Date(2000 - 1900, 0, 1, 21, 00)); // 画面起動時はシステム日時. FIXME
 
         Object nonConfigObject = getLastNonConfigurationInstance();
         if (null != nonConfigObject) {
@@ -98,8 +99,8 @@ public class AstronomicalTheaterActivity extends Activity //
         masterTheaterView.configureExtractLowerstarMagnitude(config.getExtractLowerStarMagnitude());
         secondTheaterView.configureExtractLowerstarMagnitude(config.getExtractLowerStarMagnitude());
 
-        refreshMasterTheaterView();
-        refreshSecondTheaterView();
+        setMasterObservationCondition();
+        setSecondObservationCondition();
 
         // クリックイベントの設定
         findViewById(R.id.zoomControls).setOnClickListener(this);
@@ -263,8 +264,8 @@ public class AstronomicalTheaterActivity extends Activity //
                 @Override
                 public void onChooseData(Float data) {
                     config.setExtractLowerStarMagnitude(data);
-                    masterTheaterView.configureExtractLowerstarMagnitude(data);
-                    secondTheaterView.configureExtractLowerstarMagnitude(data);
+                    masterTheaterView.configureExtractLowerstarMagnitude(data).refresh();
+                    secondTheaterView.configureExtractLowerstarMagnitude(data).refresh();
                 }
             });
             return builder.create();
@@ -283,12 +284,22 @@ public class AstronomicalTheaterActivity extends Activity //
         secondCurrentCalendar = DateTimeUtils.toSameDateTime(baseCalendar, config.getSecondObservationSiteLocation().getTimeZone());
     }
 
-    private void refreshMasterTheaterView() {
+    private void setMasterObservationCondition() {
         masterTheaterView.configureObservationSiteLocation(config.getMasterObservationSiteLocation().getLongitude(), config.getMasterObservationSiteLocation().getLatitude(), masterCurrentCalendar);
     }
 
-    private void refreshSecondTheaterView() {
+    private void refreshMasterTheaterView() {
+        setMasterObservationCondition();
+        masterTheaterView.refresh();
+    }
+
+    private void setSecondObservationCondition() {
         secondTheaterView.configureObservationSiteLocation(config.getSecondObservationSiteLocation().getLongitude(), config.getSecondObservationSiteLocation().getLatitude(), secondCurrentCalendar);
+    }
+
+    private void refreshSecondTheaterView() {
+        setSecondObservationCondition();
+        secondTheaterView.refresh();
     }
 
     private void changeLockScreenRotateWithToast(boolean lock) {
@@ -333,10 +344,12 @@ public class AstronomicalTheaterActivity extends Activity //
     private void setSecondTheaterViewVisible(boolean visible) {
         if (visible) {
             secondTheaterView.setVisibility(View.VISIBLE);
+            secondTheaterView.refresh();    // FIXME この辺があやしい
             switchShowSecondTheaterButton.setImageLevel(1);
             chooseSecondObservationSiteLocationButton.setEnabled(true);
         } else {
             secondTheaterView.setVisibility(View.GONE);
+            secondTheaterView.pause();
             switchShowSecondTheaterButton.setImageLevel(0);
             chooseSecondObservationSiteLocationButton.setEnabled(false);
         }
@@ -353,9 +366,11 @@ public class AstronomicalTheaterActivity extends Activity //
 
         if (Boolean.TRUE.equals(resolver.getTag())) {
             config.setMasterObservationSiteLocation(location);
+            refreshBaseCalendar(this.baseDate);
             refreshMasterTheaterView();
         } else {
             config.setSecondObservationSiteLocation(location);
+            refreshBaseCalendar(this.baseDate);
             refreshSecondTheaterView();
         }
     }
