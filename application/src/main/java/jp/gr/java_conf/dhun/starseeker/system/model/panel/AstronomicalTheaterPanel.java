@@ -132,7 +132,7 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
                 // 東側＆正面のパネル
                 // ・star.getAzimuth() >= 0. とは限らなくなった
                 // ・horizontalCoordinatesRect.xL <= star.getAzimuth() <= horizontalCoordinatesRect.xR
-                if (azimuth < 0) {
+                if (azimuth < 0 && horizontalCoordinatesRect.xR == +180) {
                     azimuth = 360 + azimuth;
                 }
                 return +azimuth - horizontalCoordinatesRect.xL;
@@ -140,7 +140,7 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
                 // 東側＆背面のパネル
                 // ・star.getAzimuth() >= 0. とは限らなくなった
                 // ・horizontalCoordinatesRect.xL >= star.getAzimuth() >= horizontalCoordinatesRect.xR
-                if (azimuth < 0) {
+                if (azimuth < 0 && horizontalCoordinatesRect.xL == +180) {
                     azimuth = 360 + azimuth;
                 }
                 return +horizontalCoordinatesRect.xL - azimuth;
@@ -151,7 +151,7 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
                 // 西側＆正面のパネル
                 // ・star.getAzimuth() < 0. とは限らなくなった
                 // ・horizontalCoordinatesRect.xL <= star.getAzimuth() <= horizontalCoordinatesRect.xR
-                if (azimuth > 0) {
+                if (azimuth > 0 && horizontalCoordinatesRect.xL == -180) {
                     azimuth = -360 + azimuth;
                 }
                 return -horizontalCoordinatesRect.xL + azimuth;
@@ -159,7 +159,7 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
                 // 西側＆背面のパネル
                 // ・star.getAzimuth() < 0. とは限らなくなった
                 // ・horizontalCoordinatesRect.xL >= star.getAzimuth() >= horizontalCoordinatesRect.xR
-                if (azimuth > 0) {
+                if (azimuth > 0 && horizontalCoordinatesRect.xR == -180) {
                     azimuth = -360 + azimuth;
                 }
                 return -azimuth + horizontalCoordinatesRect.xL;
