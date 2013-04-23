@@ -36,11 +36,12 @@ public class ResolveObservationSiteByGpsActivity extends Activity {
             @Override
             public void onClick(View view) {
                 // リゾルバの再開
+                progressDialog = ProgressDialog.show(ResolveObservationSiteByGpsActivity.this, "位置情報の取得", "現在位置を取得中です"); // XXX strings.xml
                 observationSiteLocationResolver.resume();
             }
         });
 
-        observationSiteLocationResolver = new ObservationSiteLocationGpsResolver(this, ObservationSiteLocationResolverType.GPS);
+        observationSiteLocationResolver = new ObservationSiteLocationGpsResolver(this, ObservationSiteLocationResolverType.NETWORK);
         observationSiteLocationResolver.setObservationSiteLocationResolverListener(new ObservationSiteLocationResolverListener() {
             private DecimalFormat nf;
             {
@@ -53,6 +54,10 @@ public class ResolveObservationSiteByGpsActivity extends Activity {
             public void onResolveObservationSiteLocation(IObservationSiteLocationResolver resolver, ObservationSiteLocation location) {
                 observationSiteLocationResolver.pause();
 
+                if (null != progressDialog && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                    progressDialog = null;
+                }
                 String text = String.format("緯度：%s\n経度：%s\n高度：%s", //
                         nf.format(location.getLatitude()),  //
                         nf.format(location.getLongitude()), //
@@ -62,20 +67,11 @@ public class ResolveObservationSiteByGpsActivity extends Activity {
 
             @Override
             public void onNotAvailableLocationProvider(IObservationSiteLocationResolver resolver) {
-                Toast.makeText(getApplicationContext(), "位置情報プロバイダを利用できません.", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onStartResolveObservationSiteLocation(IObservationSiteLocationResolver resolver) {
-                progressDialog = ProgressDialog.show(ResolveObservationSiteByGpsActivity.this, "位置情報の取得", "現在位置を取得中です"); // XXX strings.xml
-            }
-
-            @Override
-            public void onStopResolveObservationSiteLocation(IObservationSiteLocationResolver resolver) {
                 if (null != progressDialog && progressDialog.isShowing()) {
                     progressDialog.dismiss();
                     progressDialog = null;
                 }
+                Toast.makeText(getApplicationContext(), "位置情報プロバイダを利用できません.", Toast.LENGTH_SHORT).show();
             }
         });
     }

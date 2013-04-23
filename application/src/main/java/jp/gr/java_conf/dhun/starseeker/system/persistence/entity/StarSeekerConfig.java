@@ -20,8 +20,8 @@ public class StarSeekerConfig {
 
     private float extractLowerStarMagnitude;            // 天体シアターに抽出するか等星の下限値
 
-    private ObservationSiteLocation masterObservationSiteLocation;  // １つ目の天体シアターに対する観測地点のID
-    private ObservationSiteLocation secondObservationSiteLocation;  // ２つ目の天体シアターに対する観測地点のID
+    private Integer masterObservationSiteLocationId;    // １つ目の天体シアターに対する観測地点のID
+    private Integer secondObservationSiteLocationId;    // ２つ目の天体シアターに対する観測地点のID
 
     /**
      * 星の座標計算の基準日時を取得します.<br/>
@@ -80,30 +80,30 @@ public class StarSeekerConfig {
     }
 
     /**
-     * １つ目の天体シアターに対する観測地点を取得します.<br/>
+     * １つ目の天体シアターに対する観測地点のIDを取得します.<br/>
      */
-    public ObservationSiteLocation getMasterObservationSiteLocation() {
-        return masterObservationSiteLocation;
+    public Integer getMasterObservationSiteLocationId() {
+        return masterObservationSiteLocationId;
     }
 
     /**
-     * １つ目の天体シアターに対する観測地点を設定します.<br/>
+     * １つ目の天体シアターに対する観測地点のIDを設定します.<br/>
      */
-    public void setMasterObservationSiteLocation(ObservationSiteLocation masterObservationSiteLocation) {
-        this.masterObservationSiteLocation = masterObservationSiteLocation;
+    public void setMasterObservationSiteLocationId(Integer id) {
+        this.masterObservationSiteLocationId = id;
     }
 
     /**
-     * ２つ目の天体シアターに対する観測地点を取得します.<br/>
+     * ２つ目の天体シアターに対する観測地点のIDを取得します.<br/>
      */
-    public ObservationSiteLocation getSecondObservationSiteLocation() {
-        return secondObservationSiteLocation;
+    public Integer getSecondObservationSiteLocationId() {
+        return secondObservationSiteLocationId;
     }
 
     /**
-     * ２つ目の天体シアターに対する観測地点を設定します.<br/>
+     * ２つ目の天体シアターに対する観測地点のIDを設定します.<br/>
      */
-    public void setSecondObservationSiteLocation(ObservationSiteLocation secondObservationSiteLocation) {
-        this.secondObservationSiteLocation = secondObservationSiteLocation;
+    public void setSecondObservationSiteLocationId(Integer id) {
+        this.secondObservationSiteLocationId = id;
     }
 }

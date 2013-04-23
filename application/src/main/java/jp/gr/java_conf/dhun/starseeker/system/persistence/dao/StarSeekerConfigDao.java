@@ -5,8 +5,6 @@ package jp.gr.java_conf.dhun.starseeker.system.persistence.dao;
 
 import java.util.Date;
 
-import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.ObservationSiteLocationDao;
-import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSiteLocation;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarSeekerConfig;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -62,20 +60,10 @@ public class StarSeekerConfigDao {
         config.setSecondAstronomicalTheaterVisible(preferences.getBoolean(KEY_SECOND_ASTRONOMICAL_THEATER_VISIBLE, false));
         config.setLockScreenRotate(preferences.getBoolean(KEY_LOCK_SCREEN_ROTATE, true));
         config.setExtractLowerStarMagnitude(preferences.getFloat(KEY_EXTRACT_LOWER_STAR_MAGNITUDE, 2.0f));
-        config.setMasterObservationSiteLocation(findObservationSiteLocation(preferences.getInt(KEY_MASTER_OBSERVATION_SITE_LOCATION_ID, 0)));
-        config.setSecondObservationSiteLocation(findObservationSiteLocation(preferences.getInt(KEY_SECOND_OBSERVATION_SITE_LOCATION_ID, 0)));
+        config.setMasterObservationSiteLocationId(preferences.getInt(KEY_MASTER_OBSERVATION_SITE_LOCATION_ID, 0));
+        config.setSecondObservationSiteLocationId(preferences.getInt(KEY_SECOND_OBSERVATION_SITE_LOCATION_ID, 0));
 
         return config;
-    }
-
-    private ObservationSiteLocation findObservationSiteLocation(int id) {
-        ObservationSiteLocationDao dao = new ObservationSiteLocationDao(null);
-        for (ObservationSiteLocation location : dao.listAll()) {
-            if (location.getId() == id) {
-                return location;
-            }
-        }
-        return dao.listAll().get(0);
     }
 
     /**
@@ -106,8 +94,8 @@ public class StarSeekerConfigDao {
         editor.putBoolean(KEY_SECOND_ASTRONOMICAL_THEATER_VISIBLE, config.isSecondAstronomicalTheaterVisible());
         editor.putBoolean(KEY_LOCK_SCREEN_ROTATE, config.isLockScreenRotate());
         editor.putFloat(KEY_EXTRACT_LOWER_STAR_MAGNITUDE, config.getExtractLowerStarMagnitude());
-        editor.putInt(KEY_MASTER_OBSERVATION_SITE_LOCATION_ID, config.getMasterObservationSiteLocation().getId());
-        editor.putInt(KEY_SECOND_OBSERVATION_SITE_LOCATION_ID, config.getSecondObservationSiteLocation().getId());
+        editor.putInt(KEY_MASTER_OBSERVATION_SITE_LOCATION_ID, config.getMasterObservationSiteLocationId());
+        editor.putInt(KEY_SECOND_OBSERVATION_SITE_LOCATION_ID, config.getSecondObservationSiteLocationId());
 
         editor.commit();
     }

@@ -17,7 +17,6 @@ public class ObservationSiteLocationChooseResolver implements IObservationSiteLo
     private ObservationSiteLocationResolverListener onResolveObservationSiteLocationListener;
 
     private ObservationSiteLocation location;
-    private Object tag;
 
     /**
      * コンストラクタ.<br/>
@@ -35,6 +34,11 @@ public class ObservationSiteLocationChooseResolver implements IObservationSiteLo
     // IObservationSiteLocationResolver
 
     @Override
+    public Integer getObservationSiteLocationId() {
+        return location.getId();
+    }
+
+    @Override
     public void resume() {
         onResolveObservationSiteLocationListener.onResolveObservationSiteLocation(this, location);
     }
@@ -46,16 +50,5 @@ public class ObservationSiteLocationChooseResolver implements IObservationSiteLo
     @Override
     public void setObservationSiteLocationResolverListener(ObservationSiteLocationResolverListener listener) {
         this.onResolveObservationSiteLocationListener = listener;
-    }
-
-    @Override
-    public Object getTag() {
-        return tag;
-
-    }
-
-    @Override
-    public void setTag(Object tag) {
-        this.tag = tag;
     }
 }

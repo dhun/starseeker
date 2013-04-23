@@ -52,14 +52,6 @@ public class ResolveObservationSiteByChooseActivity extends Activity {
             public void onNotAvailableLocationProvider(IObservationSiteLocationResolver resolver) {
                 Toast.makeText(getApplicationContext(), "位置情報プロバイダを利用できません.", Toast.LENGTH_SHORT).show();
             }
-
-            @Override
-            public void onStartResolveObservationSiteLocation(IObservationSiteLocationResolver resolver) {
-            }
-
-            @Override
-            public void onStopResolveObservationSiteLocation(IObservationSiteLocationResolver resolver) {
-            }
         });
 
         resolveLocationButton = (Button) findViewById(R.id.resolveLocationButton);

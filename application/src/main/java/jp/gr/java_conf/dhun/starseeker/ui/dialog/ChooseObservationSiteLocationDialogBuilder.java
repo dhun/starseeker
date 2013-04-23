@@ -29,7 +29,7 @@ public class ChooseObservationSiteLocationDialogBuilder extends AbstractChooseDa
     private final Context context;
 
     private final List<ObservationSiteLocation> locations;
-    private ObservationSiteLocation initialLocation;
+    private Integer initialLocationId;
 
     /**
      * コンストラクタ
@@ -58,10 +58,10 @@ public class ChooseObservationSiteLocationDialogBuilder extends AbstractChooseDa
     }
 
     /**
-     * 初期表示する観測地点の位置を設定します
+     * 初期表示する観測地点の位置のIDを設定します
      */
-    public void setInitialLocation(ObservationSiteLocation initialLocation) {
-        this.initialLocation = initialLocation;
+    public void setInitialLocationId(Integer id) {
+        this.initialLocationId = id;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class ChooseObservationSiteLocationDialogBuilder extends AbstractChooseDa
         for (int i = 0; i < locations.size(); i++) {
             ObservationSiteLocation location = locations.get(i);
             locationNames.add(location.getName());
-            if (null != initialLocation && initialLocation.getId() == location.getId()) {
+            if (location.getId().equals(initialLocationId)) {
                 checkedItem = i;
             }
         }

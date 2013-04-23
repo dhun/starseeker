@@ -3,7 +3,7 @@
  */
 package jp.gr.java_conf.dhun.starseeker.ui.view;
 
-import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -12,10 +12,10 @@ import jp.gr.java_conf.dhun.starseeker.R;
 import jp.gr.java_conf.dhun.starseeker.system.StarSeekerEngine;
 import jp.gr.java_conf.dhun.starseeker.system.StarSeekerEngineRefreshTask;
 import jp.gr.java_conf.dhun.starseeker.system.listener.IStarSeekerListener;
+import jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location.IObservationSiteLocationResolver;
 import jp.gr.java_conf.dhun.starseeker.system.logic.terminal.orientations.ITerminalOrientationsCalculator;
 import jp.gr.java_conf.dhun.starseeker.system.logic.terminal.orientations.TerminalOrientationsCalculatorFactory;
 import jp.gr.java_conf.dhun.starseeker.system.model.StarSeekerEngineConfig;
-import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSiteLocation;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -95,10 +95,9 @@ public class AstronomicalTheaterView extends RelativeLayout implements SurfaceHo
         return display.getRotation();
     }
 
-    public void configureObservationSiteLocation(double longitude, double latitude, Calendar baseCalendar) {
-        ObservationSiteLocation location = new ObservationSiteLocation(latitude, longitude);
-        engineConfig.setObservationSiteLocation(location);
-        engineConfig.setCoordinatesCalculateBaseCalendar(baseCalendar);
+    public void configureObservationSiteLocation(Integer locationId, Date baseDate) {
+        engineConfig.setObservationSiteLocationId(locationId);
+        engineConfig.setCoordinatesCalculateBaseDate(baseDate);
     }
 
     public AstronomicalTheaterView configureExtractLowerstarMagnitude(float magnitude) {
@@ -107,13 +106,17 @@ public class AstronomicalTheaterView extends RelativeLayout implements SurfaceHo
     }
 
     public void refresh() {
+        refresh(null);
+    }
+
+    public void refresh(IObservationSiteLocationResolver resolver) {
         LogUtils.i(getClass(), "do refresh");
 
         synchronized (this) {
             cancelThreads();
         }
 
-        refreshTask = new StarSeekerEngineRefreshTask(starSeekerEngine) {
+        refreshTask = new StarSeekerEngineRefreshTask(getContext().getApplicationContext()) {
             @Override
             protected void onPreExecute() {
                 progressBar.setVisibility(View.VISIBLE);
@@ -140,6 +143,8 @@ public class AstronomicalTheaterView extends RelativeLayout implements SurfaceHo
                 refreshTask = null;
             }
         };
+        refreshTask.setStarSeekerEngine(starSeekerEngine);
+        refreshTask.setObservationSiteLocationResolver(resolver);
         refreshTask.execute(engineConfig);
     }
 

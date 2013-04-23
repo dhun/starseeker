@@ -3,9 +3,7 @@
  */
 package jp.gr.java_conf.dhun.starseeker.system.model;
 
-import java.util.Calendar;
-
-import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSiteLocation;
+import java.util.Date;
 
 /**
  * スターシーカーエンジン設定のエンティティ
@@ -15,36 +13,36 @@ import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSite
  */
 public class StarSeekerEngineConfig {
 
-    private Calendar coordinatesCalculateBaseCalendar;          // 星の座標計算の基準日時
-    private ObservationSiteLocation observationSiteLocation;    // 観測地点
+    private Date coordinatesCalculateBaseDate;                  // 星の座標計算の基準日時
+    private Integer observationSiteLocationId;                  // 観測地点
     private float extractUpperStarMagnitude;                    // 抽出する星等級の上限値
 
     /**
      * 星の座標計算の基準日時を取得します.<br/>
      */
-    public Calendar getCoordinatesCalculateBaseCalendar() {
-        return coordinatesCalculateBaseCalendar;
+    public Date getCoordinatesCalculateBaseDate() {
+        return coordinatesCalculateBaseDate;
     }
 
     /**
      * 星の座標計算の基準日時を設定します.<br/>
      */
-    public void setCoordinatesCalculateBaseCalendar(Calendar calendar) {
-        this.coordinatesCalculateBaseCalendar = calendar;
+    public void setCoordinatesCalculateBaseDate(Date date) {
+        this.coordinatesCalculateBaseDate = date;
     }
 
     /**
-     * 観測地点を取得します.<br/>
+     * 観測地点のIDを取得します.<br/>
      */
-    public ObservationSiteLocation getObservationSiteLocation() {
-        return observationSiteLocation;
+    public Integer getObservationSiteLocationId() {
+        return observationSiteLocationId;
     }
 
     /**
-     * 観測地点を設定します.<br/>
+     * 観測地点のIDを設定します.<br/>
      */
-    public void setObservationSiteLocation(ObservationSiteLocation observationSiteLocation) {
-        this.observationSiteLocation = observationSiteLocation;
+    public void setObservationSiteLocationId(Integer id) {
+        this.observationSiteLocationId = id;
     }
 
     /**

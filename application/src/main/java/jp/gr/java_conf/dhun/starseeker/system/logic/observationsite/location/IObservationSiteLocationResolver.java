@@ -10,6 +10,8 @@ import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSite
  */
 public interface IObservationSiteLocationResolver {
 
+    Integer getObservationSiteLocationId();
+
     /**
      * リゾルバを再開します..<br/>
      * Activity.onResumeなどで呼び出してください.
@@ -28,16 +30,6 @@ public interface IObservationSiteLocationResolver {
     void setObservationSiteLocationResolverListener(ObservationSiteLocationResolverListener listener);
 
     /**
-     * タグを取得します.<br/>
-     */
-    Object getTag();
-
-    /**
-     * タグを設定します.<br/>
-     */
-    void setTag(Object tag);
-
-    /**
      * 観測地点リゾルバのリスナ.<br/>
      */
     interface ObservationSiteLocationResolverListener {
@@ -48,16 +40,6 @@ public interface IObservationSiteLocationResolver {
          * @param location 観測地点
          */
         void onResolveObservationSiteLocation(IObservationSiteLocationResolver resolver, ObservationSiteLocation location);
-
-        /**
-         * 観測地点の解決を開始したことを通知します.<br/>
-         */
-        void onStartResolveObservationSiteLocation(IObservationSiteLocationResolver resolver);
-
-        /**
-         * 観測地点の解決を停止したことを通知します.<br/>
-         */
-        void onStopResolveObservationSiteLocation(IObservationSiteLocationResolver resolver);
 
         /**
          * 位置情報プロバイダを利用できないことを通知します.<br/>

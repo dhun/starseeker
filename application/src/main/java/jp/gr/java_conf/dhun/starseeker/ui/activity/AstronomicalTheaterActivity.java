@@ -9,14 +9,12 @@ import java.util.Date;
 import jp.gr.java_conf.dhun.starseeker.R;
 import jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location.IObservationSiteLocationResolver;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.StarSeekerConfigDao;
-import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSiteLocation;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarSeekerConfig;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseExtractStarMagnitudeDialogBuilder;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseObservationSiteLocationDialogBuilder;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseObservationSiteTimeDialogBuilder;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.listener.OnChooseDataListener;
 import jp.gr.java_conf.dhun.starseeker.ui.view.AstronomicalTheaterView;
-import jp.gr.java_conf.dhun.starseeker.util.DateTimeUtils;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.app.Activity;
 import android.app.Dialog;
@@ -38,7 +36,7 @@ import android.widget.Toast;
  * 
  */
 public class AstronomicalTheaterActivity extends Activity //
-        implements View.OnClickListener, IObservationSiteLocationResolver.ObservationSiteLocationResolverListener {
+        implements View.OnClickListener {
 
     // ダイアログID
     private static final int DIALOG_CHOOSE_OBSERVATION_SITE_TIME = 1;           // 観測地点の時刻選択ダイアログ
@@ -57,8 +55,6 @@ public class AstronomicalTheaterActivity extends Activity //
     private StarSeekerConfig config;
 
     private Date baseDate;
-    private Calendar masterCurrentCalendar;
-    private Calendar secondCurrentCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -241,16 +237,20 @@ public class AstronomicalTheaterActivity extends Activity //
             builder.setDialogId(id);
             builder.setDialogTitle(title + "のシアターの場所"); // XXX strings.xml
             if (isMaster) {
-                builder.setInitialLocation(config.getMasterObservationSiteLocation());
+                builder.setInitialLocationId(config.getMasterObservationSiteLocationId());
             } else {
-                builder.setInitialLocation(config.getSecondObservationSiteLocation());
+                builder.setInitialLocationId(config.getSecondObservationSiteLocationId());
             }
             builder.setOnChooseDataListener(new OnChooseDataListener<IObservationSiteLocationResolver>() {
                 @Override
                 public void onChooseData(IObservationSiteLocationResolver data) {
-                    data.setObservationSiteLocationResolverListener(AstronomicalTheaterActivity.this);
-                    data.setTag(isMaster);
-                    data.resume();
+                    if (isMaster) {
+                        config.setMasterObservationSiteLocationId(data.getObservationSiteLocationId());
+                        masterTheaterView.refresh(data);
+                    } else {
+                        config.setSecondObservationSiteLocationId(data.getObservationSiteLocationId());
+                        secondTheaterView.refresh(data);
+                    }
                 }
             });
             return builder.create();
@@ -279,13 +279,10 @@ public class AstronomicalTheaterActivity extends Activity //
 
         Calendar baseCalendar = Calendar.getInstance();
         baseCalendar.setTime(baseDate);
-
-        masterCurrentCalendar = DateTimeUtils.toSameDateTime(baseCalendar, config.getMasterObservationSiteLocation().getTimeZone());
-        secondCurrentCalendar = DateTimeUtils.toSameDateTime(baseCalendar, config.getSecondObservationSiteLocation().getTimeZone());
     }
 
     private void setMasterObservationCondition() {
-        masterTheaterView.configureObservationSiteLocation(config.getMasterObservationSiteLocation().getLongitude(), config.getMasterObservationSiteLocation().getLatitude(), masterCurrentCalendar);
+        masterTheaterView.configureObservationSiteLocation(config.getMasterObservationSiteLocationId(), baseDate);
     }
 
     private void refreshMasterTheaterView() {
@@ -294,7 +291,7 @@ public class AstronomicalTheaterActivity extends Activity //
     }
 
     private void setSecondObservationCondition() {
-        secondTheaterView.configureObservationSiteLocation(config.getSecondObservationSiteLocation().getLongitude(), config.getSecondObservationSiteLocation().getLatitude(), secondCurrentCalendar);
+        secondTheaterView.configureObservationSiteLocation(config.getSecondObservationSiteLocationId(), baseDate);
     }
 
     private void refreshSecondTheaterView() {
@@ -367,38 +364,5 @@ public class AstronomicalTheaterActivity extends Activity //
 
     private class NonConfigurationInstance {
         public Date baseDate;
-    }
-
-    @Override
-    public void onResolveObservationSiteLocation(IObservationSiteLocationResolver resolver, ObservationSiteLocation location) {
-        resolver.pause();
-
-        if (Boolean.TRUE.equals(resolver.getTag())) {
-            config.setMasterObservationSiteLocation(location);
-            refreshBaseCalendar(this.baseDate);
-            refreshMasterTheaterView();
-        } else {
-            config.setSecondObservationSiteLocation(location);
-            refreshBaseCalendar(this.baseDate);
-            refreshSecondTheaterView();
-        }
-    }
-
-    @Override
-    public void onStartResolveObservationSiteLocation(IObservationSiteLocationResolver resolver) {
-        // TODO 自動生成されたメソッド・スタブ
-
-    }
-
-    @Override
-    public void onStopResolveObservationSiteLocation(IObservationSiteLocationResolver resolver) {
-        // TODO 自動生成されたメソッド・スタブ
-
-    }
-
-    @Override
-    public void onNotAvailableLocationProvider(IObservationSiteLocationResolver resolver) {
-        // TODO 自動生成されたメソッド・スタブ
-
     }
 }

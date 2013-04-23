@@ -3,6 +3,8 @@
  */
 package jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location;
 
+import java.util.TimeZone;
+
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSiteLocation;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.content.Context;
@@ -24,7 +26,6 @@ public class ObservationSiteLocationGpsResolver implements IObservationSiteLocat
     private final ObservationSiteLocationResolverType locationProviderType;
 
     private ObservationSiteLocationResolverListener onResolveObservationSiteLocationListener;
-    private Object tag;
 
     /**
      * コンストラクタ.<br/>
@@ -39,6 +40,11 @@ public class ObservationSiteLocationGpsResolver implements IObservationSiteLocat
 
     // ********************************************************************************
     // IObservationSiteLocationResolver
+
+    @Override
+    public Integer getObservationSiteLocationId() {
+        return locationProviderType.getObservationSiteLocationId();
+    }
 
     @Override
     public void resume() {
@@ -72,11 +78,6 @@ public class ObservationSiteLocationGpsResolver implements IObservationSiteLocat
 
         LogUtils.i(ObservationSiteLocationGpsResolver.class, "[" + providerName + "]による位置情報の取得を開始します.");
         locationManager.requestLocationUpdates(providerName, 1000/* msec */, 1000/* meter */, this);
-
-        if (onResolveObservationSiteLocationListener != null) {
-            onResolveObservationSiteLocationListener.onStartResolveObservationSiteLocation(this);
-        }
-
     }
 
     @Override
@@ -87,27 +88,11 @@ public class ObservationSiteLocationGpsResolver implements IObservationSiteLocat
 
         LogUtils.i(ObservationSiteLocationGpsResolver.class, "位置情報プロバイダによる位置情報の取得を停止します.");
         locationManager.removeUpdates(this);
-
-        if (onResolveObservationSiteLocationListener != null) {
-            onResolveObservationSiteLocationListener.onStopResolveObservationSiteLocation(this);
-        }
-
     }
 
     @Override
     public void setObservationSiteLocationResolverListener(ObservationSiteLocationResolverListener listener) {
         this.onResolveObservationSiteLocationListener = listener;
-    }
-
-    @Override
-    public Object getTag() {
-        return tag;
-
-    }
-
-    @Override
-    public void setTag(Object tag) {
-        this.tag = tag;
     }
 
     // ********************************************************************************
@@ -128,6 +113,7 @@ public class ObservationSiteLocationGpsResolver implements IObservationSiteLocat
                     location.getAltitude());    // 高度
             result.setId(locationProviderType.getObservationSiteLocationId());
             result.setName("現在地"); // XXX strings.xml
+            result.setTimeZone(TimeZone.getDefault());
             onResolveObservationSiteLocationListener.onResolveObservationSiteLocation(this, result);
         }
     }
