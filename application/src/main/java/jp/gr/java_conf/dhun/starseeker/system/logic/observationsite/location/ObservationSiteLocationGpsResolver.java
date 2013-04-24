@@ -42,7 +42,7 @@ public class ObservationSiteLocationGpsResolver extends AbstractObservationSiteL
 
     @Override
     public void resume() {
-        boolean debug = true;
+        boolean debug = true;   // FIXME 後で消す
         if (debug) {
             try {
                 Thread.sleep(1000 * 5);
