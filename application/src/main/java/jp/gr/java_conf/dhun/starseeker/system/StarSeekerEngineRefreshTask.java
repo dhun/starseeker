@@ -19,10 +19,11 @@ import android.os.Handler;
 
 /**
  * @author jun
- * 
  */
-public class StarSeekerEngineRefreshTask extends AsyncTask<StarSeekerEngineConfig, Integer, StarSeekerEngine>
+public class StarSeekerEngineRefreshTask extends AsyncTask<StarSeekerEngineConfig, Integer, Boolean> //
         implements IObservationSiteLocationResolver.ObservationSiteLocationResolverListener {
+
+    private static final int WAIT_SEC = 30;
 
     private final Context context;
 
@@ -61,7 +62,7 @@ public class StarSeekerEngineRefreshTask extends AsyncTask<StarSeekerEngineConfi
     }
 
     @Override
-    protected StarSeekerEngine doInBackground(StarSeekerEngineConfig... configs) {
+    protected Boolean doInBackground(StarSeekerEngineConfig... configs) {
         validateState(configs);
 
         starSeekerEngineConfig = configs[0];
@@ -78,9 +79,12 @@ public class StarSeekerEngineRefreshTask extends AsyncTask<StarSeekerEngineConfi
                 });
 
                 try {
-                    this.wait();
+                    this.wait(WAIT_SEC * 1000);
                 } catch (InterruptedException e) {
+                }
 
+                if (observationSiteLocation == null) {
+                    return false;
                 }
             }
 
@@ -119,7 +123,7 @@ public class StarSeekerEngineRefreshTask extends AsyncTask<StarSeekerEngineConfi
 
         starSeekerEngine.prepare();
 
-        return starSeekerEngine;
+        return true;
     }
 
     public void onCancel() {

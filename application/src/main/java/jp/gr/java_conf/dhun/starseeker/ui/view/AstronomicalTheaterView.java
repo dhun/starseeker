@@ -36,20 +36,19 @@ import android.widget.Toast;
  * 天体シアターのビュー.<br/>
  * 
  * @author jun
- * 
  */
 public class AstronomicalTheaterView extends RelativeLayout implements SurfaceHolder.Callback2 {
 
-    private static final int EXPECTED_FPS = 60;                            // FPSの期待値
-    private static final int EXPECTED_FPS_OF_MILLIS = 1000 / EXPECTED_FPS; // FPSの期待値に対するミリ秒
+    private static final int EXPECTED_FPS = 60;                             // FPSの期待値
+    private static final int EXPECTED_FPS_OF_MILLIS = 1000 / EXPECTED_FPS;  // FPSの期待値に対するミリ秒
 
     private SurfaceView surfaceView;
     private ProgressBar progressBar;
 
-    private StarSeekerEngine starSeekerEngine;        // スターシーカーエンジン
-    private StarSeekerEngineConfig engineConfig;      // スターシーカーエンジンの設定
-    private StarSeekerEngineRefreshTask refreshTask;  // スターシーカーエンジンの更新タスク
-    private ScheduledExecutorService executorService; // スターシーカーシステムのスレッドエクスキュータ
+    private StarSeekerEngine starSeekerEngine;          // スターシーカーエンジン
+    private StarSeekerEngineConfig engineConfig;        // スターシーカーエンジンの設定
+    private StarSeekerEngineRefreshTask refreshTask;    // スターシーカーエンジンの更新タスク
+    private ScheduledExecutorService executorService;   // スターシーカーシステムのスレッドエクスキュータ
 
     private ITerminalOrientationsCalculator terminalStateResolver;
 
@@ -123,7 +122,13 @@ public class AstronomicalTheaterView extends RelativeLayout implements SurfaceHo
             }
 
             @Override
-            protected void onPostExecute(StarSeekerEngine result) {
+            protected void onPostExecute(Boolean result) {
+                if (!result) {
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(getContext(), "天体シアターの準備に失敗しました.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 // スレッドエクスキュータの設定
                 Runnable command = new Runnable() {
                     @Override
@@ -141,6 +146,7 @@ public class AstronomicalTheaterView extends RelativeLayout implements SurfaceHo
 
                 progressBar.setVisibility(View.GONE);
                 refreshTask = null;
+                LogUtils.i(getClass(), "end refresh");
             }
         };
         refreshTask.setStarSeekerEngine(starSeekerEngine);
@@ -164,15 +170,15 @@ public class AstronomicalTheaterView extends RelativeLayout implements SurfaceHo
         if (getVisibility() == View.VISIBLE) {
             refresh();
             // starSeekerEngine.resume(); // エンジン
-            terminalStateResolver.prepare();    // 端末ステートリゾルバ
+            terminalStateResolver.prepare(); // 端末ステートリゾルバ
         }
     }
 
     public void pause() {
         // 中断
         cancelThreads();
-        starSeekerEngine.pause();           // エンジン
-        terminalStateResolver.pause();      // 端末ステートリゾルバ
+        starSeekerEngine.pause(); // エンジン
+        terminalStateResolver.pause(); // 端末ステートリゾルバ
     }
 
     // @Override
@@ -211,6 +217,7 @@ public class AstronomicalTheaterView extends RelativeLayout implements SurfaceHo
         starSeekerEngine.setStarSeekerListener(new IStarSeekerListener() {
             @Override
             public void onException(Exception e) {
+                LogUtils.e(getClass(), "システムエラー", e);
                 executorService.shutdown();
 
                 // 頻繁に発生する処理ではないため、毎回インスタンスを作ることでインスタンスフィールドを減らしてる

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
+import jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location.IObservationSiteLocationResolver.ObservationSiteLocationResolverType;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSiteLocation;
 import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
 import android.database.Cursor;
@@ -14,7 +15,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 /**
  * @author jun
- * 
  */
 public class ObservationSiteLocationDao extends AbstractSqlDao<ObservationSiteLocation, Integer> {
 
@@ -33,18 +33,31 @@ public class ObservationSiteLocationDao extends AbstractSqlDao<ObservationSiteLo
 
     public List<ObservationSiteLocation> listAll() {
         List<ObservationSiteLocation> result = new ArrayList<ObservationSiteLocation>();
-        result.addAll(listUseLocationManagerObservationSiteLocations());
+
+        result.addAll(listLocationProviderObservationSiteLocations());
         result.addAll(listChooseObservationSiteLocation());
+
         return result;
     }
 
-    public List<ObservationSiteLocation> listUseLocationManagerObservationSiteLocations() {
+    public List<ObservationSiteLocation> listLocationProviderObservationSiteLocations() {
         List<ObservationSiteLocation> locations = new ArrayList<ObservationSiteLocation>();
-
-        locations.add(newInstance(ObservationSiteLocation.ID_GPS, "0°0'", "0°0'", "0°0'", TimeZone.getDefault().getID(), "GPS")); // XXX strings.xml
-        locations.add(newInstance(ObservationSiteLocation.ID_NETWORK, "0°0'", "0°0'", "0°0'", TimeZone.getDefault().getID(), "network")); // XXX strings.xml
-
+        locations.add(newInstance(ObservationSiteLocationResolverType.GPS, "0°0'", "0°0'", "0°0'", TimeZone.getDefault().getID(), "現在地(GPS)")); // XXX strings.xml
+        locations.add(newInstance(ObservationSiteLocationResolverType.NETWORK, "0°0'", "0°0'", "0°0'", TimeZone.getDefault().getID(), "現在地(簡易GPS)")); // XXX
+                                                                                                                                                      // strings.xml
         return locations;
+    }
+
+    private ObservationSiteLocation newInstance(ObservationSiteLocationResolverType resolverType, String longitude, String latitude, String altitude, String timezoneName, String name) {
+        ObservationSiteLocation result = new ObservationSiteLocation(  //
+                StarLocationUtil.convertAngleStringToFloat(latitude),  // 緯度
+                StarLocationUtil.convertAngleStringToFloat(longitude), // 経度
+                StarLocationUtil.convertAngleStringToFloat(altitude)); // 高度
+        result.setId(resolverType == ObservationSiteLocationResolverType.GPS ? ObservationSiteLocation.ID_GPS : ObservationSiteLocation.ID_NETWORK);
+        result.setResolverType(resolverType);
+        result.setName(name);
+        result.setTimeZone(TimeZone.getTimeZone(timezoneName));
+        return result;
     }
 
     // @see http://www.gsi.go.jp/KOKUJYOHO/center.htm
@@ -75,6 +88,7 @@ public class ObservationSiteLocationDao extends AbstractSqlDao<ObservationSiteLo
                 StarLocationUtil.convertAngleStringToFloat(longitude), // 経度
                 StarLocationUtil.convertAngleStringToFloat(altitude)); // 高度
         result.setId(id);
+        result.setResolverType(ObservationSiteLocationResolverType.LIST_CHOOSE);
         result.setName(name);
         result.setTimeZone(TimeZone.getTimeZone(timezoneName));
         return result;

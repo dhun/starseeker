@@ -12,9 +12,7 @@ import android.content.Context;
  * @author jun
  * 
  */
-public class ObservationSiteLocationChooseResolver implements IObservationSiteLocationResolver {
-    /** 観測地点の位置を解決できたことの通知を受け取るリスナ */
-    private ObservationSiteLocationResolverListener onResolveObservationSiteLocationListener;
+public class ObservationSiteLocationChooseResolver extends AbstractObservationSiteLocationResolver {
 
     private ObservationSiteLocation location;
 
@@ -24,6 +22,7 @@ public class ObservationSiteLocationChooseResolver implements IObservationSiteLo
      * @param context Androidコンテキスト
      */
     public ObservationSiteLocationChooseResolver(Context context) {
+        super(context, ObservationSiteLocationResolverType.LIST_CHOOSE);
     }
 
     public void setObservationSiteLocation(ObservationSiteLocation location) {

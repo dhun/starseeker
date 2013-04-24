@@ -5,6 +5,8 @@ package jp.gr.java_conf.dhun.starseeker.system.persistence.entity;
 
 import java.util.TimeZone;
 
+import jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location.IObservationSiteLocationResolver.ObservationSiteLocationResolverType;
+
 /**
  * 観測地点の位置.<br/>
  * 精度はLocationListenerから取得できる値と同じdouble.
@@ -18,6 +20,7 @@ public class ObservationSiteLocation {
     public static final int ID_NETWORK = -2; // NETWORKを利用した観測地点のID
 
     private Integer id;         // ID
+    private ObservationSiteLocationResolverType resolverType;
 
     private double latitude;    // 緯度
     private double longitude;   // 経度
@@ -109,6 +112,21 @@ public class ObservationSiteLocation {
      */
     public void setId(Integer id) {
         this.id = id;
+        ;
+    }
+
+    /**
+     * 観測地点リゾルバの種別を取得します.<br>
+     */
+    public ObservationSiteLocationResolverType getResolverType() {
+        return resolverType;
+    }
+
+    /**
+     * 観測地点リゾルバの種別を取得します.<br>
+     */
+    public void setResolverType(ObservationSiteLocationResolverType resolverType) {
+        this.resolverType = resolverType;
         ;
     }
 

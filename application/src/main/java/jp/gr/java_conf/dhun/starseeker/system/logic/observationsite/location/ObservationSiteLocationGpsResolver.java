@@ -20,12 +20,7 @@ import android.os.Bundle;
  * @author jun
  * 
  */
-public class ObservationSiteLocationGpsResolver implements IObservationSiteLocationResolver, LocationListener {
-
-    private final LocationManager locationManager;
-    private final ObservationSiteLocationResolverType locationProviderType;
-
-    private ObservationSiteLocationResolverListener onResolveObservationSiteLocationListener;
+public class ObservationSiteLocationGpsResolver extends AbstractObservationSiteLocationResolver implements LocationListener {
 
     /**
      * コンストラクタ.<br/>
@@ -34,8 +29,7 @@ public class ObservationSiteLocationGpsResolver implements IObservationSiteLocat
      * @param locationProviderType 位置プロバイダの種類
      */
     public ObservationSiteLocationGpsResolver(Context context, ObservationSiteLocationResolverType locationProviderType) {
-        this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        this.locationProviderType = locationProviderType;
+        super(context, locationProviderType);
     }
 
     // ********************************************************************************
@@ -48,6 +42,20 @@ public class ObservationSiteLocationGpsResolver implements IObservationSiteLocat
 
     @Override
     public void resume() {
+        boolean debug = true;
+        if (debug) {
+            try {
+                Thread.sleep(1000 * 5);
+            } catch (InterruptedException e) {
+            }
+            Location location = new Location("mock");
+            location.setAltitude(0.0);
+            location.setLatitude(50.0);
+            location.setLongitude(100.0);
+            onLocationChanged(location);
+            return;
+        }
+
         if (null == locationManager) {
             throw new IllegalStateException("locationManager must be null.");
         }
@@ -88,11 +96,6 @@ public class ObservationSiteLocationGpsResolver implements IObservationSiteLocat
 
         LogUtils.i(ObservationSiteLocationGpsResolver.class, "位置情報プロバイダによる位置情報の取得を停止します.");
         locationManager.removeUpdates(this);
-    }
-
-    @Override
-    public void setObservationSiteLocationResolverListener(ObservationSiteLocationResolverListener listener) {
-        this.onResolveObservationSiteLocationListener = listener;
     }
 
     // ********************************************************************************
