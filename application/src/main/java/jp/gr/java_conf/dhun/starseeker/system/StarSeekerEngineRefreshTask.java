@@ -104,11 +104,12 @@ public class StarSeekerEngineRefreshTask extends AsyncTask<StarSeekerEngineConfi
         basedCalendar.setTime(starSeekerEngineConfig.getCoordinatesCalculateBaseDate());
         Calendar localCalendar = DateTimeUtils.toSameDateTime(basedCalendar, observationSiteLocation.getTimeZone());
 
-        LogUtils.i(getClass(), String.format("緯度=[%6.2f], 経度=[%6.2f], 日時=[%tT], 等級=[%3.2f]" //
+        LogUtils.i(getClass(), String.format("等級=[%3.2f], 緯度=[%6.2f], 経度=[%6.2f], 日時=[%tT], タイムゾーン=[%s]" //
+                , starSeekerEngineConfig.getExtractUpperStarMagnitude() //
                 , observationSiteLocation.getLongitude() //
                 , observationSiteLocation.getLatitude() //
                 , localCalendar.getTime() //
-                , starSeekerEngineConfig.getExtractUpperStarMagnitude() //
+                , observationSiteLocation.getTimeZone().getDisplayName() //
                 ));
 
         // エンジンの設定
