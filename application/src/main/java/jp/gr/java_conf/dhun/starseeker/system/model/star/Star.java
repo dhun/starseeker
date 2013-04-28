@@ -10,6 +10,7 @@ import java.util.Set;
 
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarData;
 import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
+import android.annotation.SuppressLint;
 
 /**
  * 星.<br/>
@@ -244,9 +245,11 @@ public class Star {
         this.displayText = displayText;
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public String toString() {
-        return String.format("赤経(α)=[%s], 赤緯(δ)=[%s], 方位(A)=[%s], 高度(h)=[%s], 等級=[%4.2f], 名前=[%s]" //
+        return String.format("HIP=[%d], 赤経(α)=[%s], 赤緯(δ)=[%s], 方位(A)=[%s], 高度(h)=[%s], 等級=[%4.2f], 名前=[%s]" //
+                , getHipNumber() //
                 , StarLocationUtil.convertAngleFloatToString(getRightAscension())  //
                 , StarLocationUtil.convertAngleFloatToString(getDeclination())     //
                 , StarLocationUtil.convertAngleFloatToString(getAzimuth())         //

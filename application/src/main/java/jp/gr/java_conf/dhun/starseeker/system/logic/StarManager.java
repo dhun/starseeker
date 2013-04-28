@@ -150,7 +150,7 @@ public class StarManager {
             byMagnitudeExtractStars.put(magnitude, starSet);
 
             for (StarData entity : starDataDao.findByMagnitudeRange(magnitude)) {
-                Star star = new Star(entity);
+                Star star = findExtractedStar(starDataDao, entity.getHipNumber());
                 starSet.add(star);
                 if (byHipNumberExtractStars.containsKey(star.getHipNumber()) == false) {
                     byHipNumberExtractStars.put(star.getHipNumber(), star);
@@ -421,8 +421,10 @@ public class StarManager {
                 StarMagnitude magnitude = e.getKey();
                 if (magnitude.getRoughMagnitude() <= extractStarMagnitude.getRoughMagnitude()) {
                     StarSet starSet = e.getValue();
-                    targetStars.put(magnitude, starSet);
-                    targetConstellations.addAll(starSet.getRelatedConstellations());
+                    if (!starSet.isEmpty()) {
+                        targetStars.put(magnitude, starSet);
+                        targetConstellations.addAll(starSet.getRelatedConstellations());
+                    }
                 }
             }
 
@@ -431,6 +433,7 @@ public class StarManager {
                 for (Star componentStar : relatedConstellation.getComponentStars()) {
                     StarMagnitude magnitude = new StarMagnitude(componentStar.getMagnitude());
                     if (magnitude.getRoughMagnitude() <= extractStarMagnitude.getRoughMagnitude()) {
+                        // 「指定された等級以下の星を抽出」で抽出済のためスキップ
                         continue;
                     }
 
