@@ -6,6 +6,7 @@ package jp.gr.java_conf.dhun.starseeker.ui.dialog;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.listener.OnChooseDataListener;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 
 /**
@@ -23,6 +24,8 @@ public abstract class AbstractChooseDataDialogBuilder<T> {
     protected Integer dialogId = null;
     protected String dialogTitle;
     protected OnChooseDataListener<T> onChooseDataListener;
+
+    protected Dialog dialog;
 
     /**
      * コンストラクタ
@@ -71,6 +74,7 @@ public abstract class AbstractChooseDataDialogBuilder<T> {
                 activity.removeDialog(dialogId);
             }
         });
+        this.dialog = dialog;
         return dialog;
     }
 

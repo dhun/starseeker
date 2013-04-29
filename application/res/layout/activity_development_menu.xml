@@ -14,6 +14,12 @@
         android:orientation="vertical" >
 
         <Button
+            android:id="@+id/chooseSeekStarActivityButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="探索する星の選択ダイアログ" />
+
+        <Button
             android:id="@+id/resolveTerminalStateButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

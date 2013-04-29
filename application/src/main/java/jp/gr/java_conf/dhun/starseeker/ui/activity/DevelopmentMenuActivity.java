@@ -13,6 +13,7 @@ public class DevelopmentMenuActivity extends Activity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_development_menu);
 
+        findViewById(R.id.chooseSeekStarActivityButton).setOnClickListener(this);
         findViewById(R.id.resolveTerminalStateButton).setOnClickListener(this);
         findViewById(R.id.resolveObservationSiteByGpsActivity).setOnClickListener(this);
         findViewById(R.id.resolveObservationSiteByManualActivity).setOnClickListener(this);
@@ -27,6 +28,10 @@ public class DevelopmentMenuActivity extends Activity implements View.OnClickLis
         Intent intent;
 
         switch (view.getId()) {
+        case R.id.chooseSeekStarActivityButton:
+            intent = new Intent(this, ChooseSeekStarActivity.class);
+            startActivity(intent);
+            break;
         case R.id.resolveTerminalStateButton:
             intent = new Intent(this, ResolveTerminalStateActivity.class);
             startActivity(intent);

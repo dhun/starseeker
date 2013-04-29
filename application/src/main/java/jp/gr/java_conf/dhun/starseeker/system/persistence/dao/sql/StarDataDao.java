@@ -56,6 +56,14 @@ public class StarDataDao extends AbstractSqlDao<StarData, Integer> {
         return list(selection, selectionArgs, orderBy);
     }
 
+    public List<StarData> findByKanaNotNull() {
+        String selection = String.format("%s is not null", StarData.FieldNames.NAME);
+        String[] selectionArgs = {};
+        String orderBy = StarData.FieldNames.NAME;
+
+        return list(selection, selectionArgs, orderBy);
+    }
+
     @Override
     protected StarData convertToEntity(Cursor cursor) {
         StarData result = new StarData();

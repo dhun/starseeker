@@ -35,6 +35,9 @@
         </activity>
         <activity
             android:exported="false"
+            android:name=".ui.activity.ChooseSeekStarActivity" />
+        <activity
+            android:exported="false"
             android:name=".ui.activity.ResolveTerminalStateActivity" />
         <activity
             android:exported="false"

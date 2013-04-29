@@ -59,6 +59,14 @@ public class ConstellationDataDao extends AbstractSqlDao<ConstellationData, Stri
         return list(selection.toString(), selectionArgs, orderBy);
     }
 
+    public List<ConstellationData> findByKanaNotNull() {
+        String selection = String.format("%s is not null", ConstellationData.FieldNames.JAPANESE_KANA);
+        String[] selectionArgs = {};
+        String orderBy = ConstellationData.FieldNames.JAPANESE_KANA;
+
+        return list(selection, selectionArgs, orderBy);
+    }
+
     @Override
     protected ConstellationData convertToEntity(Cursor cursor) {
         ConstellationData result = new ConstellationData();
