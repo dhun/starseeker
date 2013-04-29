@@ -45,7 +45,7 @@ public class ObservationSiteLocationGpsResolver extends AbstractObservationSiteL
         boolean debug = true;   // FIXME 後で消すぞ
         if (debug) {
             try {
-                Thread.sleep(1000 * 5);
+                Thread.sleep(1000 * 1);
             } catch (InterruptedException e) {
             }
             Location location = new Location("mock");
