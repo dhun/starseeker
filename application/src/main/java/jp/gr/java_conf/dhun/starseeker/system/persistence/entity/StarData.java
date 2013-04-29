@@ -15,6 +15,7 @@ import android.annotation.SuppressLint;
  */
 public class StarData {
 
+    public static final float MAGNITUDE_FOR_DISPLAY_UPPER = 2.0f;   // テキスト表示する下限となる等級
     public static final float MAGGNITUDE_UNKNOWN_VALUE = 7.0f;
 
     private Integer hipNumber;      // HIP番号

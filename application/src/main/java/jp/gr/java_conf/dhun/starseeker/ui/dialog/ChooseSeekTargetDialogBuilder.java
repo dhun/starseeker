@@ -99,17 +99,21 @@ public class ChooseSeekTargetDialogBuilder extends AbstractChooseDataDialogBuild
     }
 
     private Map<String, List<SeekTarget<?>>> createExpandableListData() {
-        List<StarData> starDatas = null;
-        List<ConstellationData> constellationDatas = null;
+        // データ抽出
+        List<SeekTarget<?>> seekTargets = new ArrayList<SeekTarget<?>>();
 
         DatabaseHelper dbHelper = new DatabaseHelper(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         try {
-            StarDataDao starDataDao = new StarDataDao(db);
-            ConstellationDataDao constellationDataDao = new ConstellationDataDao(db);
+            for (StarData data : new StarDataDao(db).findByKanaNotNull()) {
+                if (data.getMagnitude() <= StarData.MAGNITUDE_FOR_DISPLAY_UPPER) {
+                    seekTargets.add(new SeekStarData(data));
+                }
+            }
+            for (ConstellationData data : new ConstellationDataDao(db).findByKanaNotNull()) {
+                seekTargets.add(new SeekConstellationData(data));
+            }
 
-            starDatas = starDataDao.findByKanaNotNull();
-            constellationDatas = constellationDataDao.findByKanaNotNull();
         } finally {
             db.close();
         }
@@ -126,49 +130,39 @@ public class ChooseSeekTargetDialogBuilder extends AbstractChooseDataDialogBuild
         kanaPrifixMap.put("ラ", new ArrayList<String>(Arrays.asList(new String[] { "ラ", "リ", "ル", "レ", "ロ" })));
         kanaPrifixMap.put("ワ", new ArrayList<String>(Arrays.asList(new String[] { "ワ", "ヲ", "ン" })));
 
+        // カナ毎に分類
         Map<String, List<SeekTarget<?>>> results = new LinkedHashMap<String, List<SeekTarget<?>>>();
-
-        Comparator<SeekTarget<?>> seekTargetcComparator = new Comparator<SeekTarget<?>>() {
-            @Override
-            public int compare(SeekTarget<?> lhs, SeekTarget<?> rhs) {
-                return lhs.getKana().compareTo(rhs.getKana());
-            }
-        };
 
         for (Entry<String, List<String>> kanaPrefixEntry : kanaPrifixMap.entrySet()) {
             List<String> kanaPrefixs = kanaPrefixEntry.getValue();
             List<SeekTarget<?>> result = new ArrayList<SeekTarget<?>>();
 
             int i = 0;
-            while (i < starDatas.size()) {
-                StarData data = starDatas.get(i);
-                String kanaPrifix = data.getName().substring(0, 1);
+            while (i < seekTargets.size()) {
+                SeekTarget<?> seekTarget = seekTargets.get(i);
+                String kanaPrifix = seekTarget.getKana().substring(0, 1);
                 if (kanaPrefixs.contains(kanaPrifix)) {
-                    starDatas.remove(i);
-                    SeekStarData seekTarget = new SeekStarData(data);
+                    seekTargets.remove(i);
                     result.add(seekTarget);
 
                 } else {
                     i++;
                 }
             }
-
-            i = 0;
-            while (i < constellationDatas.size()) {
-                ConstellationData data = constellationDatas.get(i);
-                String kanaPrifix = data.getJapaneseKana().substring(0, 1);
-                if (kanaPrefixs.contains(kanaPrifix)) {
-                    constellationDatas.remove(i);
-                    SeekConstellationData seekTarget = new SeekConstellationData(data);
-                    result.add(seekTarget);
-
-                } else {
-                    i++;
-                }
-            }
-
-            Collections.sort(result, seekTargetcComparator);
             results.put(kanaPrefixEntry.getKey(), result);
+        }
+
+        results.put("その他", new ArrayList<SeekTarget<?>>(seekTargets));
+
+        // カナ順にソート
+        Comparator<SeekTarget<?>> seekTargetcComparator = new Comparator<SeekTarget<?>>() {
+            @Override
+            public int compare(SeekTarget<?> lhs, SeekTarget<?> rhs) {
+                return lhs.getKana().compareTo(rhs.getKana());
+            }
+        };
+        for (List<SeekTarget<?>> list : results.values()) {
+            Collections.sort(list, seekTargetcComparator);
         }
 
         return results;

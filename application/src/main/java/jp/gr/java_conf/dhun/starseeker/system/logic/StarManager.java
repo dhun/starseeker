@@ -43,7 +43,6 @@ public class StarManager {
     private static final boolean DISPLAY_STAR_LOCATION = false;   // 星の地平座標を表示するかどうか
 
     private static final boolean APPEND_MOCK_STAR = false;              // モックデータを含めるかどうか. 通常はfalse
-    private static final float SET_DISPLAY_TEXT_LOWER_MAGNITUDE = 2;    // テキスト表示する下限となる等級
 
     // DAO関連
     private final DatabaseHelper databaseHelper;
@@ -251,7 +250,7 @@ public class StarManager {
         for (Star star : targetStarIterator) {
             starLocator.locate(star);
 
-            if (star.getMagnitude() <= SET_DISPLAY_TEXT_LOWER_MAGNITUDE && null != star.getName()) {
+            if (star.getMagnitude() <= StarData.MAGNITUDE_FOR_DISPLAY_UPPER && null != star.getName()) {
                 // 星の等級がしきい値以下で、かつ名前が設定されていれば画面にデータを表示
                 if (null != star.getMemo()) {
                     if (DISPLAY_STAR_LOCATION) {

@@ -60,11 +60,17 @@ public class ConstellationDataDao extends AbstractSqlDao<ConstellationData, Stri
     }
 
     public List<ConstellationData> findByKanaNotNull() {
-        String selection = String.format("%s is not null", ConstellationData.FieldNames.JAPANESE_KANA);
-        String[] selectionArgs = {};
-        String orderBy = ConstellationData.FieldNames.JAPANESE_KANA;
+        StringBuilder selection = new StringBuilder();
+        selection.append(ConstellationData.TABLE_NAME + "." + ConstellationData.FieldNames.JAPANESE_KANA + " is not null and ");
+        selection.append(ConstellationData.TABLE_NAME + "." + ConstellationData.FieldNames.CONSTELLATION_CODE + " in (");
+        selection.append("  select x." + ConstellationPathData.FieldNames.CONSTELLATION_CODE);
+        selection.append("    from " + ConstellationPathData.TABLE_NAME + " x");
+        selection.append(")");
 
-        return list(selection, selectionArgs, orderBy);
+        String[] selectionArgs = {};
+        String orderBy = null;
+
+        return list(selection.toString(), selectionArgs, orderBy);
     }
 
     @Override
