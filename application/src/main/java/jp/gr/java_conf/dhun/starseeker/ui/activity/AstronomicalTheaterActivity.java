@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import jp.gr.java_conf.dhun.starseeker.R;
+import jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location.AbstractObservationSiteLocationResolver;
 import jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location.IObservationSiteLocationResolver;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.StarSeekerConfigDao;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarSeekerConfig;
@@ -55,6 +56,8 @@ public class AstronomicalTheaterActivity extends Activity //
     private StarSeekerConfig config;
 
     private Date baseDate;
+    private IObservationSiteLocationResolver masterObservationSiteLocationResolver;
+    private IObservationSiteLocationResolver secondObservationSiteLocationResolver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,9 @@ public class AstronomicalTheaterActivity extends Activity //
         config.setCoordinatesCalculateBaseDate(new Date()); // 画面起動時はシステム日時
         // config.setCoordinatesCalculateBaseDate(new Date(2013 - 1900, 3, 17, 1, 29)); // FIXME 時刻を固定するときに解放
         // config.setCoordinatesCalculateBaseDate(new Date(2000 - 1900, 0, 1, 21, 00)); // FIXME 時刻を固定するときに解放
+
+        masterObservationSiteLocationResolver = AbstractObservationSiteLocationResolver.newResolver(this, config.getMasterObservationSiteLocationId());
+        secondObservationSiteLocationResolver = AbstractObservationSiteLocationResolver.newResolver(this, config.getSecondObservationSiteLocationId());
 
         Object nonConfigObject = getLastNonConfigurationInstance();
         if (null != nonConfigObject) {
@@ -130,7 +136,16 @@ public class AstronomicalTheaterActivity extends Activity //
         LogUtils.v(getClass(), "onResume");
         super.onResume();
 
+        IObservationSiteLocationResolver resolver;
+
+        resolver = masterObservationSiteLocationResolver;
+        masterObservationSiteLocationResolver = null;
+        masterTheaterView.refresh(resolver);
         masterTheaterView.resume();
+
+        resolver = secondObservationSiteLocationResolver;
+        secondObservationSiteLocationResolver = null;
+        secondTheaterView.refresh(resolver);
         secondTheaterView.resume();
     }
 

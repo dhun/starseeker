@@ -3,8 +3,11 @@
  */
 package jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location;
 
+import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.DatabaseHelper;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.ObservationSiteLocationDao;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSiteLocation;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.LocationManager;
 
 /**
@@ -36,7 +39,18 @@ public abstract class AbstractObservationSiteLocationResolver implements IObserv
             chooseResolver.setObservationSiteLocation(location);
             return chooseResolver;
         }
+    }
 
+    public static IObservationSiteLocationResolver newResolver(Context context, Integer observationSiteLocationId) {
+        DatabaseHelper dbHelper = new DatabaseHelper(context);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        try {
+            ObservationSiteLocationDao dao = new ObservationSiteLocationDao(db);
+            ObservationSiteLocation location = dao.findByPk(observationSiteLocationId);
+            return newResolver(context, location);
+        } finally {
+            db.close();
+        }
     }
 
     protected final LocationManager locationManager;
