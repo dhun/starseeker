@@ -16,6 +16,7 @@ import jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location.IOb
 import jp.gr.java_conf.dhun.starseeker.system.logic.terminal.orientations.ITerminalOrientationsCalculator;
 import jp.gr.java_conf.dhun.starseeker.system.logic.terminal.orientations.TerminalOrientationsCalculatorFactory;
 import jp.gr.java_conf.dhun.starseeker.system.model.StarSeekerEngineConfig;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSiteLocation;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -49,6 +50,8 @@ public class AstronomicalTheaterView extends RelativeLayout implements SurfaceHo
     private StarSeekerEngineConfig engineConfig;        // スターシーカーエンジンの設定
     private StarSeekerEngineRefreshTask refreshTask;    // スターシーカーエンジンの更新タスク
     private ScheduledExecutorService executorService;   // スターシーカーシステムのスレッドエクスキュータ
+
+    private ObservationSiteLocation observationSiteLocation;
 
     private ITerminalOrientationsCalculator terminalStateResolver;
 
@@ -129,6 +132,8 @@ public class AstronomicalTheaterView extends RelativeLayout implements SurfaceHo
                     return;
                 }
 
+                observationSiteLocation = getObservationSiteLocation();
+
                 // スレッドエクスキュータの設定
                 Runnable command = new Runnable() {
                     @Override
@@ -151,6 +156,7 @@ public class AstronomicalTheaterView extends RelativeLayout implements SurfaceHo
         };
         refreshTask.setStarSeekerEngine(starSeekerEngine);
         refreshTask.setObservationSiteLocationResolver(resolver);
+        refreshTask.setObservationSiteLocation(observationSiteLocation);
         refreshTask.execute(engineConfig);
     }
 

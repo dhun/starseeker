@@ -7,13 +7,10 @@ import java.util.Calendar;
 
 import jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location.IObservationSiteLocationResolver;
 import jp.gr.java_conf.dhun.starseeker.system.model.StarSeekerEngineConfig;
-import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.DatabaseHelper;
-import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.ObservationSiteLocationDao;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSiteLocation;
 import jp.gr.java_conf.dhun.starseeker.util.DateTimeUtils;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Handler;
 
@@ -48,6 +45,14 @@ public class StarSeekerEngineRefreshTask extends AsyncTask<StarSeekerEngineConfi
         }
     }
 
+    public void setObservationSiteLocation(ObservationSiteLocation location) {
+        this.observationSiteLocation = location;
+    }
+
+    public ObservationSiteLocation getObservationSiteLocation() {
+        return this.observationSiteLocation;
+    }
+
     protected void validateState(StarSeekerEngineConfig... configs) {
         if (1 != configs.length) {
             throw new IllegalArgumentException("configs's length must be one. length=[" + configs.length + "]");
@@ -56,9 +61,9 @@ public class StarSeekerEngineRefreshTask extends AsyncTask<StarSeekerEngineConfi
         if (null == starSeekerEngine) {
             throw new IllegalArgumentException("starSeekerEngine must be not null.");
         }
-        // if (null == observationSiteLocationResolver) {
-        // throw new IllegalArgumentException("observationSiteLocationResolver must be not null.");
-        // }
+        if (null == observationSiteLocationResolver && null == observationSiteLocation) {
+            throw new IllegalArgumentException("observationSiteLocationResolver or observationSiteLocation must be not null.");
+        }
     }
 
     @Override
@@ -86,17 +91,6 @@ public class StarSeekerEngineRefreshTask extends AsyncTask<StarSeekerEngineConfi
                 if (observationSiteLocation == null) {
                     return false;
                 }
-            }
-
-        } else {
-            // XXX ここでDBはいやだな
-            DatabaseHelper dbHelper = new DatabaseHelper(context);
-            SQLiteDatabase db = dbHelper.getReadableDatabase();
-            try {
-                ObservationSiteLocationDao dao = new ObservationSiteLocationDao(db);
-                observationSiteLocation = dao.findByPk(starSeekerEngineConfig.getObservationSiteLocationId());
-            } finally {
-                db.close();
             }
         }
 
