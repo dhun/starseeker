@@ -200,6 +200,10 @@ public class StarSeekerEngine implements //
      * 演算処理を行います.<br/>
      */
     public void calculate() {
+        if (null == astronomicalTheater) {  // FIXME システムエラーを無理やり抑制. 本当はノイズ
+            return;
+        }
+
         fpsCounter.start();
 
         try {
@@ -224,6 +228,10 @@ public class StarSeekerEngine implements //
      * @param canvas Androidキャンバス
      */
     public void draw(Canvas canvas) {
+        if (null == astronomicalTheater) {  // FIXME システムエラーを無理やり抑制. 本当はノイズ
+            return;
+        }
+
         try {
             astronomicalTheater.draw(canvas);
             for (Star star : starManager.provideTargetStars()) {
