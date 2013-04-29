@@ -168,7 +168,7 @@ public class AstronomicalTheaterView extends RelativeLayout implements SurfaceHo
     public void resume() {
         // 再開
         if (getVisibility() == View.VISIBLE) {
-            refresh();
+            // refresh();
             // starSeekerEngine.resume(); // エンジン
             terminalStateResolver.prepare(); // 端末ステートリゾルバ
         }
@@ -198,7 +198,7 @@ public class AstronomicalTheaterView extends RelativeLayout implements SurfaceHo
         LogUtils.d(getClass(), "surfaceCreated.");
 
         // スターシーカーシステムのスレッドエクスキュータを設定
-        executorService = null;
+        // executorService = null;
 
     }
 
