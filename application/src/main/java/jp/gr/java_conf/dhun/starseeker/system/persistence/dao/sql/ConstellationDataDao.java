@@ -65,6 +65,7 @@ public class ConstellationDataDao extends AbstractSqlDao<ConstellationData, Stri
         result.setConstellationCode(cursor.getString(cursor.getColumnIndex(ConstellationData.FieldNames.CONSTELLATION_CODE)));
         result.setConstellationName(cursor.getString(cursor.getColumnIndex(ConstellationData.FieldNames.CONSTELLATION_NAME)));
         result.setJapaneseName(cursor.getString(cursor.getColumnIndex(ConstellationData.FieldNames.JAPANESE_NAME)));
+        result.setJapaneseKana(cursor.getString(cursor.getColumnIndex(ConstellationData.FieldNames.JAPANESE_KANA)));
         result.setRightAscension(cursor.getFloat(cursor.getColumnIndex(ConstellationData.FieldNames.RIGHT_ASCENSION)));
         result.setDeclination(cursor.getFloat(cursor.getColumnIndex(ConstellationData.FieldNames.DECLINATION)));
 

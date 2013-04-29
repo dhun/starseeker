@@ -17,7 +17,8 @@ public class ConstellationData {
 
     private String constellationCode;   // 星座コード(略符)
     private String constellationName;   // 星座名(学名)
-    private String japaneseName;        // 星座名(日本語)
+    private String japaneseName;        // 日本語名称
+    private String japaneseKana;        // 日本語カナ
     private float rightAscension;       // 赤経(α)の数値表現
     private float declination;          // 赤緯(δ)の数値表現
 
@@ -56,17 +57,31 @@ public class ConstellationData {
     }
 
     /**
-     * 星座名(日本語)を取得します.<br/>
+     * 日本語名称を取得します.<br/>
      */
     public String getJapaneseName() {
         return japaneseName;
     }
 
     /**
-     * 星座名(日本語)を設定します.<br/>
+     * 日本語名称を設定します.<br/>
      */
     public void setJapaneseName(String japaneseName) {
         this.japaneseName = japaneseName;
+    }
+
+    /**
+     * 日本語カナを取得します.<br/>
+     */
+    public String getJapaneseKana() {
+        return japaneseKana;
+    }
+
+    /**
+     * 日本語カナを設定します.<br/>
+     */
+    public void setJapaneseKana(String japaneseKana) {
+        this.japaneseKana = japaneseKana;
     }
 
     /**
@@ -142,9 +157,10 @@ public class ConstellationData {
         public static final String CONSTELLATION_CODE = "constellation_code";
         public static final String CONSTELLATION_NAME = "constellation_name";
         public static final String JAPANESE_NAME = "japanese_name";
+        public static final String JAPANESE_KANA = "japanese_kana";
         public static final String RIGHT_ASCENSION = "right_ascension";
         public static final String DECLINATION = "declination";
 
-        public static final String[] ALL_COLUMNS = { CONSTELLATION_CODE, CONSTELLATION_NAME, JAPANESE_NAME, RIGHT_ASCENSION, DECLINATION };
+        public static final String[] ALL_COLUMNS = { CONSTELLATION_CODE, CONSTELLATION_NAME, JAPANESE_NAME, JAPANESE_KANA, RIGHT_ASCENSION, DECLINATION };
     }
 }
