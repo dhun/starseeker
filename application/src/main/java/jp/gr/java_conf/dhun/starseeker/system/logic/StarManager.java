@@ -254,24 +254,26 @@ public class StarManager {
                 // 星の等級がしきい値以下で、かつ名前が設定されていれば画面にデータを表示
                 if (null != star.getMemo()) {
                     if (DISPLAY_STAR_LOCATION) {
-                        star.setDisplayText(String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s], 備考=[%s]" //
+                        star.setDisplayText(String.format("%s (%s), 方位(A)=[%s], 高度(h)=[%s]" //
+                                , star.getName()
+                                , star.getMemo()
                                 , angleFormat.format(star.getAzimuth())  // 方位(A)
                                 , angleFormat.format(star.getAltitude()) // 高度(h)
-                                , star.getName()
-                                , star.getMemo()));
+                                ));
                     } else {
-                        star.setDisplayText(String.format("名前=[%s], 備考=[%s]" //
+                        star.setDisplayText(String.format("%s (%s)" //
                                 , star.getName()
                                 , star.getMemo()));
                     }
                 } else {
                     if (DISPLAY_STAR_LOCATION) {
-                        star.setDisplayText(String.format("方位(A)=[%s], 高度(h)=[%s], 名前=[%s]" //
+                        star.setDisplayText(String.format("%s, 方位(A)=[%s], 高度(h)=[%s]" //
+                                , star.getName()
                                 , angleFormat.format(star.getAzimuth())  // 方位(A)
                                 , angleFormat.format(star.getAltitude()) // 高度(h)
-                                , star.getName()));
+                                ));
                     } else {
-                        star.setDisplayText(String.format("名前=[%s]" //
+                        star.setDisplayText(String.format("%s" //
                                 , star.getName()));
                     }
                 }
