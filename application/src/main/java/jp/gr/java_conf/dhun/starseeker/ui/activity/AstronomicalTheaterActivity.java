@@ -108,14 +108,14 @@ public class AstronomicalTheaterActivity extends Activity //
         setSecondObservationCondition();
 
         // クリックイベントの設定
-        findViewById(R.id.zoomControls).setOnClickListener(this);
+        // findViewById(R.id.zoomControls).setOnClickListener(this);
         findViewById(R.id.chooseMagnitudeButton).setOnClickListener(this);
         findViewById(R.id.chooseObservationSiteTimeButton).setOnClickListener(this);
         findViewById(R.id.chooseMasterObservationSiteLocationButton).setOnClickListener(this);
-        findViewById(R.id.settingsButton).setOnClickListener(this);
+        // findViewById(R.id.settingsButton).setOnClickListener(this);
         findViewById(R.id.switchStarLocateIndicatorButton).setOnClickListener(this);
-        findViewById(R.id.photographButton).setOnClickListener(this);
-        findViewById(R.id.imageButton2).setOnClickListener(this);
+        // findViewById(R.id.photographButton).setOnClickListener(this);
+        // findViewById(R.id.imageButton2).setOnClickListener(this);
         switchShowSecondTheaterButton.setOnClickListener(this);
         chooseSecondObservationSiteLocationButton.setOnClickListener(this);
         switchLockDisplayRotateButton.setOnClickListener(this);
@@ -166,12 +166,7 @@ public class AstronomicalTheaterActivity extends Activity //
 
     @Override
     public void onClick(View view) {
-        String name;
         switch (view.getId()) {
-        case R.id.zoomControls:
-            name = "zoomControls";
-            break;
-
         case R.id.chooseMagnitudeButton:
             showDialog(DIALOG_CHOOSE_EXTRACT_LOWER_STAR_MAGNITUDE);
             return;
@@ -187,9 +182,9 @@ public class AstronomicalTheaterActivity extends Activity //
             showDialog(DIALOG_CHOOSE_OBSERVATION_SITE_LOCATION, bundle);
             return;
 
-        case R.id.settingsButton:
-            name = "settingsButton";
-            break;
+            // case R.id.settingsButton:
+            // name = "settingsButton";
+            // break;
 
         case R.id.switchStarLocateIndicatorButton:
             showDialog(DIALOG_CHOOSE_SEEK_TARGET_);
@@ -199,22 +194,21 @@ public class AstronomicalTheaterActivity extends Activity //
             changeLockScreenRotateWithToast(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             return;
 
-        case R.id.photographButton:
-            name = "photographButton";
-            break;
+            // case R.id.photographButton:
+            // name = "photographButton";
+            // break;
 
         case R.id.switchShowSecondTheaterButton:
             setSecondTheaterViewVisibleWithRefresh(secondTheaterView.getVisibility() != View.VISIBLE);
             return;
 
-        case R.id.imageButton2:
-            name = "imageButton2";
-            break;
+            // case R.id.imageButton2:
+            // name = "imageButton2";
+            // break;
+
         default:
             throw new IllegalStateException("unknown view.id. value=[" + view.getId() + "]");
         }
-
-        Toast.makeText(this, name + "が押されました", Toast.LENGTH_SHORT).show();
     }
 
     @Override
