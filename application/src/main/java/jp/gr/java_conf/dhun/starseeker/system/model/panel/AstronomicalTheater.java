@@ -72,7 +72,7 @@ public class AstronomicalTheater {
         normalStarRenderer = new StarRenderer();
 
         Paint targetPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        targetPaint.setColor(Color.GREEN);
+        targetPaint.setColor(Color.rgb(255, 255, 0));
         targetStarRenderer = new StarRenderer();
         targetStarRenderer.setNamePaint(targetPaint);
         targetStarRenderer.setStarPaint(targetPaint);

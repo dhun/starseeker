@@ -219,16 +219,11 @@ public class StarSeekerEngine implements //
         }
     };
 
-    private final Paint targetStarPaint = new Paint() {
-        {
-            setFlags(Paint.ANTI_ALIAS_FLAG);
-            setColor(Color.GREEN);
-        }
-    };
     private final Paint targetPathPaint = new Paint() {
         {
             setFlags(Paint.ANTI_ALIAS_FLAG);
-            setColor(Color.GREEN);
+            setColor(Color.rgb(255, 255, 0));
+            setStrokeWidth(3);
         }
     };
 
