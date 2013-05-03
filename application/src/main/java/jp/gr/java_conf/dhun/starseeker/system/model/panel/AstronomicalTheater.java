@@ -108,7 +108,7 @@ public class AstronomicalTheater {
         } else {
             theaterWidth = DEFAULT_PORTRAIT_THEATER_WIDTH;
         }
-        theaterHeight = (int) ((double) displayHeight / displayWidth * theaterWidth / 3); // FIXME 縦横比は適当;
+        theaterHeight = (int) ((double) displayHeight / displayWidth * theaterWidth);
         setTheaterSize(theaterWidth, theaterHeight);
     }
 
