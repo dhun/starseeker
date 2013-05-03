@@ -42,19 +42,19 @@ public class ObservationSiteLocationGpsResolver extends AbstractObservationSiteL
 
     @Override
     public void resume() {
-        boolean debug = true;   // FIXME 後で消すぞ
-        if (debug) {
-            try {
-                Thread.sleep(1000 * 1);
-            } catch (InterruptedException e) {
-            }
-            Location location = new Location("mock");
-            location.setAltitude(0.0);
-            location.setLatitude(50.0);
-            location.setLongitude(100.0);
-            onLocationChanged(location);
-            return;
-        }
+        // boolean debug = true; // FIXME 後で消すぞ
+        // if (debug) {
+        // try {
+        // Thread.sleep(1000 * 1);
+        // } catch (InterruptedException e) {
+        // }
+        // Location location = new Location("mock");
+        // location.setAltitude(0.0);
+        // location.setLatitude(50.0);
+        // location.setLongitude(100.0);
+        // onLocationChanged(location);
+        // return;
+        // }
 
         if (null == locationManager) {
             throw new IllegalStateException("locationManager must be null.");
