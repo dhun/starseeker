@@ -14,7 +14,9 @@ import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarSeekerConfi
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseExtractStarMagnitudeDialogBuilder;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseObservationSiteLocationDialogBuilder;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseObservationSiteTimeDialogBuilder;
+import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseSeekTargetDialogBuilder;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.listener.OnChooseDataListener;
+import jp.gr.java_conf.dhun.starseeker.ui.dto.SeekTarget;
 import jp.gr.java_conf.dhun.starseeker.ui.view.AstronomicalTheaterView;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.app.Activity;
@@ -43,6 +45,7 @@ public class AstronomicalTheaterActivity extends Activity //
     private static final int DIALOG_CHOOSE_OBSERVATION_SITE_TIME = 1;           // 観測地点の時刻選択ダイアログ
     private static final int DIALOG_CHOOSE_OBSERVATION_SITE_LOCATION = 2;       // 観測地点の位置選択ダイアログ
     private static final int DIALOG_CHOOSE_EXTRACT_LOWER_STAR_MAGNITUDE = 3;    // 抽出する等級の選択ダイアログ
+    private static final int DIALOG_CHOOSE_SEEK_TARGET_ = 4;                    // 探索する星の選択ダイアログ
 
     // ビュー
     private AstronomicalTheaterView masterTheaterView;
@@ -189,8 +192,8 @@ public class AstronomicalTheaterActivity extends Activity //
             break;
 
         case R.id.switchStarLocateIndicatorButton:
-            name = "switchStarLocateIndicatorButton";
-            break;
+            showDialog(DIALOG_CHOOSE_SEEK_TARGET_);
+            return;
 
         case R.id.switchLockDisplayRotateButton:
             changeLockScreenRotateWithToast(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
@@ -216,6 +219,22 @@ public class AstronomicalTheaterActivity extends Activity //
 
     @Override
     protected Dialog onCreateDialog(final int id, Bundle bundle) {
+        if (id == DIALOG_CHOOSE_SEEK_TARGET_) {
+            ChooseSeekTargetDialogBuilder builder = new ChooseSeekTargetDialogBuilder(this);
+            builder.setDialogId(id);
+            builder.setOnChooseDataListener(new OnChooseDataListener<SeekTarget<?>>() {
+                @Override
+                public void onChooseData(SeekTarget<?> data) {
+                    config.setSeekTargetType(data.getSeekTargetType());
+                    config.setSeekTargetId(data.getSeekTargetId());
+
+                    masterTheaterView.configureSeektarget(data).refresh();
+                    secondTheaterView.configureSeektarget(data).refresh();
+                }
+            });
+            return builder.create();
+        }
+
         if (id == DIALOG_CHOOSE_OBSERVATION_SITE_TIME) {
             // 観測地点の時刻選択ダイアログ
             ChooseObservationSiteTimeDialogBuilder builder = new ChooseObservationSiteTimeDialogBuilder(this);

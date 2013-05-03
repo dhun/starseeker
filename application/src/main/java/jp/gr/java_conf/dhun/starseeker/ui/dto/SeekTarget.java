@@ -28,6 +28,8 @@ public abstract class SeekTarget<T> {
         return seekTarget;
     }
 
+    public abstract String getSeekTargetId();
+
     public abstract String getName();
 
     public abstract String getKana();
@@ -39,6 +41,11 @@ public abstract class SeekTarget<T> {
     public static class SeekStarData extends SeekTarget<StarData> {
         public SeekStarData(StarData data) {
             super(SeekTargetType.STAR, data);
+        }
+
+        @Override
+        public String getSeekTargetId() {
+            return getSeekTarget().getHipNumber().toString();
         }
 
         @Override
@@ -55,6 +62,11 @@ public abstract class SeekTarget<T> {
     public static class SeekConstellationData extends SeekTarget<ConstellationData> {
         public SeekConstellationData(ConstellationData data) {
             super(SeekTargetType.CONSTELLATION, data);
+        }
+
+        @Override
+        public String getSeekTargetId() {
+            return getSeekTarget().getConstellationCode();
         }
 
         @Override

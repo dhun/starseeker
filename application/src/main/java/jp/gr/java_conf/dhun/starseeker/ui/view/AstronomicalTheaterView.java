@@ -17,6 +17,7 @@ import jp.gr.java_conf.dhun.starseeker.system.logic.terminal.orientations.ITermi
 import jp.gr.java_conf.dhun.starseeker.system.logic.terminal.orientations.TerminalOrientationsCalculatorFactory;
 import jp.gr.java_conf.dhun.starseeker.system.model.StarSeekerEngineConfig;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSiteLocation;
+import jp.gr.java_conf.dhun.starseeker.ui.dto.SeekTarget;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -104,6 +105,11 @@ public class AstronomicalTheaterView extends RelativeLayout implements SurfaceHo
 
     public AstronomicalTheaterView configureExtractLowerstarMagnitude(float magnitude) {
         engineConfig.setExtractUpperStarMagnitude(magnitude);
+        return this;
+    }
+
+    public AstronomicalTheaterView configureSeektarget(SeekTarget<?> seekTarget) {
+        engineConfig.setSeekTarget(seekTarget);
         return this;
     }
 

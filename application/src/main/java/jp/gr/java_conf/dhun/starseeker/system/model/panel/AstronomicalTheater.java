@@ -52,7 +52,9 @@ public class AstronomicalTheater {
     private final Paint backgroundPaint;
 
     // レンダラ
-    private final StarRenderer starRenderer;
+    private Integer targetHipNumber;
+    private final StarRenderer normalStarRenderer;
+    private final StarRenderer targetStarRenderer;
     private final IAzimuthIndicator azimuthIndicator;
     private final IAltitudeIndicator altitudeIndicator;
 
@@ -67,7 +69,14 @@ public class AstronomicalTheater {
         this.displayHeight = displayHeight;
 
         // レンダラ
-        starRenderer = new StarRenderer();
+        normalStarRenderer = new StarRenderer();
+
+        Paint targetPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        targetPaint.setColor(Color.GREEN);
+        targetStarRenderer = new StarRenderer();
+        targetStarRenderer.setNamePaint(targetPaint);
+        targetStarRenderer.setStarPaint(targetPaint);
+
         azimuthIndicator = new NumericAzimuthIndicator(displayWidth, displayHeight);
         altitudeIndicator = new NumericAltitudeIndicator(displayWidth, displayHeight);
 
@@ -115,6 +124,10 @@ public class AstronomicalTheater {
 
         azimuthIndicator.setTheaterWidthAngle(theaterWidth);
         altitudeIndicator.setTheaterHeightAngle(theaterHeight);
+    }
+
+    public void setSeekTargetHipNumber(Integer hipNumber) {
+        this.targetHipNumber = hipNumber;
     }
 
     /**
@@ -433,7 +446,11 @@ public class AstronomicalTheater {
         //
         // panel.remapDisplayCoordinates(star);
         if (star.isDisplayCoordinatesLocated()) {
-            starRenderer.drawStar(canvas, star);
+            if (targetHipNumber != null && targetHipNumber.equals(star.getHipNumber())) {
+                targetStarRenderer.drawStar(canvas, star);
+            } else {
+                normalStarRenderer.drawStar(canvas, star);
+            }
         }
     }
 

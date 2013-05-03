@@ -6,6 +6,7 @@ package jp.gr.java_conf.dhun.starseeker.system.persistence.dao;
 import java.util.Date;
 
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarSeekerConfig;
+import jp.gr.java_conf.dhun.starseeker.ui.dto.SeekTarget.SeekTargetType;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -27,6 +28,8 @@ public class StarSeekerConfigDao {
     private static final String KEY_EXTRACT_LOWER_STAR_MAGNITUDE = "extractLowerStarMagnitude";               // シアターに抽出するか等星の下限値
     private static final String KEY_MASTER_OBSERVATION_SITE_LOCATION_ID = "masterObservationSiteLocationId";  // １つ目の天体シアターに対する観測地点のID
     private static final String KEY_SECOND_OBSERVATION_SITE_LOCATION_ID = "secondObservationSiteLocationId";  // ２つ目の天体シアターに対する観測地点のID
+    private static final String KEY_SEEK_TARGET_TYPE = "seekTargetType";                                      // 探索対象の種別
+    private static final String KEY_SEEK_TARGET_ID = "seekTargetId";                                          // 探索対象の識別子
 
     private final Context context;
 
@@ -62,6 +65,10 @@ public class StarSeekerConfigDao {
         config.setExtractLowerStarMagnitude(preferences.getFloat(KEY_EXTRACT_LOWER_STAR_MAGNITUDE, 2.0f));
         config.setMasterObservationSiteLocationId(preferences.getInt(KEY_MASTER_OBSERVATION_SITE_LOCATION_ID, 0));
         config.setSecondObservationSiteLocationId(preferences.getInt(KEY_SECOND_OBSERVATION_SITE_LOCATION_ID, 0));
+        if (preferences.contains(KEY_SEEK_TARGET_TYPE)) {
+            config.setSeekTargetType(SeekTargetType.valueOf(preferences.getString(KEY_SEEK_TARGET_TYPE, null)));
+            config.setSeekTargetId(preferences.getString(KEY_SEEK_TARGET_ID, null));
+        }
 
         return config;
     }
@@ -96,6 +103,8 @@ public class StarSeekerConfigDao {
         editor.putFloat(KEY_EXTRACT_LOWER_STAR_MAGNITUDE, config.getExtractLowerStarMagnitude());
         editor.putInt(KEY_MASTER_OBSERVATION_SITE_LOCATION_ID, config.getMasterObservationSiteLocationId());
         editor.putInt(KEY_SECOND_OBSERVATION_SITE_LOCATION_ID, config.getSecondObservationSiteLocationId());
+        editor.putString(KEY_SEEK_TARGET_TYPE, config.getSeekTargetType().name());
+        editor.putString(KEY_SEEK_TARGET_ID, config.getSeekTargetId().toString());
 
         editor.commit();
     }

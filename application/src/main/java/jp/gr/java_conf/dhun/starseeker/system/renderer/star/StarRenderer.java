@@ -18,8 +18,8 @@ import android.text.TextPaint;
 public class StarRenderer {
 
     // 描画系
-    private final Paint namePaint;
-    private final Paint starPaint;
+    private Paint namePaint;
+    private Paint starPaint;
 
     public StarRenderer() {
         namePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
@@ -29,6 +29,14 @@ public class StarRenderer {
         starPaint.setColor(Color.WHITE);
     }
 
+    public void setNamePaint(Paint paint) {
+        this.namePaint = paint;
+    }
+
+    public void setStarPaint(Paint paint) {
+        this.starPaint = paint;
+    }
+
     /**
      * 指定された星をキャンバスへ描画します.<br/>
      * 
@@ -36,8 +44,6 @@ public class StarRenderer {
      * @param canvas キャンバス
      */
     public void drawStar(Canvas canvas, Star star) {
-        starPaint.setColor(resolveStarColor(star));
-
         final float radius = resolveStarRadius(star);
         canvas.drawCircle(star.getDisplayX(), star.getDisplayY(), radius, starPaint);
 
@@ -82,9 +88,5 @@ public class StarRenderer {
         } else {
             return 2;
         }
-    }
-
-    private int resolveStarColor(Star star) {
-        return Color.WHITE;
     }
 }

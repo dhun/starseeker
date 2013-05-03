@@ -5,6 +5,8 @@ package jp.gr.java_conf.dhun.starseeker.system.model;
 
 import java.util.Date;
 
+import jp.gr.java_conf.dhun.starseeker.ui.dto.SeekTarget;
+
 /**
  * スターシーカーエンジン設定のエンティティ
  * 
@@ -16,6 +18,7 @@ public class StarSeekerEngineConfig {
     private Date coordinatesCalculateBaseDate;                  // 星の座標計算の基準日時
     private Integer observationSiteLocationId;                  // 観測地点
     private float extractUpperStarMagnitude;                    // 抽出する星等級の上限値
+    private SeekTarget<?> seekTarget;                           // 探索対象
 
     /**
      * 星の座標計算の基準日時を取得します.<br/>
@@ -57,5 +60,19 @@ public class StarSeekerEngineConfig {
      */
     public void setExtractUpperStarMagnitude(float magnitude) {
         this.extractUpperStarMagnitude = magnitude;
+    }
+
+    /**
+     * 探索対象を取得します.<br/>
+     */
+    public SeekTarget<?> getSeekTarget() {
+        return seekTarget;
+    }
+
+    /**
+     * 探索対象を取得します.<br/>
+     */
+    public void setSeekTarget(SeekTarget<?> seekTarget) {
+        this.seekTarget = seekTarget;
     }
 }

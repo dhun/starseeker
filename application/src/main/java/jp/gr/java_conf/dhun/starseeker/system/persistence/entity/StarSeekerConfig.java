@@ -5,6 +5,8 @@ package jp.gr.java_conf.dhun.starseeker.system.persistence.entity;
 
 import java.util.Date;
 
+import jp.gr.java_conf.dhun.starseeker.ui.dto.SeekTarget.SeekTargetType;
+
 /**
  * スターシーカーシステム設定のエンティティ
  * 
@@ -22,6 +24,9 @@ public class StarSeekerConfig {
 
     private Integer masterObservationSiteLocationId;    // １つ目の天体シアターに対する観測地点のID
     private Integer secondObservationSiteLocationId;    // ２つ目の天体シアターに対する観測地点のID
+
+    private SeekTargetType seekTargetType;              // 探索対象の種別
+    private String seekTargetId;                        // 探索対象の識別子
 
     /**
      * 星の座標計算の基準日時を取得します.<br/>
@@ -105,5 +110,33 @@ public class StarSeekerConfig {
      */
     public void setSecondObservationSiteLocationId(Integer id) {
         this.secondObservationSiteLocationId = id;
+    }
+
+    /**
+     * 探索対象の種別を取得します.<br/>
+     */
+    public SeekTargetType getSeekTargetType() {
+        return seekTargetType;
+    }
+
+    /**
+     * 探索対象の種別を設定します.<br/>
+     */
+    public void setSeekTargetType(SeekTargetType seekTargetType) {
+        this.seekTargetType = seekTargetType;
+    }
+
+    /**
+     * 探索対象の識別子を取得します.<br>
+     */
+    public String getSeekTargetId() {
+        return seekTargetId;
+    }
+
+    /**
+     * 探索対象の識別子を設定します.<br>
+     */
+    public void setSeekTargetId(String seekTargetId) {
+        this.seekTargetId = seekTargetId;
     }
 }

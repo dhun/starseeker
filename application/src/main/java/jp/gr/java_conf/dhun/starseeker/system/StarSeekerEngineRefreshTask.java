@@ -109,6 +109,7 @@ public class StarSeekerEngineRefreshTask extends AsyncTask<StarSeekerEngineConfi
         // エンジンの設定
         starSeekerEngine.setObservationCondition(observationSiteLocation, localCalendar);
         starSeekerEngine.setExtractUpperStarMagnitude(starSeekerEngineConfig.getExtractUpperStarMagnitude());
+        starSeekerEngine.setSeekTarget(starSeekerEngineConfig.getSeekTarget());
 
         // 星の抽出
         starSeekerEngine.extract();

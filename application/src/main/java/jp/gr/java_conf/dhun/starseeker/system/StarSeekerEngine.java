@@ -17,6 +17,8 @@ import jp.gr.java_conf.dhun.starseeker.system.model.star.Constellation;
 import jp.gr.java_conf.dhun.starseeker.system.model.star.ConstellationPath;
 import jp.gr.java_conf.dhun.starseeker.system.model.star.Star;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ObservationSiteLocation;
+import jp.gr.java_conf.dhun.starseeker.ui.dto.SeekTarget;
+import jp.gr.java_conf.dhun.starseeker.ui.dto.SeekTarget.SeekTargetType;
 import jp.gr.java_conf.dhun.starseeker.util.DateTimeUtils;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.content.Context;
@@ -63,6 +65,10 @@ public class StarSeekerEngine implements //
     private String locationTitle;
 
     private boolean enabled;
+
+    private SeekTargetType seekTargetType;
+    private Integer seekTargetStarHipNumber;
+    private String seekTargetConsCode;
 
     /**
      * コンストラクタ
@@ -113,6 +119,25 @@ public class StarSeekerEngine implements //
      */
     public void setExtractUpperStarMagnitude(float magnitude) {
         starManager.setExtractUpperStarMagnitude(magnitude);
+    }
+
+    public void setSeekTarget(SeekTarget<?> seekTarget) {
+        this.seekTargetType = null;
+        this.seekTargetStarHipNumber = null;
+        this.seekTargetConsCode = null;
+
+        if (null == seekTarget) {
+            return;
+
+        } else {
+            this.seekTargetType = seekTarget.getSeekTargetType();
+
+            if (seekTargetType == SeekTargetType.STAR) {
+                this.seekTargetStarHipNumber = Integer.valueOf(seekTarget.getSeekTargetId());
+            } else {
+                this.seekTargetConsCode = seekTarget.getSeekTargetId();
+            }
+        }
     }
 
     /**
@@ -174,12 +199,6 @@ public class StarSeekerEngine implements //
     }
 
     // ＞＞＞ 開発中のコード
-    private final Paint paint = new Paint() {
-        {
-            setFlags(Paint.ANTI_ALIAS_FLAG);
-            setColor(Color.WHITE);
-        }
-    };
     private final NumberFormat decFormat = new DecimalFormat("0.0") {
         {
             setPositivePrefix("+");
@@ -187,10 +206,29 @@ public class StarSeekerEngine implements //
         }
     };
 
-    private final Paint pathPaint = new Paint() {
+    private final Paint normalStarPaint = new Paint() {
         {
             setFlags(Paint.ANTI_ALIAS_FLAG);
             setColor(Color.WHITE);
+        }
+    };
+    private final Paint normalPathPaint = new Paint() {
+        {
+            setFlags(Paint.ANTI_ALIAS_FLAG);
+            setColor(Color.WHITE);
+        }
+    };
+
+    private final Paint targetStarPaint = new Paint() {
+        {
+            setFlags(Paint.ANTI_ALIAS_FLAG);
+            setColor(Color.GREEN);
+        }
+    };
+    private final Paint targetPathPaint = new Paint() {
+        {
+            setFlags(Paint.ANTI_ALIAS_FLAG);
+            setColor(Color.GREEN);
         }
     };
 
@@ -234,14 +272,19 @@ public class StarSeekerEngine implements //
 
         try {
             astronomicalTheater.draw(canvas);
+
+            astronomicalTheater.setSeekTargetHipNumber(seekTargetStarHipNumber);
             for (Star star : starManager.provideTargetStars()) {
                 astronomicalTheater.draw(canvas, star);
             }
 
             // TODO 星座の座標補正が必要なので、このままではダメ
-            int i = 0; // FIXME ゴミコード
-            i = i + 1;
             for (Constellation constellation : starManager.provideTargetConstellations()) {
+                Paint pathPaint = normalPathPaint;
+                if (seekTargetConsCode != null && seekTargetConsCode.equals(constellation.getConstellationCode())) {
+                    pathPaint = targetPathPaint;
+                }
+
                 for (ConstellationPath path : constellation.getConstellationPaths()) {
                     Star fmStar = path.getFromStar();
                     Star toStar = path.getToStar();
@@ -252,12 +295,12 @@ public class StarSeekerEngine implements //
             }
 
             fpsCounter.finish();
-            canvas.drawText(fpsCounter.getDisplayText(), 100, 100, paint);
-            canvas.drawText("azimuth=" + decFormat.format(orientations.azimuth), 100, 120, paint);
-            canvas.drawText("pitch=" + decFormat.format(orientations.pitch), 100, 130, paint);
-            canvas.drawText("roll=" + decFormat.format(orientations.roll), 100, 140, paint);
+            canvas.drawText(fpsCounter.getDisplayText(), 100, 100, normalStarPaint);
+            canvas.drawText("azimuth=" + decFormat.format(orientations.azimuth), 100, 120, normalStarPaint);
+            canvas.drawText("pitch=" + decFormat.format(orientations.pitch), 100, 130, normalStarPaint);
+            canvas.drawText("roll=" + decFormat.format(orientations.roll), 100, 140, normalStarPaint);
 
-            canvas.drawText(locationTitle, 100, 200, paint);
+            canvas.drawText(locationTitle, 100, 200, normalStarPaint);
 
         } catch (Exception e) {
             LogUtils.e(getClass(), "描画処理で例外が発生しました.", e);

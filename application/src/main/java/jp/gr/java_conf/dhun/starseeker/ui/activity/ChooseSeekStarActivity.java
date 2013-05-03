@@ -3,9 +3,9 @@
  */
 package jp.gr.java_conf.dhun.starseeker.ui.activity;
 
-import jp.gr.java_conf.dhun.starseeker.system.model.star.Star;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseSeekTargetDialogBuilder;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.listener.OnChooseDataListener;
+import jp.gr.java_conf.dhun.starseeker.ui.dto.SeekTarget;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +16,7 @@ import android.widget.Button;
  * @author jun
  * 
  */
-public class ChooseSeekStarActivity extends Activity implements OnChooseDataListener<Star> {
+public class ChooseSeekStarActivity extends Activity implements OnChooseDataListener<SeekTarget<?>> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class ChooseSeekStarActivity extends Activity implements OnChooseDataList
     }
 
     @Override
-    public void onChooseData(Star data) {
+    public void onChooseData(SeekTarget<?> data) {
         // TODO 自動生成されたメソッド・スタブ
 
     }

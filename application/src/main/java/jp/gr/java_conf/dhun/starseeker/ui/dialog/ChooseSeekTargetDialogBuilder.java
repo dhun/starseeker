@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import jp.gr.java_conf.dhun.starseeker.system.model.star.Star;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.ConstellationDataDao;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.DatabaseHelper;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.StarDataDao;
@@ -30,13 +29,12 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.SimpleExpandableListAdapter;
-import android.widget.Toast;
 
 /**
  * @author jun
  * 
  */
-public class ChooseSeekTargetDialogBuilder extends AbstractChooseDataDialogBuilder<Star> {
+public class ChooseSeekTargetDialogBuilder extends AbstractChooseDataDialogBuilder<SeekTarget<?>> {
 
     private final Context context;
 
@@ -88,9 +86,12 @@ public class ChooseSeekTargetDialogBuilder extends AbstractChooseDataDialogBuild
         ExpandableListView listView = new ExpandableListView(context);
         listView.setAdapter(listAdapter);
         listView.setOnChildClickListener(new OnChildClickListener() {
+            @SuppressWarnings("unchecked")
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Toast.makeText(context, listAdapter.getChild(groupPosition, childPosition).toString(), Toast.LENGTH_SHORT).show();
+                Map<String, Object> item = (Map<String, Object>) listAdapter.getChild(groupPosition, childPosition);
+                SeekTarget<?> seekTarget = (SeekTarget<?>) item.get(CHILD_LABEL2);
+                onChooseDataListener.onChooseData(seekTarget);
                 ChooseSeekTargetDialogBuilder.this.dialog.dismiss();
                 return true;
             }
