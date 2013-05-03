@@ -41,6 +41,8 @@ import android.graphics.Paint;
 public class StarSeekerEngine implements //
         ITerminalOrientationsCalculator.OnChangeTerminalOrientationsListener {
 
+    public static boolean DEBUG = false;
+
     // void main() {
     // /*
     // * n. 端末の方位と傾きを算出
@@ -290,12 +292,15 @@ public class StarSeekerEngine implements //
             }
 
             fpsCounter.finish();
-            canvas.drawText(fpsCounter.getDisplayText(), 100, 100, normalStarPaint);
-            canvas.drawText("azimuth=" + decFormat.format(orientations.azimuth), 100, 120, normalStarPaint);
-            canvas.drawText("pitch=" + decFormat.format(orientations.pitch), 100, 130, normalStarPaint);
-            canvas.drawText("roll=" + decFormat.format(orientations.roll), 100, 140, normalStarPaint);
 
-            canvas.drawText(locationTitle, 100, 200, normalStarPaint);
+            canvas.drawText(locationTitle, 50, 50, normalStarPaint);
+
+            if (DEBUG) {
+                canvas.drawText(fpsCounter.getDisplayText(), 50, 100, normalStarPaint);
+                canvas.drawText("azimuth=" + decFormat.format(orientations.azimuth), 50, 120, normalStarPaint);
+                canvas.drawText("pitch=" + decFormat.format(orientations.pitch), 50, 130, normalStarPaint);
+                canvas.drawText("roll=" + decFormat.format(orientations.roll), 50, 140, normalStarPaint);
+            }
 
         } catch (Exception e) {
             LogUtils.e(getClass(), "描画処理で例外が発生しました.", e);

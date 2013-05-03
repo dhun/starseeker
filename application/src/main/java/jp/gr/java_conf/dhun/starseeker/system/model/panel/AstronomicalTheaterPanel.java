@@ -1,5 +1,6 @@
 package jp.gr.java_conf.dhun.starseeker.system.model.panel;
 
+import jp.gr.java_conf.dhun.starseeker.system.StarSeekerEngine;
 import jp.gr.java_conf.dhun.starseeker.system.model.coordinates.CoordinatesRect;
 import jp.gr.java_conf.dhun.starseeker.system.model.star.Star;
 import android.annotation.SuppressLint;
@@ -203,8 +204,9 @@ public abstract class AstronomicalTheaterPanel implements IAstronomicalTheaterPa
     public void draw(Canvas canvas) {
         canvas.drawRect(displayCoordinatesRect.xL, displayCoordinatesRect.yT, displayCoordinatesRect.xR, displayCoordinatesRect.yB, gridPaint);
 
-        if (horizontalCoordinatesRect.hasRegion()) {
+        if (StarSeekerEngine.DEBUG && horizontalCoordinatesRect.hasRegion()) {
             pointPaint.setTextAlign(Paint.Align.CENTER);
+
             canvas.drawText(panelType.toString(), displayCoordinatesRect.centerX(), displayCoordinatesRect.centerY() - pointTextAdjustToCenter, pointPaint);
 
             drawCoordinatesTop(canvas, horizontalCoordinatesRect.xL, horizontalCoordinatesRect.yT, displayCoordinatesRect.xL, displayCoordinatesRect.yT, Paint.Align.LEFT);
