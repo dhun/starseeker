@@ -28,9 +28,9 @@ public class AstronomicalTheater {
 
     private static final boolean VERIFY_PANEL_COODINATES = true;      // パネルの座標を検証するかどうか. FIXME リリース時にはfalseにする
 
-    private static final float DEFAULT_PORTRAIT_THEATER_WIDTH = 140;  // 縦向き）天体シアターの基底の横幅
+    private static final float DEFAULT_PORTRAIT_THEATER_WIDTH = 90;   // 縦向き）天体シアターの基底の横幅
     private static final float DEFAULT_PORTRAIT_THEATER_HEIGHT = 30;  // 縦向き）天体シアターの基底の高さ
-    private static final float DEFAULT_LANDSCAPE_THEATER_WIDTH = 90;  // 横向き）天体シアターの基底の横幅
+    private static final float DEFAULT_LANDSCAPE_THEATER_WIDTH = 140; // 横向き）天体シアターの基底の横幅
     private static final float DEFAULT_LANDSCAPE_THEATER_HEIGHT = 60; // 横向き）天体シアターの基底の高さ
 
     // パネル
@@ -104,11 +104,11 @@ public class AstronomicalTheater {
         // 端末の回転状態から、天体シアターのサイズを算出
         float theaterWidth, theaterHeight;
         if (displayWidth > displayHeight) {
-            theaterWidth = DEFAULT_PORTRAIT_THEATER_WIDTH;
-        } else {
             theaterWidth = DEFAULT_LANDSCAPE_THEATER_WIDTH;
+        } else {
+            theaterWidth = DEFAULT_PORTRAIT_THEATER_WIDTH;
         }
-        theaterHeight = (int) ((double) displayHeight / displayWidth * theaterWidth);
+        theaterHeight = (int) ((double) displayHeight / displayWidth * theaterWidth / 3); // FIXME 縦横比は適当;
         setTheaterSize(theaterWidth, theaterHeight);
     }
 
