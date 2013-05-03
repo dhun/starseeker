@@ -17,22 +17,29 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:allowBackup="false" >
+
         <activity
             android:name=".ui.activity.DevelopmentMenuActivity"
             android:label="@string/title_activity_development_menu"
             android:configChanges="orientation|keyboardHidden" >
+        </activity>
+
+        <activity
+            android:name=".ui.activity.TitleActivity"
+            android:configChanges="orientation|keyboardHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.activity.AstronomicalTheaterActivity"
             android:exported="false" >
 
             <!-- 「android:configChanges="orientation|keyboardHidden"」を指定すると、onDestroy...onCreateが発生しなくなり画面の向きに応じたレイアウトファイルを適用できなくなるため指定しない -->
         </activity>
+
         <activity
             android:exported="false"
             android:name=".ui.activity.ChooseSeekStarActivity" />
