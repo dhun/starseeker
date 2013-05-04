@@ -2,9 +2,9 @@
 <level-list
     xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
-        android:drawable="@android:drawable/ic_input_add"
+        android:drawable="@drawable/window_split_horizontal"
         android:maxLevel="0" />
     <item
-        android:drawable="@android:drawable/ic_input_delete"
+        android:drawable="@drawable/window_single"
         android:maxLevel="1" />
 </level-list>

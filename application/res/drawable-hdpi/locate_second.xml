@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item>
+        <bitmap
+            android:src="@drawable/locate_flag"
+            android:gravity="center" />
+    </item>
+    <item android:bottom="0dp" android:right="0dp">
+        <bitmap
+            android:src="@drawable/locate_symbole_second"
+            android:gravity="bottom|right" />
+    </item>
+</layer-list>

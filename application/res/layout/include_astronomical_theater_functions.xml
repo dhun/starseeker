@@ -25,22 +25,22 @@
         <ImageButton
             android:id="@+id/chooseMagnitudeButton"
             style="@style/astronomical_theater_function"
-            android:src="@android:drawable/star_big_on" />
+            android:src="@drawable/star" />
 
         <ImageButton
             android:id="@+id/chooseObservationSiteTimeButton"
             style="@style/astronomical_theater_function"
-            android:src="@android:drawable/ic_menu_today" />
+            android:src="@drawable/datetime" />
 
         <ImageButton
             android:id="@+id/chooseMasterObservationSiteLocationButton"
             style="@style/astronomical_theater_function"
-            android:src="@android:drawable/ic_menu_myplaces" />
+            android:src="@drawable/locate_master" />
 
         <ImageButton
             android:id="@+id/chooseSecondObservationSiteLocationButton"
             style="@style/astronomical_theater_function"
-            android:src="@android:drawable/ic_menu_myplaces" />
+            android:src="@drawable/locate_second" />
 
         <!--
         <ImageButton
@@ -52,7 +52,7 @@
         <ImageButton
             android:id="@+id/switchStarLocateIndicatorButton"
             style="@style/astronomical_theater_function"
-            android:src="@android:drawable/ic_menu_search" />
+            android:src="@drawable/search" />
 
         <ImageButton
             android:id="@+id/switchLockDisplayRotateButton"
