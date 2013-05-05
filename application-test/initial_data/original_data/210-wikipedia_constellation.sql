@@ -60,6 +60,14 @@ insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code)
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('20889', '25428', 'Tau');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('25428', '20711', 'Tau');
 
+-- はくちょう座
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('102098', '100453', 'Cyg');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('100453', '102488', 'Cyg');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('100453', '97165', 'Cyg');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('100453', '98110', 'Cyg');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('98110', '95947', 'Cyg');
+
+
 -- 冬の大三角
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('32349', '37279', 'winter-triangle');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('37279', '27989', 'winter-triangle');
