@@ -5,9 +5,11 @@ package jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,6 +18,7 @@ import java.util.Locale;
 
 import jp.gr.java_conf.dhun.starseeker.system.exception.StarSeekerRuntimeException;
 import jp.gr.java_conf.dhun.starseeker.util.AssetsUtils;
+import jp.gr.java_conf.dhun.starseeker.util.FileUtils;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -34,13 +37,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /** DBファイルを再作成するかどうか. trueにすると「starseeker-initial.dump」の内容で初期化します */
     private static final boolean RECREATE_DB_FILE = false;
 
-    private static final String INIT_ASSETS_DB_TIME = "sql/starseeker-initial.timestamp";  // 初期DBのタイムスタンプファイルの名前
-    private static final String INIT_ASSETS_DB_FILE = "sql/starseeker-initial.db";  // 初期DBファイルの名前
+    private static final String INIT_ASSETS_DB_TIME = "database/starseeker-initial.timestamp";  // 初期DBのタイムスタンプファイルの名前
+    private static final String INIT_ASSETS_DB_FILE = "database/starseeker-initial.db";  // 初期DBファイルの名前
     private static final String APPLICATION_DB_FILE = "starseeker.db";  // DBファイルの名前
     private static final int DB_VERSION = 1;                // DBのバージョン
 
     private static final String SQL_FILE_ENCODE = "UTF-8";
-    private static final File INITIAL_DATA_DUMP = new File("sql/starseeker-initial.dump");
+    private static final File INITIAL_DATA_DUMP = new File("database/starseeker-initial.dump");
 
     private static final File initDbTimestampFile = new File(INIT_ASSETS_DB_TIME);
 
@@ -51,6 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static void setupInitialDatabaseFileIfNotNeed(Context context) {
         if (!needSetupInitialDatabaseFileNeed(context)) {
+            LogUtils.i(DatabaseHelper.class, "DBファイルの再作成をスキップした.");
             return;
         }
 
@@ -58,26 +62,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = context.openOrCreateDatabase(APPLICATION_DB_FILE, Context.MODE_PRIVATE, null);
         db.close();
 
-        // DBファイルを初期DBファイルで上書き
-        context.getDatabasePath(APPLICATION_DB_FILE).delete();
-        SQLiteDatabase database = context.openOrCreateDatabase(APPLICATION_DB_FILE, Context.MODE_PRIVATE, null);
-        executeSqlFileInternal(context, database, INITIAL_DATA_DUMP);
-        database.close();
+        // // DBファイルを初期DBファイルで上書き
+        // context.getDatabasePath(APPLICATION_DB_FILE).delete();
+        // SQLiteDatabase database = context.openOrCreateDatabase(APPLICATION_DB_FILE, Context.MODE_PRIVATE, null);
+        // executeSqlFileInternal(context, database, INITIAL_DATA_DUMP);
+        // database.close();
 
-        // InputStream iniDb = null;
-        // OutputStream appDb = null;
-        // try {
-        // iniDb = context.getAssets().open("sql/starseeker-initial.db", Context.MODE_PRIVATE);
-        // appDb = new FileOutputStream(context.getDatabasePath(APPLICATION_DB_FILE));
-        // FileUtils.copyStream(context, iniDb, appDb);
-        //
-        // } catch (IOException e) {
-        // throw new StarSeekerRuntimeException("DBファイルの作成に失敗した.", e);
-        //
-        // } finally {
-        // FileUtils.closeStreamIgnoreIOException(iniDb);
-        // FileUtils.closeStreamIgnoreIOException(appDb);
-        // }
+        InputStream iniDb = null;
+        OutputStream appDb = null;
+        try {
+            iniDb = context.getAssets().open(INIT_ASSETS_DB_FILE, Context.MODE_PRIVATE);
+            appDb = new FileOutputStream(context.getDatabasePath(APPLICATION_DB_FILE));
+            FileUtils.copyStream(iniDb, appDb);
+            LogUtils.i(DatabaseHelper.class, "DBファイルを再作成した.");
+
+        } catch (IOException e) {
+            throw new StarSeekerRuntimeException("DBファイルの作成に失敗した.", e);
+
+        } finally {
+            FileUtils.closeIgnoreIOException(iniDb);
+            FileUtils.closeIgnoreIOException(appDb);
+        }
 
         // DBファイルのタイムスタンプを更新
         storeApplicationDbTimestamp(context, new Date());

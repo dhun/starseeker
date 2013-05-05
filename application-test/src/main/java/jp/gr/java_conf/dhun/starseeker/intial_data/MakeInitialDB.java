@@ -62,7 +62,7 @@ import jp.gr.java_conf.dhun.starseeker.util.StarLocationUtil;
  */
 public class MakeInitialDB {
 
-    private static final boolean RECREATE_CONSTELLATION_ONLY = false;     // trueにすると、星座パスの再生成だけを行います
+    private static final boolean RECREATE_CONSTELLATION_ONLY = true;     // trueにすると、星座パスの再生成だけを行います
 
     private static final boolean COPY_TO_APPLICATION_IF_SUCCEED = true;  // trueにすると、初期DBダンプの生成に成功したとき、アプリケーションプロジェクトにコピーする
     private static final boolean REMOVE_TMP_DATABASE_IF_SUCCEED = false; // trueにすると、初期DBダンプの生成に成功したとき、一時DBを削除する
@@ -70,12 +70,13 @@ public class MakeInitialDB {
 
     private static final String SQLITE_PATH = "sqlite3";
 
-    private static final String APPLICATION_ASSET_DIR = "../application/assets/sql";
+    private static final String APPLICATION_ASSET_DIR = "../application/assets/database";
 
     private static final File ROOT_DIR = new File("initial_data");
 
-    private static final File TMP_DATABASE_FILE = new File(ROOT_DIR, "starseeker.db");
+    private static final File TMP_DATABASE_FILE = new File(ROOT_DIR, "starseeker-temp.db");
     private static final File INI_DATABASE_DUMP = new File(ROOT_DIR, "starseeker-initial.dump");
+    private static final File INI_DATABASE_FILE = new File(ROOT_DIR, "starseeker-initial.db");
     private static final File INI_DATABASE_TIME = new File(ROOT_DIR, "starseeker-initial.timestamp");
 
     private static final DateFormat timestampFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -93,17 +94,20 @@ public class MakeInitialDB {
             validateExistsSqlite();
 
             // 出力ファイルを初期化
-            if (!RECREATE_CONSTELLATION_ONLY) {
+            FileUtils.delete(INI_DATABASE_DUMP);
+            FileUtils.delete(INI_DATABASE_FILE);
+            FileUtils.delete(INI_DATABASE_TIME);
+
+            if (RECREATE_CONSTELLATION_ONLY && TMP_DATABASE_FILE.exists()) {
+                // SQLスクリプトを実行して一時的なデータベースを作成
+                executeSqlFiles(ROOT_DIR + File.separator + "original_data", Arrays.asList(new String[] { "210-wikipedia_constellation.sql" }));
+                executeSqlFiles(ROOT_DIR + File.separator + "convert_starseeker_database");
+
+            } else {
                 FileUtils.delete(TMP_DATABASE_FILE);
-                FileUtils.delete(INI_DATABASE_DUMP);
-                FileUtils.delete(INI_DATABASE_TIME);
 
                 // SQLスクリプトを実行して一時的なデータベースを作成
                 executeSqlFiles(ROOT_DIR + File.separator + "original_data");
-                executeSqlFiles(ROOT_DIR + File.separator + "convert_starseeker_database");
-            } else {
-                // SQLスクリプトを実行して一時的なデータベースを作成
-                executeSqlFiles(ROOT_DIR + File.separator + "original_data", Arrays.asList(new String[] { "210-wikipedia_constellation.sql" }));
                 executeSqlFiles(ROOT_DIR + File.separator + "convert_starseeker_database");
             }
 
@@ -117,7 +121,10 @@ public class MakeInitialDB {
             }
 
             // 初期DBに必要なテーブルをダンプ
-            dumpTables();
+            exportTables();
+
+            // ダンプファイルから初期DBを作成
+            importTables();
 
             // 初期DBのタイムスタンプファイルを作成
             createTimestampFile();
@@ -130,7 +137,7 @@ public class MakeInitialDB {
             // アプリケーションプロジェクトにダンプファイルをコピー
             if (COPY_TO_APPLICATION_IF_SUCCEED) {
                 File dstDir = new File(APPLICATION_ASSET_DIR);
-                FileUtils.copyFile(INI_DATABASE_DUMP, new File(dstDir, INI_DATABASE_DUMP.getName()));
+                FileUtils.copyFile(INI_DATABASE_FILE, new File(dstDir, INI_DATABASE_FILE.getName()));
                 FileUtils.copyFile(INI_DATABASE_TIME, new File(dstDir, INI_DATABASE_TIME.getName()));
             }
 
@@ -360,13 +367,14 @@ public class MakeInitialDB {
         statement.execute();
     }
 
-    private void dumpTables() throws IOException, InterruptedException {
+    private void exportTables() throws IOException, InterruptedException {
         List<File> dumpFiles = new ArrayList<File>();
 
         try {
-            dumpFiles.add(dumpTable("star_data"));
-            dumpFiles.add(dumpTable("constellation_data"));
-            dumpFiles.add(dumpTable("constellation_path"));
+            dumpFiles.add(exportTable("android_metadata"));
+            dumpFiles.add(exportTable("star_data"));
+            dumpFiles.add(exportTable("constellation_data"));
+            dumpFiles.add(exportTable("constellation_path"));
 
             FileUtils.delete(INI_DATABASE_DUMP);
             for (File dumpFile : dumpFiles) {
@@ -380,8 +388,8 @@ public class MakeInitialDB {
         }
     }
 
-    private File dumpTable(String tableName) throws IOException, InterruptedException {
-        System.out.println("---- dump table : " + tableName + " ----");
+    private File exportTable(String tableName) throws IOException, InterruptedException {
+        System.out.println("---- export table : " + tableName + " ----");
 
         // ダンプファイルを作成
         File dumpFile = File.createTempFile("dump", ".dmp", ROOT_DIR);
@@ -430,6 +438,47 @@ public class MakeInitialDB {
 
         } finally {
             FileUtils.delete(iniFile);
+            FileUtils.closeIgnoreIOException(standardIn);
+        }
+    }
+
+    private void importTables() throws IOException, InterruptedException {
+        System.out.println("---- import tables ----");
+
+        // SQLITEのコマンドラインを構築
+        List<String> commands = new ArrayList<String>();
+        commands.add(SQLITE_PATH);
+        commands.add("-batch");
+        commands.add("-bail");
+        commands.add(INI_DATABASE_FILE.getAbsolutePath());
+        commands.add(".read " + INI_DATABASE_DUMP.getAbsolutePath());
+
+        // SQLITEを利用したダンプ処理
+        ProcessBuilder builder = new ProcessBuilder(commands);
+        builder.redirectErrorStream(true);
+        Process process = builder.start();
+
+        BufferedReader standardIn = null;
+        try {
+            standardIn = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
+            String line;
+            while (null != (line = standardIn.readLine())) {
+                System.out.println(line);
+            }
+            int result = process.waitFor();
+            if (result != 0) {
+                throw new RuntimeException("データベースダンプファイルのロード中に例外が発生した");
+            }
+
+        } catch (IOException e) {
+            FileUtils.delete(INI_DATABASE_FILE);
+            throw e;
+
+        } catch (InterruptedException e) {
+            FileUtils.delete(INI_DATABASE_FILE);
+            throw e;
+
+        } finally {
             FileUtils.closeIgnoreIOException(standardIn);
         }
     }
