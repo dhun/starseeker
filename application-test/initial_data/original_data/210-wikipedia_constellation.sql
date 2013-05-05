@@ -77,6 +77,13 @@ insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code)
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('60129', '57757', 'Vir');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('57757', '57380', 'Vir');
 
+-- ふたご座
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('30343', '32246', 'Gem');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('32246', '36850', 'Gem');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('36850', '37826', 'Gem');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('37826', '35550', 'Gem');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('35550', '31681', 'Gem');
+
 
 -- 冬の大三角
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('32349', '37279', 'winter-triangle');
