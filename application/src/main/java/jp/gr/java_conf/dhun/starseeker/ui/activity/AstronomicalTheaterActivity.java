@@ -82,6 +82,8 @@ public class AstronomicalTheaterActivity extends Activity //
         // config.setCoordinatesCalculateBaseDate(new Date(2013 - 1900, 3, 17, 1, 29)); // FIXME 時刻を固定するときに解放
         // config.setCoordinatesCalculateBaseDate(new Date(2000 - 1900, 0, 1, 21, 00)); // FIXME 時刻を固定するときに解放
 
+        config.setSecondAstronomicalTheaterVisible(false);  // 初期表示ではセカンドビューは非表示
+
         masterObservationSiteLocationResolver = AbstractObservationSiteLocationResolver.newResolver(this, config.getMasterObservationSiteLocationId());
         secondObservationSiteLocationResolver = AbstractObservationSiteLocationResolver.newResolver(this, config.getSecondObservationSiteLocationId());
 
