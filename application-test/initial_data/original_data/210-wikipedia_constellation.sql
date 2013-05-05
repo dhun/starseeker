@@ -127,6 +127,14 @@ insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code)
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('89931', '90185', 'Sgr');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('90185', '89642', 'Sgr');
 
+-- やぎ座（適当）
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('100064', '100345', 'Cap');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('100345', '104139', 'Cap');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('104139', '106985', 'Cap');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('106985', '107556', 'Cap');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('107556', '105881', 'Cap');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('105881', '100345', 'Cap');
+
 
 -- 冬の大三角
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('32349', '37279', 'winter-triangle');
