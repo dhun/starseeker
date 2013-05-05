@@ -135,6 +135,10 @@ insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code)
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('107556', '105881', 'Cap');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('105881', '100345', 'Cap');
 
+-- うお座
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('7097', '9487', 'Psc');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('9487', '114971', 'Psc');
+
 
 -- 冬の大三角
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('32349', '37279', 'winter-triangle');
