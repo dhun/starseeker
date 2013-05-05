@@ -91,6 +91,17 @@ insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code)
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('112961', '113136', 'Aqr');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('113136', '114341', 'Aqr');
 
+-- しし座
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('49669', '49583', 'Leo');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('49583', '50583', 'Leo');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('50583', '50335', 'Leo');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('50583', '54872', 'Leo');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('50335', '48455', 'Leo');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('48455', '47908', 'Leo');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('54872', '57632', 'Leo');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('57632', '54879', 'Leo');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('54879', '49669', 'Leo');
+
 
 -- 冬の大三角
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('32349', '37279', 'winter-triangle');
