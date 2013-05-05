@@ -67,6 +67,16 @@ insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code)
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('100453', '98110', 'Cyg');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('98110', '95947', 'Cyg');
 
+-- おとめ座
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('65474 ', '64238', 'Vir');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('64238', '66249', 'Vir');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('64238', '61941', 'Vir');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('61941', '63090', 'Vir');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('61941', '60129', 'Vir');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('63090', '63608', 'Vir');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('60129', '57757', 'Vir');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('57757', '57380', 'Vir');
+
 
 -- 冬の大三角
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('32349', '37279', 'winter-triangle');
