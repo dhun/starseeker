@@ -103,8 +103,13 @@ public class StarSeekerConfigDao {
         editor.putFloat(KEY_EXTRACT_LOWER_STAR_MAGNITUDE, config.getExtractLowerStarMagnitude());
         editor.putInt(KEY_MASTER_OBSERVATION_SITE_LOCATION_ID, config.getMasterObservationSiteLocationId());
         editor.putInt(KEY_SECOND_OBSERVATION_SITE_LOCATION_ID, config.getSecondObservationSiteLocationId());
-        editor.putString(KEY_SEEK_TARGET_TYPE, config.getSeekTargetType().name());
-        editor.putString(KEY_SEEK_TARGET_ID, config.getSeekTargetId().toString());
+        if (config.getSeekTargetType() == null) {
+            editor.remove(KEY_SEEK_TARGET_TYPE);
+            editor.remove(KEY_SEEK_TARGET_ID);
+        } else {
+            editor.putString(KEY_SEEK_TARGET_TYPE, config.getSeekTargetType().name());
+            editor.putString(KEY_SEEK_TARGET_ID, config.getSeekTargetId().toString());
+        }
 
         editor.commit();
     }
