@@ -58,7 +58,6 @@ insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code)
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('20894', '20205', 'Tau');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('20205', '20889', 'Tau');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('20889', '25428', 'Tau');
-insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('25428', '20711', 'Tau');
 
 -- はくちょう座
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('102098', '100453', 'Cyg');
@@ -101,6 +100,15 @@ insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code)
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('54872', '57632', 'Leo');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('57632', '54879', 'Leo');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('54879', '49669', 'Leo');
+
+-- おひつじ座
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('9884', '8903', 'Ari');
+
+-- かに座
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('43103', '42806', 'Cnc');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('42806', '42911', 'Cnc');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('42911', '40526', 'Cnc');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('42911', '44066', 'Cnc');
 
 
 -- 冬の大三角
