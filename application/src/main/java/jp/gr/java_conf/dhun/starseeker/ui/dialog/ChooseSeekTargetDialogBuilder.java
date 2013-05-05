@@ -15,12 +15,9 @@ import java.util.Map.Entry;
 
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.ConstellationDataDao;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.DatabaseHelper;
-import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.StarDataDao;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ConstellationData;
-import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarData;
 import jp.gr.java_conf.dhun.starseeker.ui.dto.SeekTarget;
 import jp.gr.java_conf.dhun.starseeker.ui.dto.SeekTarget.SeekConstellationData;
-import jp.gr.java_conf.dhun.starseeker.ui.dto.SeekTarget.SeekStarData;
 import android.app.Activity;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -38,10 +35,14 @@ public class ChooseSeekTargetDialogBuilder extends AbstractChooseDataDialogBuild
 
     private final Context context;
 
+    /**
+     * コンストラクタ
+     */
     public ChooseSeekTargetDialogBuilder(Activity activity) {
         super(activity);
 
         this.context = activity;
+        setDialogTitle("探索する星座"); // XXX strings.xml
     }
 
     @Override
@@ -57,6 +58,10 @@ public class ChooseSeekTargetDialogBuilder extends AbstractChooseDataDialogBuild
         List<List<Map<String, Object>>> childData = new ArrayList<List<Map<String, Object>>>();
 
         for (Entry<String, List<SeekTarget<?>>> listDataEntry : listDataMap.entrySet()) {
+            if (listDataEntry.getValue().isEmpty()) {
+                continue;
+            }
+
             Map<String, String> map = new HashMap<String, String>();
             map.put(GROUP_LABEL1, listDataEntry.getKey());
             groupData.add(map);
@@ -106,11 +111,12 @@ public class ChooseSeekTargetDialogBuilder extends AbstractChooseDataDialogBuild
         DatabaseHelper dbHelper = new DatabaseHelper(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         try {
-            for (StarData data : new StarDataDao(db).findByKanaNotNull()) {
-                if (data.getMagnitude() <= StarData.MAGNITUDE_FOR_DISPLAY_UPPER) {
-                    seekTargets.add(new SeekStarData(data));
-                }
-            }
+            // XXX 星は非表示にした
+            // for (StarData data : new StarDataDao(db).findByKanaNotNull()) {
+            // if (data.getMagnitude() <= StarData.MAGNITUDE_FOR_DISPLAY_UPPER) {
+            // seekTargets.add(new SeekStarData(data));
+            // }
+            // }
             for (ConstellationData data : new ConstellationDataDao(db).findByKanaNotNull()) {
                 seekTargets.add(new SeekConstellationData(data));
             }

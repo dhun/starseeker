@@ -42,6 +42,14 @@ public class ConstellationDataDao extends AbstractSqlDao<ConstellationData, Stri
         return list(selection, selectionArgs, orderBy);
     }
 
+    public ConstellationData findByPk(String constellationCode) {
+        String selection = ConstellationData.FieldNames.CONSTELLATION_CODE + " = ?";
+        String[] selectionArgs = { constellationCode };
+        String orderBy = null;
+
+        return find(selection, selectionArgs, orderBy);
+    }
+
     public List<ConstellationData> findLessThanUpperMagnitude(StarMagnitude magnitude) {
         StringBuilder selection = new StringBuilder();
         selection.append(ConstellationData.TABLE_NAME + "." + ConstellationData.FieldNames.CONSTELLATION_CODE + " in (");

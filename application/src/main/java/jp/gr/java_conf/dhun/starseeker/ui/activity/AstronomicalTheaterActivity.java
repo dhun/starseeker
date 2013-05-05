@@ -10,6 +10,11 @@ import jp.gr.java_conf.dhun.starseeker.R;
 import jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location.AbstractObservationSiteLocationResolver;
 import jp.gr.java_conf.dhun.starseeker.system.logic.observationsite.location.IObservationSiteLocationResolver;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.StarSeekerConfigDao;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.ConstellationDataDao;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.DatabaseHelper;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.dao.sql.StarDataDao;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.ConstellationData;
+import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarData;
 import jp.gr.java_conf.dhun.starseeker.system.persistence.entity.StarSeekerConfig;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseExtractStarMagnitudeDialogBuilder;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseObservationSiteLocationDialogBuilder;
@@ -17,6 +22,7 @@ import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseObservationSiteTimeDialog
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.ChooseSeekTargetDialogBuilder;
 import jp.gr.java_conf.dhun.starseeker.ui.dialog.listener.OnChooseDataListener;
 import jp.gr.java_conf.dhun.starseeker.ui.dto.SeekTarget;
+import jp.gr.java_conf.dhun.starseeker.ui.dto.SeekTarget.SeekTargetType;
 import jp.gr.java_conf.dhun.starseeker.ui.view.AstronomicalTheaterView;
 import jp.gr.java_conf.dhun.starseeker.util.LogUtils;
 import android.app.Activity;
@@ -24,6 +30,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.Surface;
@@ -78,6 +85,7 @@ public class AstronomicalTheaterActivity extends Activity //
         // 設定の復元
         configDao = new StarSeekerConfigDao(getApplicationContext());
         config = configDao.findOrDefault();
+
         config.setCoordinatesCalculateBaseDate(new Date()); // 画面起動時はシステム日時
         // config.setCoordinatesCalculateBaseDate(new Date(2013 - 1900, 3, 17, 1, 29)); // FIXME 時刻を固定するときに解放
         // config.setCoordinatesCalculateBaseDate(new Date(2000 - 1900, 0, 1, 21, 00)); // FIXME 時刻を固定するときに解放
@@ -108,6 +116,26 @@ public class AstronomicalTheaterActivity extends Activity //
 
         setMasterObservationCondition();
         setSecondObservationCondition();
+
+        if (config.getSeekTargetType() != null) {
+            SQLiteDatabase db = null;
+            SeekTarget<?> seekTarget = null;
+            try {
+                DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext());
+                db = dbHelper.getReadableDatabase();
+                if (config.getSeekTargetType() == SeekTargetType.STAR) {
+                    StarData data = new StarDataDao(db).findByPk(Integer.parseInt(config.getSeekTargetId()));
+                    seekTarget = new SeekTarget.SeekStarData(data);
+                } else {
+                    ConstellationData data = new ConstellationDataDao(db).findByPk(config.getSeekTargetId());
+                    seekTarget = new SeekTarget.SeekConstellationData(data);
+                }
+            } finally {
+                db.close();
+            }
+            masterTheaterView.configureSeektarget(seekTarget);
+            secondTheaterView.configureSeektarget(seekTarget);
+        }
 
         // クリックイベントの設定
         // findViewById(R.id.zoomControls).setOnClickListener(this);
