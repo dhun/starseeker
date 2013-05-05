@@ -110,6 +110,11 @@ insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code)
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('42911', '40526', 'Cnc');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('42911', '44066', 'Cnc');
 
+-- てんびん座
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('76333', '74785', 'Lib');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('74785', '72622', 'Lib');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('72622', '73714', 'Lib');
+
 
 -- 冬の大三角
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('32349', '37279', 'winter-triangle');
