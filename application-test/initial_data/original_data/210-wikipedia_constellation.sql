@@ -115,6 +115,18 @@ insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code)
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('74785', '72622', 'Lib');
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('72622', '73714', 'Lib');
 
+-- いて座
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('93085', '94141', 'Sgr');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('94141', '92855', 'Sgr');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('92855', '93864', 'Sgr');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('93864', '93506', 'Sgr');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('92855', '92041', 'Sgr');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('92041', '90496', 'Sgr');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('90496', '89931', 'Sgr');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('89931', '88635', 'Sgr');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('89931', '90185', 'Sgr');
+insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('90185', '89642', 'Sgr');
+
 
 -- 冬の大三角
 insert into wikipedia_constellation (hip_num_fm, hip_num_to, constellation_code) values ('32349', '37279', 'winter-triangle');
